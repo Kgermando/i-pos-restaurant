@@ -77,6 +77,21 @@
                             <div class="tasks-activity tasks collapse show mt-3" id="rapport">
                                 <!-- Campaign Status -->
                                 <div class="row">
+                                    <div class="col-xl-4 col-lg-6"> 
+                                        <div class="campaign-box bg-primary-light" style="background-color: #007d9c1f;"> 
+                                            <div class="campaign-img">
+                                                <p>Prix de vente</p>
+                                            </div>
+                                            <h4>
+                                                {{ formatCurrency(product.prix_vente, currentUser.currency) }}
+
+                                                <br>
+                                                <h6 style="font-weight: 300;">
+                                                    {{ formatCurrency(prixAchat(), currentUser.currency) }} 
+                                                </h6>
+                                            </h4>
+                                        </div>
+                                    </div>
                                     <div class="col-xl-4 col-lg-6">
                                         <div class="campaign-box bg-danger-light">
                                             <div class="campaign-img">
@@ -91,6 +106,32 @@
                                         </div>
                                     </div>
                                     <div class="col-xl-4 col-lg-6">
+                                        <div class="campaign-box bg-purple-light mb-0">
+                                            @if (pourcentStockRestant()) {
+                                            <app-progress-bar [progress]="pourcentStockRestant()"></app-progress-bar>
+                                            }@else {
+                                            <app-progress-bar [progress]="0"></app-progress-bar>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-6">
+                                        <div class="campaign-box bg-warning-light">
+                                            <div class="campaign-img">
+                                                <p>Val. produits</p>
+                                            </div>
+                                            <h4>
+                                                {{ valeurProductObtenu() | number:'1.2-3' }}/
+                                                {{ formatCurrency(valeurProductAttendu(), currentUser.currency) }}
+
+                                                <br>
+                                                <h6 style="font-weight: 300;">{{ pourcentValeurProduit().toFixed(2) }}%
+                                                </h6>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
                                         <div class="campaign-box bg-success-light">
                                             <div class="campaign-img">
                                                 <p>Profits</p>
@@ -101,45 +142,7 @@
 
                                                 <br>
                                                 <h6 style="font-weight: 300;">{{ pourcentProfit().toFixed(2) }}% </h6>
-                                            </h4> 
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-4 col-lg-6">
-                                        <div class="campaign-box bg-purple-light mb-0">
-                                            @if (pourcentStockRestant()) {
-                                            <app-progress-bar [progress]="pourcentStockRestant()"></app-progress-bar>
-                                            }@else {
-                                            <app-progress-bar [progress]="0"></app-progress-bar>
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row mt-3">
-                                    <div class="col-xl-4 col-lg-6">
-                                        <div class="campaign-box bg-warning-light">
-                                            <div class="campaign-img">
-                                                <p>Val. produits</p>
-                                            </div>
-                                            <h4>
-                                                {{ valeurProductObtenu() | number:'1.2-3' }}/
-                                                {{ formatCurrency(valeurProductAttendu(), currentUser.currency) }}
-
-                                                <br>
-                                                <h6 style="font-weight: 300;">{{ pourcentValeurProduit().toFixed(2) }}% </h6>
-                                            </h4> 
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-4 col-lg-6">
-                                        <div class="campaign-box bg-success-light">
-                                            <div class="campaign-img">
-                                                <p>Prix de vente</p>
-                                            </div>
-                                            <h4> 
-                                                {{ formatCurrency(product.prix_vente, currentUser.currency) }}
-
-                                                <br>
-                                                <h6 style="font-weight: 300;">- </h6>
-                                            </h4> 
+                                            </h4>
                                         </div>
                                     </div>
                                 </div>

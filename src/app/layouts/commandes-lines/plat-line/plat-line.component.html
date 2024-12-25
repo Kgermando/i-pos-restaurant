@@ -38,12 +38,12 @@
                                 <div class="d-flex align-items-center justify-content-between mb-3">
                                     <div class="d-flex align-items-center">
                                         <div>
-                                            <h6>{{ item.name }}</h6>
+                                            <h5>{{ item.name }}</h5>
                                             <p class="text-default">#{{ item.reference }}</p>
                                         </div>
                                     </div>
                                     <div class="dropdown table-action">
-                                        
+                                        <h6>{{ formatCurrency(item.prix_vente, currentUser.currency) }}</h6>
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">

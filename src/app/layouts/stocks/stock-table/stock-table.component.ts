@@ -11,8 +11,7 @@ import { ToastrService } from 'ngx-toastr';
 import { IStock } from '../../../models/stock.model';
 import { IProduct } from '../../../models/product.model';
 import { IFournisseur } from '../../../models/fournisseur.model';
-import { CurrencyPipe } from '@angular/common'; 
-import { IStockDispo } from '../../../models/stock_dispo.model';
+import { CurrencyPipe } from '@angular/common';  
 import { FournisseurService } from '../../fournisseurs/fournisseur.service';
 import { StockService } from '../stock.service';
 import { ProductService } from '../../products/product.service';
@@ -66,6 +65,8 @@ export class StockTableComponent implements OnInit, AfterViewInit {
   cmdLineQty = signal<number>(0);
   pourcentQty = computed(() => (this.cmdLineQty() * 100) / this.stockQty());
   pourcentStockRestant = computed(() => 100 - (this.cmdLineQty() * 100 / this.stockQty()));
+
+  prixAchat = signal<number>(0);
 
   profitAttendu = signal<number>(0);  // marge beneficiaire
   profitObtenu = signal<number>(0);
@@ -181,6 +182,7 @@ export class StockTableComponent implements OnInit, AfterViewInit {
           const mbObtenu = (this.product.prix_vente - r.data.prix_achat) * line.data;
           this.profitAttendu.set(mbAttendu);
           this.profitObtenu.set(mbObtenu); 
+          this.prixAchat.set(r.data.prix_achat);
         }); 
       }); 
     });

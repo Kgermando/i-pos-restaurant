@@ -100,7 +100,7 @@ export class CmdFactureComponent {
         this.tableBoxService.update(this.commande.TableBox!.ID!, body).subscribe(() => {
           this.isLoading = false;
           this.toastr.success(`Facture ${status} effectuée avec succès!`, 'Success!');
-          this.router.navigate(['/web/table-box/commandes/commande-list']);
+          this.router.navigate(['/web/table-box/table-box-list']);   
         });
       });
     } catch (error) {

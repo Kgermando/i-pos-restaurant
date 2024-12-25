@@ -93,8 +93,6 @@ export class CommandesLinesComponent implements OnInit {
         this.commandeLineList = line.data;
         this.totalLength.set(this.commandeLineList.length);
         this.loading = false;
-
-        console.log("commandeLineList", this.commandeLineList)
       }); 
     });
   }

@@ -35,7 +35,6 @@ import { FournisseurTableComponent } from './fournisseurs/fournisseur-table/four
 import { FournisseursComponent } from './fournisseurs/fournisseurs.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { CommandesLinesComponent } from './commandes-lines/commandes-lines.component';
-import { CmdQtyComponent } from './commandes-lines/cmd-qty/cmd-qty.component';
 import { CmdQtyInputComponent } from './commandes-lines/cmd-qty-input/cmd-qty-input.component';
 import { CmdFactureComponent } from './commandes-lines/cmd-facture/cmd-facture.component';
 import { FatureComponent } from './commandes/fature/fature.component';
@@ -49,6 +48,7 @@ import { PlatLineComponent } from './commandes-lines/plat-line/plat-line.compone
 import { PlatCardComponent } from './plat/plat-card/plat-card.component';
 import { PlatTableComponent } from './plat/plat-table/plat-table.component';
 import { ProdQtyDispoComponent } from './products/prod-qty-dispo/prod-qty-dispo.component';
+import { ProdItemComponent } from './commandes-lines/product-line/prod-item/prod-item.component';
 
 
 @NgModule({
@@ -81,7 +81,6 @@ import { ProdQtyDispoComponent } from './products/prod-qty-dispo/prod-qty-dispo.
     FournisseursComponent,
     DashboardComponent,
     CommandesLinesComponent,
-    CmdQtyComponent,
     CmdQtyInputComponent,
     CmdFactureComponent,
     FatureComponent,
@@ -95,6 +94,7 @@ import { ProdQtyDispoComponent } from './products/prod-qty-dispo/prod-qty-dispo.
     PlatCardComponent,
     PlatTableComponent,
     ProdQtyDispoComponent,
+    ProdItemComponent,
   ],
   imports: [
     CommonModule,

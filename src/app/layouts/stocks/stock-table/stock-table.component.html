@@ -69,6 +69,21 @@
                             <div class="tasks-activity tasks collapse show mt-3" id="rapport">
                                 <!-- Campaign Status -->
                                 <div class="row">
+                                    <div class="col-xl-4 col-lg-6"> 
+                                        <div class="campaign-box bg-primary-light" style="background-color: #007d9c1f;"> 
+                                            <div class="campaign-img">
+                                                <p>Prix de vente</p>
+                                            </div>
+                                            <h4>
+                                                {{ formatCurrency(product.prix_vente, currentUser.currency) }}
+
+                                                <br>
+                                                <h6 style="font-weight: 300;">
+                                                    {{ formatCurrency(prixAchat(), currentUser.currency) }} 
+                                                </h6>
+                                            </h4>
+                                        </div>
+                                    </div>
                                     <div class="col-xl-4 col-lg-6">
                                         <div class="campaign-box bg-danger-light">
                                             <div class="campaign-img">
@@ -83,20 +98,6 @@
                                         </div>
                                     </div>
                                     <div class="col-xl-4 col-lg-6">
-                                        <div class="campaign-box bg-success-light">
-                                            <div class="campaign-img">
-                                                <p>Profits</p>
-                                            </div>
-                                            <h4>
-                                                {{ profitObtenu() | number:'1.2-3' }}/
-                                                {{ formatCurrency(profitAttendu(), currentUser.currency) }}
-
-                                                <br>
-                                                <h6 style="font-weight: 300;">{{ pourcentProfit().toFixed(2) }}% </h6>
-                                            </h4> 
-                                        </div>
-                                    </div>
-                                    <div class="col-xl-4 col-lg-6">
                                         <div class="campaign-box bg-purple-light mb-0">
                                             @if (pourcentStockRestant()) {
                                             <app-progress-bar [progress]="pourcentStockRestant()"></app-progress-bar>
@@ -107,7 +108,7 @@
                                     </div>
                                 </div>
                                 <div class="row mt-2">
-                                    <div class="col-xl-4 col-lg-6">
+                                    <div class="col-md-6">
                                         <div class="campaign-box bg-warning-light">
                                             <div class="campaign-img">
                                                 <p>Val. produits</p>
@@ -117,21 +118,23 @@
                                                 {{ formatCurrency(valeurProductAttendu(), currentUser.currency) }}
 
                                                 <br>
-                                                <h6 style="font-weight: 300;">{{ pourcentValeurProduit().toFixed(2) }}% </h6>
-                                            </h4> 
+                                                <h6 style="font-weight: 300;">{{ pourcentValeurProduit().toFixed(2) }}%
+                                                </h6>
+                                            </h4>
                                         </div>
                                     </div>
-                                    <div class="col-xl-4 col-lg-6">
+                                    <div class="col-md-6">
                                         <div class="campaign-box bg-success-light">
                                             <div class="campaign-img">
-                                                <p>Prix de vente</p>
+                                                <p>Profits</p>
                                             </div>
-                                            <h4> 
-                                                {{ formatCurrency(product.prix_vente, currentUser.currency) }}
+                                            <h4>
+                                                {{ profitObtenu() | number:'1.2-3' }}/
+                                                {{ formatCurrency(profitAttendu(), currentUser.currency) }}
 
                                                 <br>
-                                                <h6 style="font-weight: 300;">- </h6>
-                                            </h4> 
+                                                <h6 style="font-weight: 300;">{{ pourcentProfit().toFixed(2) }}% </h6>
+                                            </h4>
                                         </div>
                                     </div>
                                 </div>
@@ -166,10 +169,10 @@
                                                 {{ product.unite_vente }}
                                                 }
                                             </td>
-                                        </ng-container> 
+                                        </ng-container>
 
-                                          <!-- prix_achat Column -->
-                                          <ng-container matColumnDef="prix_achat">
+                                        <!-- prix_achat Column -->
+                                        <ng-container matColumnDef="prix_achat">
                                             <th mat-header-cell *matHeaderCellDef> Prix d'achat </th>
                                             <td mat-cell *matCellDef="let element">
                                                 {{ formatCurrency(element.prix_achat, currentUser.currency) }}
@@ -280,14 +283,14 @@
                 <div class="row">
                     <div class="col-md-6">
                         @if (product) {
-                            <div class="mb-3">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <label class="col-form-label" for="name">Prix de vente <span
-                                            class="text-danger">*</span></label>
-                                </div>
-                                <input type="number" class="form-control" [value]="product.prix_vente" [readOnly]="true" /> 
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="name">Prix de vente <span
+                                        class="text-danger">*</span></label>
                             </div>
-                        } 
+                            <input type="number" class="form-control" [value]="product.prix_vente" [readOnly]="true" />
+                        </div>
+                        }
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
@@ -394,13 +397,13 @@
                 <div class="row">
                     <div class="col-md-6">
                         @if (product) {
-                            <div class="mb-3">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <label class="col-form-label" for="name">Prix de vente <span
-                                            class="text-danger">*</span></label>
-                                </div>
-                                <input type="number" class="form-control" [value]="product.prix_vente" [readOnly]="true" /> 
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="name">Prix de vente <span
+                                        class="text-danger">*</span></label>
                             </div>
+                            <input type="number" class="form-control" [value]="product.prix_vente" [readOnly]="true" />
+                        </div>
                         }
                     </div>
                     <div class="col-md-6">

@@ -62,6 +62,7 @@ export class StockCardComponent implements OnInit, AfterViewInit {
   pourcentQty = computed(() => (this.cmdLineQty() * 100) / this.stockQty());
   pourcentStockRestant = computed(() => 100 - (this.cmdLineQty() * 100 / this.stockQty()));
 
+  prixAchat = signal<number>(0);
   profitAttendu = signal<number>(0);  // marge beneficiaire
   profitObtenu = signal<number>(0);
   pourcentProfit = computed(() => (this.profitObtenu() * 100) / this.profitAttendu());
@@ -171,6 +172,7 @@ export class StockCardComponent implements OnInit, AfterViewInit {
           const mbObtenu = (this.product.prix_vente - r.data.prix_achat) * line.data;
           this.profitAttendu.set(mbAttendu);
           this.profitObtenu.set(mbObtenu);
+          this.prixAchat.set(r.data.prix_achat);
         }); 
       }); 
     });
