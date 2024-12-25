@@ -251,6 +251,7 @@ export class StockCardComponent implements OnInit, AfterViewInit {
 
 
   delete(): void {
+    this.isLoading = true;
     this.stockService.delete(this.idItem).subscribe(() => {
       this.formGroup.reset();
       this.toastr.info('Supprimé avec succès!', 'Success!');
