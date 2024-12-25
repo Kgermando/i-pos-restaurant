@@ -31,6 +31,7 @@ export class ProdItemComponent implements OnInit {
   stockDispo = computed(() => this.stockQty() - this.cmdLineQty());
   pourcentQty = computed(() => 100 - (this.cmdLineQty() * 100 / this.stockQty()));
 
+  
   constructor(
     private commaneLineService: CommandeLineService,
     private stocksService: StockService,

@@ -1,14 +1,10 @@
-import { Component, OnInit, signal } from '@angular/core'; 
+import { Component, OnInit } from '@angular/core'; 
 import { IUser } from '../../../auth/models/user';
 import { routes } from '../../../shared/routes/routes';
-import { IProduct } from '../../../models/product.model'; 
-import { ICommandeLine } from '../../../models/commande_line.model';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from '../../../auth/auth.service'; 
-import { CurrencyPipe } from '@angular/common';
-import { CommandeLineService } from '../commande-line.service';
-import { ProductService } from '../../products/product.service';
-import { ToastrService } from 'ngx-toastr';
+import { IProduct } from '../../../models/product.model';  
+import { Router } from '@angular/router';
+import { AuthService } from '../../../auth/auth.service';  
+import { ProductService } from '../../products/product.service'; 
 import { IdDataService } from '../id-data.service';
 
 
