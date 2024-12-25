@@ -26,10 +26,8 @@ import { CommandeLineService } from '../../commandes-lines/commande-line.service
 export class StockTableComponent implements OnInit, AfterViewInit {
   loadUserData = false;
   isLoadingData = false;
-  public routes = routes;
-  public sidebarPopup1 = false;
-  public sidebarPopup2 = false;
-
+  public routes = routes; 
+  
   // Table 
   dataList: IStock[] = [];
   totalItems: number = 0;
@@ -142,7 +140,6 @@ export class StockTableComponent implements OnInit, AfterViewInit {
     });
   }
  
-
   // Format de devise
   formatCurrency(price: number, currency: string): string {
     return this.currencyPipe.transform(price, currency, 'symbol', '1.2-2', 'fr-FR') || '';
@@ -219,7 +216,6 @@ export class StockTableComponent implements OnInit, AfterViewInit {
           pos_id: parseInt(this.currentUser.pos!.ID.toString()),
           code_entreprise: parseInt(this.currentUser.entreprise!.code.toString()),
         };
-        console.log("body", body)
         this.stockService.create(body).subscribe(res => {
           this.isLoading = false;
           this.formGroup.reset();
@@ -279,6 +275,7 @@ export class StockTableComponent implements OnInit, AfterViewInit {
 
 
   delete(): void {
+    this.isLoading = true;
     this.stockService.delete(this.idItem).subscribe(() => {
       this.formGroup.reset();
       this.toastr.info('Supprimé avec succès!', 'Success!');
