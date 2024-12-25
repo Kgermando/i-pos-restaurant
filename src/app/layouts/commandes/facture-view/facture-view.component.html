@@ -1,0 +1,118 @@
+@if (isLoading) {
+<div class=" text-center d-flex justify-content-center align-items-center ">
+    <div class="spinner-border bs-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+} @else {
+@if (currentUser && commande) {
+<!-- Page Wrapper -->
+<div class="page-wrapper">
+    <div class="content">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Page Header -->
+                <div class="page-header">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h4 class="page-title">
+                                Commandes
+                                <span class="count-title">#{{ commande.ncommande }}</span>
+                            </h4>
+                            <!-- <h6>Germain kataku</h6> -->
+                        </div>
+                        <div class="col-4 text-end">
+
+                        </div>
+                    </div>
+                </div>
+                <!-- /Page Header -->
+                @if (isLoading) {
+                <div class="spinner-border text-center d-flex justify-content-center align-items-center" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                } @else {
+                    <div class="row">
+                        <div class="card-body">
+                            <div class="invoice-container">
+                                <h4 class="mb-3 text-center"> {{ currentUser.entreprise?.name?.toUpperCase() }}
+                                </h4>
+                                <table class="invoice-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Designation</th>
+                                            <th>Qté</th>
+                                            <th>P.U.</th>
+                                            <th>TVA</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let item of commandeLineList">
+                                            <td>
+                                                {{ item.Product!.name }}
+                                            </td>
+                                            <td>{{ item.quantity }}
+                                                @if (item.quantity > 1) {
+                                                {{ item.Product!.unite_vente }}s
+                                                }@else {
+                                                {{ item.Product!.unite_vente }}
+                                                }
+                                            </td>
+                                            <td> {{ formatCurrency(item.Product!.prix_vente, currentUser.currency) }}
+                                            </td>
+                                            <td>
+                                                @if (item.Product!.tva === 16) {
+                                                {{ item.Product!.tva }}%
+                                                }@else {
+                                                -
+                                                }
+                                            </td>
+                                            <td>
+                                                {{ formatCurrency(item.quantity * item.Product!.prix_vente,
+                                                currentUser.currency) }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="4">Sous-total</td>
+                                            <td>{{ formatCurrency(subtotal, currentUser.currency) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4">TVA (16%)</td>
+                                            <td>{{ formatCurrency(tax, currentUser.currency) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4">Total</td>
+                                            <td style="font-weight: 800;">{{ formatCurrency(total,
+                                                currentUser.currency) }}</td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+            
+                                <div class="footer text-center">
+                                    <p>Merci de votre confiance !</p>
+                                    <p>
+                                        RCCM: {{ currentUser.entreprise?.rccm }} ID Nat: {{
+                                        currentUser.entreprise?.idnat }} <br>
+                                        Telephone: {{ currentUser.entreprise?.telephone }} <br>
+                                        Email: {{ currentUser.entreprise?.email }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Page Wrapper -->
+
+
+
+}
+}

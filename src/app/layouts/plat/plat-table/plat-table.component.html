@@ -1,0 +1,438 @@
+<!-- Page Wrapper -->
+<div class="page-wrapper">
+    <div class="content">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Page Header -->
+                <div class="page-header">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h4 class="page-title">
+                                Plats <span class="count-title">{{ length }}</span>
+                            </h4>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <div class="head-icons">
+                                <app-reload></app-reload>
+                                <app-collapse-header></app-collapse-header>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /Page Header -->
+                @if (loadUserData) {
+                <div class="spinner-border text-center d-flex justify-content-center align-items-center" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                }@else {
+                @if (currentUser) {
+                <div class="card">
+                    <div class="card-header">
+                        <!-- Search -->
+                        <div class="row align-items-center">
+                            <div class="col-sm-4">
+                                <div class="icon-form mb-3 mb-sm-0">
+                                    <span class="form-icon"><i class="ti ti-search"></i></span>
+                                    <input type="text" #input [(ngModel)]="search"
+                                        (ngModelChange)="onSearchChange($event)" class="form-control"
+                                        placeholder="Ex. reference ou name" />
+                                </div>
+                            </div>
+                            <div class="col-sm-8">
+                                <div class="d-flex align-items-center flex-wrap row-gap-2 justify-content-sm-end">
+                                    <div class="dropdown me-2">
+                                        <a href="javascript:void(0);" class="dropdown-toggle"
+                                            data-bs-toggle="dropdown"><i
+                                                class="ti ti-package-export me-2"></i>Export</a>
+                                        <div class="dropdown-menu dropdown-menu-end">
+                                            <ul>
+                                                <li>
+                                                    <a href="javascript:void(0);" class="dropdown-item"><i
+                                                            class="ti ti-file-type-pdf text-danger me-1"></i>Export as
+                                                        PDF</a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript:void(0);" class="dropdown-item"><i
+                                                            class="ti ti-file-type-xls text-green me-1"></i>Export as
+                                                        Excel
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    @if(currentUser.permission === 'ALL' ||
+                                    currentUser.permission === 'AM' ||
+                                    currentUser.permission === 'A') {
+                                    <a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="offcanvas"
+                                        data-bs-target="#offcanvas_add"><i
+                                            class="ti ti-square-rounded-plus me-2"></i>Ajouter un plat</a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /Search -->
+                    </div>
+                    <div class="card-body">
+
+                        <div class="table-responsive custom-table">
+                            <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)"
+                                class="mat-elevation-z2 table tasks-activity tasks ">
+
+                                <!-- reference Column -->
+                                <ng-container matColumnDef="reference">
+                                    <th mat-header-cell *matHeaderCellDef> N˚ Reference </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <a [routerLink]="['/web/products', element.ID, 'stocks' ]">
+                                            #{{element.reference}}
+                                        </a>
+                                    </td>
+                                </ng-container>
+
+                                <!-- name Column -->
+                                <ng-container matColumnDef="name">
+                                    <th mat-header-cell *matHeaderCellDef> Nom </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <a [routerLink]="['/web/products', element.ID, 'stocks' ]">
+                                            {{ element.name }}
+                                        </a>
+                                    </td>
+                                </ng-container>
+
+                                <!-- prix_vente Column -->
+                                <ng-container matColumnDef="prix_vente">
+                                    <th mat-header-cell *matHeaderCellDef> Prix de vente </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <a [routerLink]="['/web/products', element.ID, 'stocks' ]">
+                                            {{ formatCurrency(element.prix_vente, currentUser.currency) }}
+                                        </a>
+                                    </td>
+                                </ng-container>
+
+                                <!-- tva Column -->
+                                <ng-container matColumnDef="tva">
+                                    <th mat-header-cell *matHeaderCellDef> TVA </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <a [routerLink]="['/web/products', element.ID, 'stocks' ]">
+                                            @if (element.tva === 16) {
+                                            {{element.tva}}%
+                                            } @else {
+                                            -
+                                            }
+                                        </a>
+                                    </td>
+                                </ng-container>
+
+                                <!-- description Column -->
+                                <ng-container matColumnDef="description">
+                                    <th mat-header-cell *matHeaderCellDef> Description </th>
+                                    <td mat-cell *matCellDef="let element"> {{ element.description }} </td>
+                                </ng-container>
+
+                                <!-- id Column -->
+                                <ng-container matColumnDef="id">
+                                    <th mat-header-cell *matHeaderCellDef> Action </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        @if(currentUser.permission === 'ALL' ||
+                                        currentUser.permission === 'AM' ||
+                                        currentUser.permission === 'MS' ||
+                                        currentUser.permission === 'M') {
+                                        <button mat-icon-button (click)="findValue(element.ID)"
+                                            data-bs-toggle="offcanvas" data-bs-target="#offcanvas_edit">
+                                            <mat-icon class="text-blue">edit</mat-icon>
+                                        </button>
+                                        }
+                                        @if(currentUser.permission === 'ALL' ||
+                                        currentUser.permission === 'MS') {
+                                        <button mat-icon-button (click)="findValue(element.ID)" data-bs-toggle="modal"
+                                            data-bs-target="#delete_contact">
+                                            <mat-icon class="text-danger">delete</mat-icon>
+                                        </button>
+                                        }
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                                <!-- Row shown when there is no matching data. -->
+                                <tr class="mat-row" *matNoDataRow>
+                                    @if (isLoadingData || isLoading){
+                                    <button disabled class="btn btn-primary">
+                                        <div class="spinner-border" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </button>
+                                    } @else {
+                                    <td class="mat-cell" colspan="4">Aucune donnée correspondant au filtre
+                                        "{{input.value}}"</td>
+                                    }
+                                </tr>
+                            </table>
+                        </div>
+                        <mat-paginator [length]="length" [pageSize]="pageSize"
+                            [pageSizeOptions]="[15, 20, 30, 40, 50, 80, 100]" showFirstLastButtons
+                            (page)="onPageChange($event)" aria-label="Select page">
+                        </mat-paginator>
+                        <!-- /Manage data List -->
+                    </div>
+                </div>
+                }
+                }
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Page Wrapper -->
+
+<!-- Add data form -->
+<div class="offcanvas offcanvas-end offcanvas-large" tabindex="-1" id="offcanvas_add">
+    <div class="offcanvas-header border-bottom">
+        <h5 class="fw-semibold">Ajouter Nouveau PLat </h5>
+        <button type="button"
+            class="btn-close custom-btn-close border p-1 me-0 d-flex align-items-center justify-content-center rounded-circle"
+            data-bs-dismiss="offcanvas" aria-label="Close">
+            <i class="ti ti-x"></i>
+        </button>
+    </div>
+    <div class="offcanvas-body">
+        <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+            <div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="reference">Reference
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                    <button class="btn btn-outline-primary" type="button" data-bs-target="#scanner"
+                                        (click)="onReferenceScanner()">Scanner</button>
+                                    <button class="btn btn-outline-primary" type="button"
+                                        (click)="onReferenceGenCode()">Generer code</button>
+                                    <button class="btn btn-outline-primary" type="button"
+                                        (click)="onReferenceReset()">Vider</button>
+                                </div>
+                            </div>
+                            <input type="text" class="form-control" [value]="reference" readonly required />
+                            @if (isScan) {
+                            <zxing-scanner #scanner [formats]="formats" (scanSuccess)="processCode($event)"
+                                [device]="currentDevice"></zxing-scanner>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="name">Nom <span class="text-danger">*</span></label>
+                            </div>
+                            <input type="text" class="form-control" formControlName="name" required />
+                            <mat-error *ngIf="formGroup.controls['name'].hasError('required')">
+                                Ce champs est obligatoire
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="description">Description <span
+                                        class="text-danger">*</span></label>
+                            </div>
+                            <input type="text" class="form-control" formControlName="description" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="col-form-label" for="unite_vente">
+                                Unite de vente
+                                <span class="text-danger">*</span>
+                            </label>
+                            <mat-select class="select custom-mat-select" formControlName="unite_vente"
+                                placeholder="Choose unite_vente">
+                                @for (item of uniteVenteList; track item) {
+                                <mat-option value="{{item}}">{{item}}</mat-option>
+                                }
+                            </mat-select>
+                            <mat-error *ngIf="formGroup.controls['unite_vente'].hasError('required')">
+                                Ce champs est obligatoire
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="name">Prix de vente <span
+                                        class="text-danger">*</span></label>
+                            </div>
+                            <input type="number" class="form-control" formControlName="prix_vente" required />
+                            <mat-error *ngIf="formGroup.controls['prix_vente'].hasError('required')">
+                                Ce champs est obligatoire
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="name">TVA <span class="text-danger">*</span></label>
+                            </div>
+                            <input type="number" class="form-control" formControlName="tva" required />
+                            <mat-error *ngIf="formGroup.controls['tva'].hasError('required')">
+                                Ce champs est obligatoire
+                            </mat-error>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-end">
+                <a href="javascript:void(0);" class="btn btn-light me-2" data-bs-dismiss="offcanvas">Cancel</a>
+                @if (isLoading) {
+                <button disabled class="btn btn-primary">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </button>
+                }
+                @if (!isLoading) {
+                <button type="submit" class="btn btn-primary" id="myOffcanvas" data-bs-dismiss="offcanvas"
+                    data-bs-target="#create_success">Create</button>
+                }
+            </div>
+        </form>
+    </div>
+</div>
+<!-- /Add data form -->
+
+<!-- Edit data form -->
+<div class="offcanvas offcanvas-end offcanvas-large" tabindex="-1" id="offcanvas_edit">
+
+    <div class="offcanvas-header border-bottom">
+        <h4>Modification du produit</h4>
+        <button type="button"
+            class="btn-close custom-btn-close border p-1 me-0 d-flex align-items-center justify-content-center rounded-circle"
+            data-bs-dismiss="offcanvas" aria-label="Close">
+            <i class="ti ti-x"></i>
+        </button>
+    </div>
+    <div class="offcanvas-body">
+        <form [formGroup]="formGroup" (ngSubmit)="onSubmitUpdate()">
+            <div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="reference">Code Reference
+                                    <span class="text-danger">*</span>
+                                </label>
+                            </div>
+                            <input type="text" class="form-control" [value]="reference" readonly required />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="name">Nom <span class="text-danger">*</span></label>
+                            </div>
+                            <input type="text" class="form-control" formControlName="name" required />
+                            <mat-error *ngIf="formGroup.controls['name'].hasError('required')">
+                                Ce champs est obligatoire
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="name">Prix de vente <span
+                                        class="text-danger">*</span></label>
+                            </div>
+                            <input type="number" class="form-control" formControlName="prix_vente" required />
+                            <mat-error *ngIf="formGroup.controls['prix_vente'].hasError('required')">
+                                Ce champs est obligatoire
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="col-form-label" for="unite_vente">
+                                Unite de vente
+                                <span class="text-danger">*</span>
+                            </label>
+                            <mat-select class="select custom-mat-select" formControlName="unite_vente"
+                                placeholder="Choose unite_vente">
+                                @for (item of uniteVenteList; track item) {
+                                <mat-option value="{{item}}">{{item}}</mat-option>
+                                }
+                            </mat-select>
+                            <mat-error *ngIf="formGroup.controls['unite_vente'].hasError('required')">
+                                Ce champs est obligatoire
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="name">TVA <span class="text-danger">*</span></label>
+                            </div>
+                            <input type="number" class="form-control" formControlName="tva" required />
+                            <mat-error *ngIf="formGroup.controls['tva'].hasError('required')">
+                                Ce champs est obligatoire
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="description">Description <span
+                                        class="text-danger">*</span></label>
+                            </div>
+                            <input type="text" class="form-control" formControlName="description" required />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-end">
+                <button type="button" data-bs-dismiss="offcanvas" class="btn btn-light me-2">Cancel</button>
+                @if (isLoading) {
+                <button disabled class="btn btn-primary">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </button>
+                }
+                @if (!isLoading) {
+                <button type="submit" class="btn btn-primary" data-bs-dismiss="offcanvas"
+                    data-bs-target="#create_success">
+                    Save Changes
+                </button>
+                }
+            </div>
+        </form>
+    </div>
+
+</div>
+<!-- /Edit data form -->
+
+<!-- Delete data item -->
+<div class="modal fade" id="delete_contact" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="text-center">
+                    <div class="avatar avatar-xl bg-danger-light rounded-circle mb-3">
+                        <i class="ti ti-trash-x fs-36 text-danger"></i>
+                    </div>
+                    <h4 class="mb-2">Supprimer cet l'élément ?</h4>
+                    <p class="mb-0">Êtes-vous sûr de vouloir le supprimer ?</p>
+                    <div class="d-flex align-items-center justify-content-center mt-4">
+                        <a href="javascript:void(0);" class="btn btn-light me-2" data-bs-dismiss="modal">Annuler</a>
+                        <button (click)="delete()" class="btn btn-danger" data-bs-dismiss="modal">
+                            Oui, supprimez-le
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Delete data item -->

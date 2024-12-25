@@ -1,0 +1,75 @@
+@if (loadUserData) {
+    <div class="text-center d-flex justify-content-center align-items-center">
+        <div class="spinner-border bs-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+    }@else {
+    @if (isLoadingData) {
+    <div class="text-center d-flex justify-content-center align-items-center">
+        <div class="spinner-border bs-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+    } @else {
+    @if (currentUser) {
+    <!-- Card -->
+    <div class="card">
+        <div class="card-header">
+            <!-- Search -->
+            <div class="row align-items-center">
+                <div class="col-sm-12">
+                    <div class="icon-form mb-3 mb-sm-0">
+                        <span class="form-icon"><i class="ti ti-search"></i></span>
+                        <input type="text" #input [(ngModel)]="search" (ngModelChange)="onSearchChange($event)"
+                            class="form-control" placeholder="Search Contacts">
+                    </div>
+                </div>
+            </div>
+            <!-- /Search -->
+        </div>
+        <div class="card-body">
+      
+            <div class="row">
+                @for (item of dataList; track item.ID) {
+                    <div class="col-xxl-3 col-xl-4 col-md-6">
+                        <div class="card border">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center justify-content-between mb-3">
+                                    <div class="d-flex align-items-center">
+                                        <div>
+                                            <h6>{{ item.name }}</h6>
+                                            <p class="text-default">#{{ item.reference }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown table-action">
+                                        
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
+                                    <app-cmd-qty-input [quantity]="quantity()"
+                                        (quantityChange)="onQuantityChange(item, $event)"></app-cmd-qty-input>
+                                    @if (isLoading) {
+                                    <div class="spinner-border" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    } @else {
+                                    <button class="btn btn-primary" (click)="onSubmit(item)">
+                                        <i class="ti ti-shopping-cart me-2"></i>
+                                        Add
+                                    </button>
+                                    }
+    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+    
+            </div> 
+        </div>
+    </div>
+    <!-- /Card -->
+    }
+    }
+    }

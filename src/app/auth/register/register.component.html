@@ -1,0 +1,123 @@
+<div class="account-content">
+    <div class="d-flex flex-wrap w-100 vh-100 overflow-hidden account-bg-01">
+        <div
+            class="d-flex align-items-center justify-content-center flex-wrap vh-100 overflow-auto p-4 w-50 bg-backdrop">
+            <form [formGroup]="formGroup" (ngSubmit)="onSubmit()" class="flex-fill">
+                <div class="mx-auto mw-450">
+                    <div class="text-center mb-4">
+                        <img src="img/logo.png" class="img-fluid" alt="Logo">
+                    </div>
+                    <div class="mb-4">
+                        <h4 class="mb-2 fs-20">Création du compte</h4>
+                        <p class="text-justify">
+                            Application de gestion de stocks, conçue pour simplifier votre
+                            quotidien.
+                            Gagnez du temps en augmentant votre productivite.
+                            Atteignez vos objectifs plus rapidement en ayant le controle de vos donnees.
+                        </p>
+                    </div>
+                    <div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label class="col-form-label" for="location">Type entreprise <span
+                                            class="text-danger">*</span></label>
+                                    <mat-select class="select custom-mat-select" placeholder="Choose Type entreprise"
+                                        formControlName="type_entreprise" required>
+                                        @for (item of typeEntrepriseList; track item) {
+                                            <mat-option value="{{item}}">{{item}}</mat-option>
+                                        }
+                                    </mat-select>
+                                    <mat-error *ngIf="formGroup.controls['type_entreprise'].hasError('required')">
+                                        Ce champs est obligatoire
+                                    </mat-error>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <label class="col-form-label" for="name">Nom de l'entreprise <span
+                                                class="text-danger">*</span></label>
+                                    </div>
+                                    <input type="text" class="form-control" formControlName="name" required />
+                                    <mat-error *ngIf="formGroup.controls['name'].hasError('required')">
+                                        Ce champs est obligatoire
+                                    </mat-error>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <label class="col-form-label" for="rccm">RCCM <span class="text-danger">*</span></label>
+                                    </div>
+                                    <input type="text" class="form-control" formControlName="rccm" required />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <label class="col-form-label" for="idnat">Id nat. <span
+                                                class="text-danger">*</span></label>
+                                    </div>
+                                    <input type="text" class="form-control" formControlName="idnat" required />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <label class="col-form-label" for="email">Email <span
+                                                class="text-danger">*</span></label>
+                                    </div>
+                                    <input type="email" class="form-control" formControlName="email" required />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="col-form-label" for="telephone">Telephone
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" class="form-control" formControlName="telephone" required />
+                                    <mat-error *ngIf="formGroup.controls['telephone'].hasError('required')">
+                                        Ce champs est obligatoire
+                                    </mat-error>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="col-form-label" for="manager">Manager général
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" class="form-control" formControlName="manager" required />
+                                    <mat-error *ngIf="formGroup.controls['manager'].hasError('required')">
+                                        Ce champs est obligatoire
+                                    </mat-error>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        @if (isLoading) {
+                            <button disabled class="btn btn-primary w-100">
+                                <div class="spinner-border" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </button>
+                        }
+                       @if (!isLoading) {
+                        <button type="submit" class="btn btn-primary w-100">Soumettre la creation du compte</button>
+                       } 
+                    </div>
+                    <div class="mb-3">
+                        <h6>Avez-vous deja un compte ?
+                            <a [routerLink]="routes.login" class="text-purple link-hover"> 
+                            Connectez-vous ici.</a>.
+                        </h6>
+                    </div>
+                    <div class="text-center">
+                        <p class="fw-medium text-gray">Copyright &copy; {{ dateY }} </p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

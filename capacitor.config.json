@@ -1,0 +1,13 @@
+{
+  "appId": "com.ictech.iposrestaurant",
+  "appName": "IPosRestaurant",
+  "bundledWebRuntime": false,
+  "webDir": "dist/i-pos-restaurant",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  },
+  "linuxAndroidStudioPath": "/path/to/android-studio",
+  "windowsAndroidStudioPath": "C:\\Path\\To\\Android-Studio"
+}

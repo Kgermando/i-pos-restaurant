@@ -1,0 +1,8 @@
+<div class="progress-container">
+  <div class="progress-bar" [style.width.%]="progress" [ngClass]="{
+    'bg-danger': +progress.toFixed(2) < 30,
+    'bg-warning': +progress.toFixed(2) >= 30 && +progress.toFixed(2) < 70,
+    'bg-success': +progress.toFixed(2) >= 70
+  }"></div>
+</div>
+<p>Taux de Stock disponible: {{ progress.toFixed(2) }}%</p>

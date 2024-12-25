@@ -1,0 +1,366 @@
+<!-- Page Wrapper -->
+<div class="page-wrapper">
+    <div class="content">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Page Header -->
+                <div class="page-header">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h4 class="page-title">
+                                Tables <span class="count-title">{{ length }}</span>
+                            </h4>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <div class="head-icons">
+                                <app-reload></app-reload>
+                                <app-collapse-header></app-collapse-header>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /Page Header -->
+                @if (loadUserData) {
+                <div class="spinner-border text-center d-flex justify-content-center align-items-center" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                }@else {
+                @if (currentUser) {
+                <div class="card">
+                    <div class="card-header">
+                        <!-- Search -->
+                        <div class="row align-items-center">
+                            <div class="col-sm-4">
+                                <div class="icon-form mb-3 mb-sm-0">
+                                    <span class="form-icon"><i class="ti ti-search"></i></span>
+                                    <input type="text" #input [(ngModel)]="search"
+                                        (ngModelChange)="onSearchChange($event)" class="form-control"
+                                        placeholder="Ex. numero ou nom" />
+                                </div>
+                            </div>
+                            <div class="col-sm-8">
+                                <div class="d-flex align-items-center flex-wrap row-gap-2 justify-content-sm-end">
+                                    <div class="dropdown me-2">
+                                        <a href="javascript:void(0);" class="dropdown-toggle"
+                                            data-bs-toggle="dropdown"><i
+                                                class="ti ti-package-export me-2"></i>Export</a>
+                                        <div class="dropdown-menu dropdown-menu-end">
+                                            <ul>
+                                                <li>
+                                                    <a href="javascript:void(0);" class="dropdown-item"><i
+                                                            class="ti ti-file-type-pdf text-danger me-1"></i>Export as
+                                                        PDF</a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript:void(0);" class="dropdown-item"><i
+                                                            class="ti ti-file-type-xls text-green me-1"></i>Export as
+                                                        Excel
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    @if(currentUser.permission === 'ALL' ||
+                                    currentUser.permission === 'AM' ||
+                                    currentUser.permission === 'A') {
+                                    <a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="offcanvas"
+                                        data-bs-target="#offcanvas_add">
+                                        <i class="ti ti-square-rounded-plus me-2"></i>
+                                        Ajouter une table
+                                    </a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /Search -->
+                    </div>
+                    <div class="card-body">
+
+                        <!-- Company Grid -->
+                        <div class="row">
+                            @for (item of dataList; track item.ID) {
+                            <div class="col-xxl-3 col-xl-4 col-md-6">
+                                <div class="card border">
+                                    @if (isLoading) {
+                                        <div class="spinner-border text-center d-flex justify-content-center align-items-center" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    }@else {
+                                        <div class="card-body">
+                                            <div
+                                                class="d-flex align-items-center justify-content-between flex-wrap row-gap-2 mb-3">
+                                                <div class="d-flex align-items-center">
+                                                    <a [routerLink]="['/web/table-box/commandes', item.ID, 'table-view']"
+                                                        class="avatar avatar-lg border rounded flex-shrink-0 me-2">
+                                                        <img src="img/table.png"
+                                                            class="w-auto h-auto" alt="img" />
+                                                    </a>
+                                                    <div>
+                                                        <h6>
+                                                            <a [routerLink]="['/web/table-box/commandes', item.ID, 'table-view']"
+                                                                class="fw-medium">
+                                                                {{ item.name }}
+                                                            </a>
+                                                        </h6>
+                                                        <div class="set-star text-default">
+                                                            <i class="fa fa-star filled me-1"></i> 
+                                                            {{ item.numero }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="dropdown table-action">
+                                                    <a href="javascript:void(0);" class="action-icon"
+                                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <i class="fa fa-ellipsis-v"></i>
+                                                    </a>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <a class="dropdown-item" href="javascript:void(0);"
+                                                            data-bs-toggle="offcanvas" data-bs-target="#offcanvas_edit"
+                                                            (click)="findValue(item.ID!)">
+                                                            <i class="ti ti-edit text-blue"></i> Edit</a>
+                                                        <a class="dropdown-item" href="javascript:void(0);"
+                                                            data-bs-toggle="modal" data-bs-target="#delete_contact"
+                                                            (click)="findValue(item.ID!)">
+                                                            <i class="ti ti-trash text-danger"></i> Delete</a>
+                                                        <!-- <a class="dropdown-item" [routerLink]="routes.tableBoxList"><i
+                                                                    class="ti ti-eye text-blue-light"></i>
+                                                                Preview</a> -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="d-block"> 
+                                                <div class="d-flex align-items-center">
+                                                    @if (item.status == 'Libre') {
+                                                    <span class="badge badge-tag badge-success-light me-2">Libre</span>
+                                                    } @else if(item.status == 'Occuper') {
+                                                    <span class="badge badge-tag badge-danger-light me-2">Occuper</span>
+                                                    } @else if(item.status == 'Reserver') {
+                                                    <span class="badge badge-tag badge-warning-light">Reserver</span>
+                                                    }
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="d-flex justify-content-between align-items-center flex-wrap row-gap-2 border-top pt-3 mt-3">
+                                                <!-- <div class="avatar-list-stacked avatar-group-xs">
+                                                    <span class="avatar border-0">
+                                                        <img src="assets/img/profiles/avatar-01.jpg" class="rounded-circle"
+                                                            alt="img" />
+                                                    </span>
+                                                    <span class="avatar border-0">
+                                                        <img src="assets/img/profiles/avatar-02.jpg" class="rounded-circle"
+                                                            alt="img" />
+                                                    </span>
+                                                    <span class="avatar border-0">
+                                                        <img src="assets/img/profiles/avatar-03.jpg" class="rounded-circle"
+                                                            alt="img" />
+                                                    </span>
+                                                    <span class="avatar border-0">
+                                                        <img src="assets/img/profiles/avatar-04.jpg" class="rounded-circle"
+                                                            alt="img" />
+                                                    </span>
+                                                </div> -->
+                                                <!-- <div class="d-flex align-items-center grid-social-links">
+                                                    <a href="javascript:void(0);"
+                                                        class="avatar avatar-xs text-dark rounded-circle me-1"><i
+                                                            class="ti ti-mail fs-14"></i></a>
+                                                    <a href="javascript:void(0);"
+                                                        class="avatar avatar-xs text-dark rounded-circle me-1"><i
+                                                            class="ti ti-phone-check fs-14"></i></a>
+                                                    <a href="javascript:void(0);"
+                                                        class="avatar avatar-xs text-dark rounded-circle me-1"><i
+                                                            class="ti ti-message-circle-share fs-14"></i></a>
+                                                    <a href="javascript:void(0);"
+                                                        class="avatar avatar-xs text-dark rounded-circle me-1"><i
+                                                            class="ti ti-brand-skype fs-14"></i></a>
+                                                    <a href="javascript:void(0);"
+                                                        class="avatar avatar-xs text-dark rounded-circle"><i
+                                                            class="ti ti-brand-facebook fs-14"></i></a>
+                                                </div> -->
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            }
+
+                        </div>
+                        <!-- /Company Grid -->
+
+                    </div>
+                </div>
+                }
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Page Wrapper -->
+
+<!-- Add Company -->
+<div class="offcanvas offcanvas-end offcanvas-large" tabindex="-1" id="offcanvas_add">
+    <div class="offcanvas-header border-bottom">
+        <h5 class="fw-semibold">Ajouter une table</h5>
+        <button type="button"
+            class="btn-close custom-btn-close border p-1 me-0 d-flex align-items-center justify-content-center rounded-circle"
+            data-bs-dismiss="offcanvas" aria-label="Close">
+            <i class="ti ti-x"></i>
+        </button>
+    </div>
+    <div class="offcanvas-body">
+        <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+            <div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="name">Nom <span class="text-danger">*</span></label>
+                            </div>
+                            <input type="text" class="form-control" formControlName="name" required />
+                            <mat-error *ngIf="formGroup.controls['name'].hasError('required')">
+                                Ce champs est obligatoire
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="numero">Numéro <span
+                                        class="text-danger">*</span></label>
+                            </div>
+                            <input type="numero" class="form-control" formControlName="numero" required />
+                        </div>
+                    </div>
+                    <!-- <div class="col-md-12">
+                        <div class="mb-3">
+                            <label class="col-form-label" for="status">
+                                Status
+                                <span class="text-danger">*</span>
+                            </label>
+                            <mat-select class="select custom-mat-select" formControlName="status"
+                                placeholder="Choose Status">
+                                @for (status of statusList; track status) {
+                                <mat-option value="{{status}}">{{status}}</mat-option>
+                                }
+                            </mat-select>
+                            <mat-error *ngIf="formGroup.controls['status'].hasError('required')">
+                                Ce champs est obligatoire
+                            </mat-error>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-end">
+                <a href="javascript:void(0);" class="btn btn-light me-2" data-bs-dismiss="offcanvas">Annuler</a>
+                @if (isLoading) {
+                <button disabled class="btn btn-primary">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </button>
+                }
+                @if (!isLoading) {
+                <button type="submit" class="btn btn-primary" id="myOffcanvas" data-bs-dismiss="offcanvas"
+                    data-bs-target="#create_success">Soumettre</button>
+                }
+            </div>
+        </form>
+    </div>
+</div>
+<!-- /Add Company -->
+
+<!-- Edit Company -->
+<div class="offcanvas offcanvas-end offcanvas-large" tabindex="-1" id="offcanvas_edit">
+    <div class="offcanvas-header border-bottom">
+        <h5 class="fw-semibold">Modifier la table</h5>
+        <button type="button"
+            class="btn-close custom-btn-close border p-1 me-0 d-flex align-items-center justify-content-center rounded-circle"
+            data-bs-dismiss="offcanvas" aria-label="Close">
+            <i class="ti ti-x"></i>
+        </button>
+    </div>
+    <div class="offcanvas-body">
+        <form [formGroup]="formGroup" (ngSubmit)="onSubmitUpdate()">
+            <div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="name">Nom <span class="text-danger">*</span></label>
+                            </div>
+                            <input type="text" class="form-control" formControlName="name" required />
+                            <mat-error *ngIf="formGroup.controls['name'].hasError('required')">
+                                Ce champs est obligatoire
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="numero">Numéro <span
+                                        class="text-danger">*</span></label>
+                            </div>
+                            <input type="text" class="form-control" formControlName="numero" required />
+                        </div>
+                    </div>
+                    <!-- <div class="col-md-12">
+                        <div class="mb-3">
+                            <label class="col-form-label" for="status">
+                                Status
+                                <span class="text-danger">*</span>
+                            </label>
+                            <mat-select class="select custom-mat-select" formControlName="status"
+                                placeholder="Choose Status">
+                                @for (status of statusList; track status) {
+                                <mat-option value="{{status}}">{{status}}</mat-option>
+                                }
+                            </mat-select>
+                            <mat-error *ngIf="formGroup.controls['status'].hasError('required')">
+                                Ce champs est obligatoire
+                            </mat-error>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-end">
+                <a href="javascript:void(0);" class="btn btn-light me-2" data-bs-dismiss="offcanvas">Annuler</a>
+                @if (isLoading) {
+                <button disabled class="btn btn-primary">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </button>
+                }
+                @if (!isLoading) {
+                <button type="submit" class="btn btn-primary" id="myOffcanvas" data-bs-dismiss="offcanvas"
+                    data-bs-target="#create_success">Soumettre</button>
+                }
+            </div>
+        </form>
+    </div>
+</div>
+<!-- /Edit Company -->
+
+<!-- Delete data item -->
+<div class="modal fade" id="delete_contact" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="text-center">
+                    <div class="avatar avatar-xl bg-danger-light rounded-circle mb-3">
+                        <i class="ti ti-trash-x fs-36 text-danger"></i>
+                    </div>
+                    <h4 class="mb-2">Supprimer cet l'élément ?</h4>
+                    <p class="mb-0">Êtes-vous sûr de vouloir le supprimer ?</p>
+                    <div class="d-flex align-items-center justify-content-center mt-4">
+                        <a href="javascript:void(0);" class="btn btn-light me-2" data-bs-dismiss="modal">Annuler</a>
+                        <button (click)="delete()" class="btn btn-danger" data-bs-dismiss="modal">
+                            Oui, supprimez-le
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Delete data item -->

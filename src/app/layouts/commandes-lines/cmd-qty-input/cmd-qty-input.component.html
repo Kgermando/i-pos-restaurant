@@ -1,0 +1,9 @@
+<div class="quantity-input">
+    <button (click)="decrement()" [disabled]="quantity <= 0">
+        <span class="material-symbols-outlined">-</span>
+    </button>
+    <input type="number" [(ngModel)]="quantity" (input)="onInputChange()" />
+    <button (click)="increment()">
+        <span class="material-symbols-outlined">+</span>
+    </button>
+</div>

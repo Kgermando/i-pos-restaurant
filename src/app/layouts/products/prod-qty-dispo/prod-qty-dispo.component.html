@@ -1,0 +1,29 @@
+{{ qtyDispo() }} @if (qtyDispo() > 1) {
+{{item.unite_vente}}s
+}@else {
+{{item.unite_vente}}
+}
+|
+@if (pourcentQty()) {
+    @if (pourcentQty() >= 70) {
+        <span style="color: green; font-weight: 800;">
+            {{ pourcentQty().toFixed(2) }}%
+        </span>
+        }@else if(pourcentQty() < 70 && pourcentQty()>= 30) {
+            <span style="color: rgb(0, 110, 255); font-weight: 800;">
+                {{ pourcentQty().toFixed(2) }}%
+            </span>
+            }@else if(pourcentQty() < 30 && pourcentQty()>= 15) {
+                <span style="color: orange; font-weight: 800;">
+                    {{ pourcentQty().toFixed(2) }}%
+                </span>
+                }@else if(pourcentQty() < 15) { <span style="color: red; font-weight: 800;">
+                    {{ pourcentQty().toFixed(2) }}%
+                    </span>
+                    }
+        
+}@else {
+    <span style="color: red; font-weight: 800;">
+        0%
+    </span>
+}

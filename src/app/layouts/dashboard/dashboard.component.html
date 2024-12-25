@@ -1,0 +1,330 @@
+<!-- Page Wrapper -->
+<div class="page-wrapper">
+  <div class="content">
+    <div class="row">
+      <div class="col-md-12">
+
+        @if (loadUserData) {
+        <div class="spinner-border text-center d-flex justify-content-center align-items-center" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        }@else {
+        @if (currentUser) {
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="row align-items-center">
+            <div class="col-4">
+              <h4 class="page-title">
+                Dashboard
+              </h4>
+            </div>
+            <div class="col-8 text-end">
+              <form [formGroup]="dateRange">
+                <div class="d-flex title-head">
+                  <div class="daterange-picker d-flex align-items-center justify-content-center">
+                    <!-- <div class="card mb-0 mr-5">
+                      @if (load) {
+                      <div class=" text-center d-flex justify-content-center align-items-center ">
+                        <div class="spinner-border bs-primary" role="status">
+                          <span class="visually-hidden">Loading...</span>
+                        </div>
+                      </div>
+                      } @else {
+                      <mat-select class="select custom-mat-select" placeholder="Select le point de vente"
+                        formControlName="pos">
+                        @for (item of posDropdownList; track item) {
+                        <mat-option value="ALL">Tous</mat-option>
+                        <mat-option [value]="item">{{item.name}}</mat-option>
+                        }
+                      </mat-select>
+                      }
+                    </div> -->
+                    <div class="form-sort me-2">
+                      <i class="ti ti-calendar"></i>
+                      <input type="text" class="form-control date-range bookingrange" bsDaterangepicker
+                        [bsConfig]="{ adaptivePosition: true }" formControlName="rangeValue" />
+                    </div>
+                    <div class="head-icons mb-0">
+                      <app-reload></app-reload>
+                      <app-collapse-header></app-collapse-header>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <!-- /Page Header -->
+
+
+        <!-- Campaign Status -->
+        <app-summary [isLoading]="isLoading" [currentUser]="currentUser" [TotalProductStock]="TotalProductStock"
+          [TotalProfitDispos]="TotalProfitDispos" [TotalProfitSorties]="TotalProfitSorties"
+          [TatalValeurProducts]="TatalValeurProducts"></app-summary>
+        <!-- /Campaign Status -->
+
+        <div class="card shadow flex-fill">
+          @if (isLoading) {
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+          </div>
+          }@else {
+            <div class="card-header d-flex justify-content-between align-items-center flex-wrap row-gap-2">
+              <h4>Ventes journalières</h4>
+            </div>
+            <div class="card-body">
+              <h3>{{ formatCurrency(totalVente24h, currentUser.currency) }}</h3>
+              <div id="contact-report">
+                <apx-chart [series]="chartOptions4?.series" [chart]="chartOptions4?.chart" [xaxis]="chartOptions4?.xaxis"
+                  [dataLabels]="chartOptions4?.dataLabels" [grid]="chartOptions4?.grid" [stroke]="chartOptions4?.stroke"
+                  [title]="chartOptions4?.title" [colors]="chartOptions4?.colors"></apx-chart>
+              </div>
+            </div>
+          } 
+        </div>
+
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">Stocks disponibles</div>
+              </div>
+              <div class="card-body">
+                @if (dataStockDisponibles) {
+                <div class="chartjs-wrapper-demo">
+                  <div class="chart-container">
+                    <canvas id="doughcharts" class="h-300"></canvas>
+                  </div>
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">Stocks disponibles </div>
+              </div>
+              <div class="card-body">
+                <div>
+                  @if (dataStockDisponibles) {
+                  <div class="chart-container">
+                    <canvas id="pieschart" class="h-300"></canvas>
+                  </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chart -->
+        <div class="row">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title"><i class="ti ti-grip-vertical me-1"></i>Mouvements des entrées et sorties</div>
+              </div>
+              <div class="card-body">
+                @if (dataEntreSortiePie) {
+                <div class="chartjs-wrapper-demo">
+                  <div class="chart-container">
+                    <canvas id="stackcharts" class="h-500"></canvas>
+                  </div>
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">Courbe des ventes et profits réalisés</div>
+              </div>
+              <div class="card-body">
+                @if (dataSaleProfits) {
+                  <div class="chartjs-wrapper-demo">
+                    <div class="chart-container">
+                      <canvas id="MyChart" class="h-300"></canvas>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 d-flex">
+            <div class="card flex-fill">
+              <div class="card flex-fill">
+                <div class="card-header border-0 pb-0">
+                  <div class="d-flex align-items-center justify-content-between flex-wrap row-gap-3">
+                    <h4>
+                      <i class="ti ti-grip-vertical me-1"></i>
+                      Tableau des Entrées
+                    </h4>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive custom-table ">
+                    <table class="table dataTable" id="deals-project">
+                      <thead class="thead-light">
+                        <tr>
+                          <th>Date</th>
+                          <th>Nom</th>
+                          <th>Quantité</th>
+                          <th>Prix d'achat</th>
+                          <th>Date d'expiration</th>
+                          <th>Fourniseur</th>
+                          <th>Description</th>
+                          <th>Signature</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @if (isLoading) {
+                        <div class=" text-center d-flex justify-content-center align-items-center ">
+                          <div class="spinner-border bs-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                          </div>
+                        </div>
+                        } @else {
+                        @for (item of dataListEntree; track item.ID; let i = $index) {
+                        <tr class="odd">
+                          <td>{{ item.CreatedAt | date: 'dd/mm/yyyy HH:mm' }} </td>
+                          <td>{{item.Product!.name }}</td>
+                          <td>{{ item.quantity }}
+                            @if (item.quantity > 1) {
+                            {{ item.Product!.unite_vente }}s
+                            }@else {
+                            {{ item.Product!.unite_vente }}
+                            }
+                          </td>
+                          <td>{{item.prix_achat }} {{ currentUser.currency }}</td>
+                          <td>{{item.date_expiration | date: 'dd/mm/yyyy' }}</td>
+                          <td>
+                            @if (item.Fournisseur) {
+                            {{item.Fournisseur!.name }}
+                            }@else {
+                            --
+                            }
+                          </td>
+                          <td>{{item.description }}</td>
+                          <td>{{item.signature }}</td>
+                        </tr>
+                        }
+                        }
+                      </tbody>
+                    </table>
+                    <mat-paginator [length]="lengthEntree" [pageSize]="pageSizeEntree"
+                      [pageSizeOptions]="[10, 20, 30, 40, 50, 80, 100]" showFirstLastButtons
+                      (page)="onPageChangeEntree($event)" aria-label="Select page">
+                    </mat-paginator>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 d-flex">
+            <div class="card flex-fill">
+              <div class="card flex-fill">
+                <div class="card-header border-0 pb-0">
+                  <div class="d-flex align-items-center justify-content-between flex-wrap row-gap-3">
+                    <h4>
+                      <i class="ti ti-grip-vertical me-1"></i>
+                      Tableau des Sorties
+                    </h4>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive custom-table ">
+                    <table class="table dataTable" id="deals-project">
+                      <thead class="thead-light">
+                        <tr>
+                          <th>Date</th>
+                          <th>N° commande</th>
+                          <th>Nom</th>
+                          <th>Quantité</th>
+                          <th>Prix vente</th>
+                          <th>Client</th>
+                          <th>Signature</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @if (isLoading) {
+                        <div class=" text-center d-flex justify-content-center align-items-center ">
+                          <div class="spinner-border bs-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                          </div>
+                        </div>
+                        } @else {
+                        @for (item of dataListSortie; track item.ID; let i = $index) {
+                        @if (item.Plat!.ID! > 0) {
+                        <tr class="odd">
+                          <td>{{ item.CreatedAt | date: 'dd/mm/yyyy HH:mm' }} </td>
+                          <td>#{{item.Commande!.ncommande }}</td>
+                          <td>{{item.Product!.name }}</td>
+                          <td>{{ item.quantity }}
+                            @if (item.quantity > 1) {
+                            {{ item.Product!.unite_vente }}s
+                            }@else {
+                            {{ item.Product!.unite_vente }}
+                            }
+                          </td>
+                          <td>{{item.Product!.prix_vente }} {{ currentUser.currency }} </td>
+                          <td>
+                            @if (item.Commande?.Client!) {
+                            {{item.Commande?.Client!.fullname }}
+                            }@else {
+                            --
+                            }
+                          </td>
+                          <td>{{item.Commande!.signature }}</td>
+                        </tr>
+                        }@else if (item.Product!.ID! > 0) {
+                        <tr class="odd">
+                          <td>{{ item.CreatedAt | date: 'dd/mm/yyyy HH:mm' }} </td>
+                          <td>#{{item.Commande!.ncommande }}</td>
+                          <td>{{item.Product!.name }}</td>
+                          <td>{{ item.quantity }}
+                            @if (item.quantity > 1) {
+                            {{ item.Product!.unite_vente }}s
+                            }@else {
+                            {{ item.Product!.unite_vente }}
+                            }
+                          </td>
+                          <td>{{item.Product!.prix_vente }} {{ currentUser.currency }} </td>
+                          <td>
+                            @if (item.Commande?.Client!) {
+                            {{item.Commande?.Client!.fullname }}
+                            }@else {
+                            --
+                            }
+                          </td>
+                          <td>{{item.Commande!.signature }}</td>
+                        </tr>
+                        }
+
+                        }
+                        }
+                      </tbody>
+                    </table>
+                    <mat-paginator [length]="lengthSortie" [pageSize]="pageSizeSortie"
+                      [pageSizeOptions]="[10, 20, 30, 40, 50, 80, 100]" showFirstLastButtons
+                      (page)="onPageChangeSortie($event)" aria-label="Select page">
+                    </mat-paginator>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        }
+        }
+
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /Page Wrapper -->

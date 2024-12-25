@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <title>IPosRestaurant</title>
+    <base href="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' fonts.googleapis.com; font-src fonts.gstatic.com;"> -->
+
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png">
+    <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon">
+
+    <style class="site-preloader-style">
+        @keyframes site-preloader-animation {
+            from {
+                transform: rotateZ(0deg);
+            }
+
+            to {
+                transform: rotateZ(360deg);
+            }
+        }
+
+        body {
+            overflow: hidden !important;
+            overflow-y: scroll !important;
+            height: 100% !important;
+        }
+
+        .site-preloader {
+            position: fixed;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #fafafa;
+            z-index: 99999;
+            opacity: 1;
+        }
+
+        .site-preloader::before {
+            box-sizing: border-box;
+            content: '';
+            display: block;
+            position: absolute;
+            left: calc(50% - 50px);
+            top: calc(50% - 50px);
+            width: 100px;
+            height: 100px;
+            border-radius: 50px;
+            border: 3px solid rgba(0, 0, 0, .2);
+            border-top-color: rgba(0, 0, 0, .6);
+
+            animation-name: site-preloader-animation;
+            animation-duration: .5s;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+        }
+
+        .site-preloader__fade {
+            transition: opacity .3s;
+            opacity: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="site-preloader"></div>
+    <app-root></app-root>
+</body>
+
+</html>

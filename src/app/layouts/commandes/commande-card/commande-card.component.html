@@ -1,0 +1,241 @@
+<!-- Page Wrapper -->
+<div class="page-wrapper">
+  <div class="content">
+    <div class="row">
+      <div class="col-md-12">
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="row align-items-center">
+            <div class="col-md-8">
+              <h4 class="page-title">
+                Commande <span class="count-title">{{ length }}</span>
+              </h4>
+            </div>
+            <div class="col-md-4 text-end">
+              <div class="head-icons">
+                <app-reload></app-reload>
+                <app-collapse-header></app-collapse-header>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /Page Header -->
+
+        @if (loadUserData) {
+        <div class="spinner-border text-center d-flex justify-content-center align-items-center" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        }@else {
+        @if (loading || currentUser) {
+        <div class="card">
+          <div class="card-header">
+            <!-- Search -->
+            <div class="row align-items-center">
+              <div class="col-sm-4">
+                <div class="icon-form mb-3 mb-sm-0">
+                  <span class="form-icon"><i class="ti ti-search"></i></span>
+                  <input type="text" #input [(ngModel)]="search" (ngModelChange)="onSearchChange($event)"
+                    class="form-control" placeholder="Ex. reference ou nom du produit" />
+                </div>
+              </div>
+              <div class="col-sm-8">
+                <div class="d-flex align-items-center flex-wrap row-gap-2 justify-content-sm-end">
+                  @if(currentUser.permission === 'ALL' ||
+                  currentUser.permission === 'AM' ||
+                  currentUser.permission === 'A') {
+                  <button (click)="onSubmit()" class="btn btn-primary" data-bs-toggle="offcanvas">
+                    <i class="ti ti-square-rounded-plus me-2"></i>
+                    Ajouter commande
+                  </button>
+                  }
+                </div>
+              </div>
+            </div>
+            <!-- /Search -->
+          </div>
+
+          <div class="card-body">
+
+            <!-- Recent Task List -->
+            <div class="task-wrapper">
+
+              @if (isLoadingData || isLoading){
+                <div class="spinner-border" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              } @else {
+              <div class="tasks-activity tasks mb-5" id="recent">
+                <ul>
+                  @for (item of dataList; track item.ID) {
+                  <li class="task-wrap pending">
+                    <div class="">
+                      <h6>
+                        @if (item.status === 'Cash') {
+                        <a [routerLink]="['/web/table-box/commandes', item.ID, 'facture', item.ncommande ]">
+                          #{{item.ncommande}}
+                        </a>
+                        } @else {
+                        <a [routerLink]="['/web/table-box/commandes', item.ID, 'line' ]">
+                          #{{item.ncommande}}
+                        </a>
+                        }
+                      </h6>
+                      @if (item.status === 'Cash') {
+                      <a [routerLink]="['/web/table-box/commandes', item.ID, 'facture', item.ncommande ]">
+                        {{item.CreatedAt | date: 'dd/mm/yyy HH:mm' }}
+                      </a>
+                      } @else {
+                      <a [routerLink]="['/web/table-box/commandes', item.ID, 'line' ]">
+                        {{item.CreatedAt | date: 'dd/mm/yyy HH:mm' }}
+                      </a>
+                      }
+                    </div>
+                    <div class="task-actions">
+                      <ul>
+                        <li class="task-owner">
+                          <span class="badge badge-pill badge-status" [ngClass]="{
+                                  'bg-warning': (item.status === 'Créance') ? 'Créance' : '',
+                                  'bg-success': (item.status === 'Cash') ? 'Cash' : '',
+                                  'bg-blue': (item.status === 'En cours') ? 'En cours' : ''
+                              }">
+                            @if (item.status === 'Créance') {
+                            Créance
+                            } @else if (item.status === 'Cash') {
+                            Cash
+                            } @else if (item.status === 'En cours') {
+                            En cours
+                            }
+
+                          </span>
+                        </li>
+                        @if (item.status === 'Cash') {
+                        <li class="task-owner">
+                          <a mat-icon-button href="javascript:void(0);" data-bs-toggle="modal"
+                            data-bs-target="#offcanvas_view_mobile" (click)="findValue(item.ID!)">
+                            <mat-icon class="text-blue">print</mat-icon>
+                          </a>
+                        </li>
+                        }@else {
+                        <li class="task-owner">
+                          <div class="dropdown table-action">
+                            <a href="javascript:void(0);" class="action-icon" data-bs-toggle="dropdown"
+                              aria-expanded="false">
+                              <i class="fa fa-ellipsis-v"></i>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                              @if(currentUser.permission === 'ALL' ||
+                              currentUser.permission === 'MS') {
+                              <a class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal"
+                                data-bs-target="#delete_contact_mobile" (click)="findValue(item.ID!)">
+                                <i class="ti ti-trash text-danger"></i>
+                                Delete
+                              </a>
+                              }
+                              @if (item.status === 'Cash') {
+                              <a class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal"
+                                data-bs-target="#offcanvas_view_mobile" (click)="findValue(item.ID!)">
+                                <i class="ti ti-file text-success"></i>
+                                Facture
+                              </a>
+                              }
+
+                            </div>
+                          </div>
+                        </li>
+                        }
+
+                      </ul>
+                    </div>
+                  </li>
+                  } @empty {
+                  <li>Pas encore de donnée </li>
+                  }
+                </ul>
+              </div>
+              <mat-paginator [length]="length" [pageSize]="pageSize" [pageSizeOptions]="[15, 20, 30, 40, 50, 80, 100]"
+                showFirstLastButtons (page)="onPageChange($event)" aria-label="Select page">
+              </mat-paginator>
+              }
+
+
+            </div>
+            <!-- /Recent Task List -->
+
+            <!-- /Task List -->
+          </div>
+        </div>
+        }
+        }
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /Page Wrapper -->
+
+<!-- Delete data item -->
+<div class="modal fade" id="delete_contact_mobile" role="dialog">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="text-center">
+          <div class="avatar avatar-xl bg-danger-light rounded-circle mb-3">
+            <i class="ti ti-trash-x fs-36 text-danger"></i>
+          </div>
+          <h4 class="mb-2">Supprimer cet l'élément ?</h4>
+          <p class="mb-0">Êtes-vous sûr de vouloir le supprimer ?</p>
+          <div class="d-flex align-items-center justify-content-center mt-4">
+            <a href="javascript:void(0);" class="btn btn-light me-2" data-bs-dismiss="modal">Annuler</a>
+            <button (click)="delete()" class="btn btn-danger" data-bs-dismiss="modal">
+              Oui, supprimez-le
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /Delete data item -->
+
+<!-- view-invoice -->
+<div class="modal fade" tabindex="-1" id="offcanvas_view_mobile">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body">
+        @if (dataItem) {
+        <div class="offcanvas-header border-bottom justify-content-between">
+          <h4>Facture <span class="text-purple ms-2">#{{ dataItem.ncommande }}</span></h4>
+          <div class="d-flex align-items-center mb-3 ">
+            <div class="toggle-header-popup">
+              <div class="dropdown table-action me-2">
+                <a href="javascript:void(0);" class="btn btn-dropdowns dropdown-toggle" data-bs-toggle="dropdown"
+                  aria-expanded="false">
+                  <div style="margin-right: 10px;">
+                    <i class="fa-solid fa-print"></i>
+                  </div>
+                  Télécharger
+                </a>
+                <div class="dropdown-menu dropdown-menu-right">
+                  <!-- <a class="dropdown-item" href="javascript:void(0);"> Download </a> -->
+                  <a class="dropdown-item" href="javascript:void(0);" (click)="generatePdf()">
+                    Facture PDF
+                  </a>
+                </div>
+              </div>
+            </div>
+            <button type="button" class="btn-close custom-btn-close border p-1 me-0 d-flex align-items-center 
+                              justify-content-center rounded-circle" data-bs-dismiss="modal" aria-label="Close">
+              <i class="ti ti-x"></i>
+            </button>
+          </div>
+        </div>
+        <div class="offcanvas-body">
+          <app-cmd-facture [currentUser]="currentUser" [commande_id]="dataItem.ID!" [commande]="dataItem"
+            [commandeLineList]="commandeLineList"></app-cmd-facture>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- /view-invoice -->

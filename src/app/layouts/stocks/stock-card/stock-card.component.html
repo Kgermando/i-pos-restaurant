@@ -1,0 +1,490 @@
+<!-- Page Wrapper -->
+<div class="page-wrapper">
+    <div class="content">
+        @if (loadUserData) {
+        <div class="spinner-border text-center d-flex justify-content-center align-items-center" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        }@else {
+        @if (currentUser) {
+        <div class="row">
+            @if (isLoadingData ) {
+            <div class=" text-center d-flex justify-content-center align-items-center ">
+                <div class="spinner-border bs-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+            } @else {
+            @if (product) {
+            <div class="col-md-12">
+                <!-- Page Header -->
+                <div class="page-header">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h4 class="page-title">
+                                {{ product.name }}
+                                <span class="count-title"> #{{ product.reference }}</span>
+                            </h4>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <div class="head-icons">
+                                <app-reload></app-reload>
+                                <app-collapse-header></app-collapse-header>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /Page Header -->
+                <div class="card">
+                    <div class="card-header">
+                        <!-- Search -->
+                        <div class="row align-items-center">
+                            <div class="col-sm-4">
+                                <div class="icon-form mb-3 mb-sm-0">
+                                    <span class="form-icon"><i class="ti ti-search"></i></span>
+                                    <input type="text" #input [(ngModel)]="search"
+                                        (ngModelChange)="onSearchChange($event)" class="form-control"
+                                        placeholder="Ex. Quantite ou prix" />
+                                </div>
+                            </div>
+                            <div class="col-sm-8">
+                                <div class="d-flex align-items-center flex-wrap row-gap-2 justify-content-sm-end">
+                                    @if(currentUser.permission === 'ALL' ||
+                                    currentUser.permission === 'AM' ||
+                                    currentUser.permission === 'A') {
+                                    <a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="offcanvas"
+                                        data-bs-target="#offcanvas_add_mobile"><i
+                                            class="ti ti-square-rounded-plus me-2"></i>Ajouter Stock</a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /Search -->
+                    </div>
+                    <div class="card-body">
+                        @if (isLoadingData || isLoading){
+                        <button disabled class="btn btn-primary">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </button>
+                        } @else {
+                        <div class="task-wrapper">
+                            <a href="javascript:void(0);" class="task-accordion" data-bs-toggle="collapse"
+                                data-bs-target="#rapport">
+                                <h4>Rapport de ventes </h4>
+                            </a>
+                            <div class="tasks-activity tasks collapse show mt-3" id="rapport">
+                                <!-- Campaign Status -->
+                                <div class="row">
+                                    <div class="col-xl-4 col-lg-6">
+                                        <div class="campaign-box bg-danger-light">
+                                            <div class="campaign-img">
+                                                <p>Stocks</p>
+                                            </div>
+                                            <h4>
+                                                {{ cmdLineQty() }} / {{ stockQty() }}
+                                                <small>{{ product.unite_vente.toLocaleLowerCase() }}s</small>
+                                                <br>
+                                                <h6 style="font-weight: 300;">{{ pourcentQty().toFixed(2) }}% </h6>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-6">
+                                        <div class="campaign-box bg-success-light">
+                                            <div class="campaign-img">
+                                                <p>Profits</p>
+                                            </div>
+                                            <h4>
+                                                {{ profitObtenu() | number:'1.2-3' }}/
+                                                {{ formatCurrency(profitAttendu(), currentUser.currency) }}
+
+                                                <br>
+                                                <h6 style="font-weight: 300;">{{ pourcentProfit().toFixed(2) }}% </h6>
+                                            </h4> 
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-6">
+                                        <div class="campaign-box bg-purple-light mb-0">
+                                            @if (pourcentStockRestant()) {
+                                            <app-progress-bar [progress]="pourcentStockRestant()"></app-progress-bar>
+                                            }@else {
+                                            <app-progress-bar [progress]="0"></app-progress-bar>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-xl-4 col-lg-6">
+                                        <div class="campaign-box bg-warning-light">
+                                            <div class="campaign-img">
+                                                <p>Val. produits</p>
+                                            </div>
+                                            <h4>
+                                                {{ valeurProductObtenu() | number:'1.2-3' }}/
+                                                {{ formatCurrency(valeurProductAttendu(), currentUser.currency) }}
+
+                                                <br>
+                                                <h6 style="font-weight: 300;">{{ pourcentValeurProduit().toFixed(2) }}% </h6>
+                                            </h4> 
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4 col-lg-6">
+                                        <div class="campaign-box bg-success-light">
+                                            <div class="campaign-img">
+                                                <p>Prix de vente</p>
+                                            </div>
+                                            <h4> 
+                                                {{ formatCurrency(product.prix_vente, currentUser.currency) }}
+
+                                                <br>
+                                                <h6 style="font-weight: 300;">- </h6>
+                                            </h4> 
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /Campaign Status -->
+                            </div>
+                        </div>
+                        <div class="task-wrapper">
+                            <a href="javascript:void(0);" class="task-accordion" data-bs-toggle="collapse"
+                                data-bs-target="#recent">
+                                <h4>Stocks <span>{{ length }}</span></h4>
+                            </a>
+                            <div class="tasks-activity tasks collapse show" id="recent">
+
+                                <ul class="mb-5">
+                                    @for (item of dataList; track item.ID) {
+                                    <li class="task-wrap pending">
+                                        <div>
+                                            <h6>
+                                                Achat: {{ formatCurrency(item.prix_achat, currentUser.currency) }}
+                                            </h6>
+                                            <p> @if ( item.Fournisseur) {
+                                                {{ item.Fournisseur!.name }}
+                                                }@else {
+                                                --
+                                                }</p>
+                                        </div>
+                                        <div class="task-actions">
+                                            <ul>
+                                                <li>
+                                                    <h6>
+                                                        Qty: {{ item.quantity }} {{ product.unite_vente }}s
+                                                    </h6>
+                                                </li>
+                                                <li class="task-owner">
+                                                    <div class="dropdown table-action">
+                                                        <a href="javascript:void(0);" class="action-icon"
+                                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                                            <i class="fa fa-ellipsis-v"></i>
+                                                        </a>
+                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                            @if(currentUser.permission === 'ALL' ||
+                                                            currentUser.permission === 'AM' ||
+                                                            currentUser.permission === 'MS' ||
+                                                            currentUser.permission === 'M') {
+                                                            <a class="dropdown-item" data-bs-toggle="offcanvas"
+                                                                href="javascript:void(0);"
+                                                                data-bs-target="#offcanvas_edit_mobile"
+                                                                (click)="findValue(item.ID!)">
+                                                                <i class="ti ti-edit text-blue"></i>
+                                                                Edit
+                                                            </a>
+                                                            }
+                                                            @if(currentUser.permission === 'ALL' ||
+                                                            currentUser.permission === 'MS') {
+                                                            <a class="dropdown-item" href="javascript:void(0);"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#delete_contact_mobile"
+                                                                (click)="findValue(item.ID!)">
+                                                                <i class="ti ti-trash text-danger"></i>
+                                                                Delete
+                                                            </a>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    } @empty {
+                                    <li>Pas encore de donnée </li>
+                                    }
+                                </ul>
+
+                                <mat-paginator [length]="length" [pageSize]="pageSize"
+                                    [pageSizeOptions]="[15, 20, 30, 40, 50, 80, 100]" showFirstLastButtons
+                                    (page)="onPageChange($event)" aria-label="Select page">
+                                </mat-paginator>
+                                <!-- /Manage data List -->
+                            </div>
+                        </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+            }
+
+            }
+
+        </div>
+        }
+        }
+    </div>
+</div>
+<!-- /Page Wrapper -->
+
+<!-- Add data form -->
+<div class="offcanvas offcanvas-end offcanvas-large" tabindex="-1" id="offcanvas_add_mobile">
+    <div class="offcanvas-header border-bottom">
+        <h5 class="fw-semibold">Ajouter Nouveau stock </h5>
+        <button type="button"
+            class="btn-close custom-btn-close border p-1 me-0 d-flex align-items-center justify-content-center rounded-circle"
+            data-bs-dismiss="offcanvas" aria-label="Close">
+            <i class="ti ti-x"></i>
+        </button>
+    </div>
+    <div class="offcanvas-body">
+        <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+            <div>
+                <div class="row">
+                    <div class="col-md-6">
+                        @if (product) {
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <label class="col-form-label" for="name">Prix de vente <span
+                                            class="text-danger">*</span></label>
+                                </div>
+                                <input type="number" class="form-control" [value]="product.prix_vente" [readOnly]="true" /> 
+                            </div>
+                        } 
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="name">Prix d'achat <span
+                                        class="text-danger">*</span></label>
+                            </div>
+                            <input type="number" class="form-control" formControlName="prix_achat" required />
+                            <mat-error *ngIf="formGroup.controls['prix_achat'].hasError('required')">
+                                Ce champs est obligatoire
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="name">Quantité <span
+                                        class="text-danger">*</span></label>
+                            </div>
+                            <input type="number" class="form-control" formControlName="quantity" required />
+                            <mat-error *ngIf="formGroup.controls['quantity'].hasError('required')">
+                                Ce champs est obligatoire
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="col-form-label" for="Start">
+                                Date d'expiration du produit
+                                <span class="text-danger">*</span>
+                            </label>
+                            <div class="icon-form">
+                                <span class="form-icon"><i class="ti ti-calendar-event"></i></span>
+                                <input type="text" class="form-control datetimepicker" bsDatepicker
+                                    [bsConfig]="{ adaptivePosition: true }" value="29-02-2020"
+                                    formControlName="date_expiration" />
+                                <mat-error *ngIf="formGroup.controls['date_expiration'].hasError('required')">
+                                    Ce champs est obligatoire
+                                </mat-error> 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="description">Description <span
+                                        class="text-danger">*</span></label>
+                            </div>
+                            <input type="text" class="form-control" formControlName="description" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="col-form-label" for="fournisseur_id">
+                                Fournisseur
+                                <span class="text-danger">*</span>
+                            </label>
+                            <mat-select class="select custom-mat-select" formControlName="fournisseur_id"
+                                placeholder="Choose fournisseur">
+                                @for (item of fournisseurList; track item) {
+                                <mat-option value="{{item.ID}}">{{item.name}}</mat-option>
+                                }
+                            </mat-select>
+                            <mat-error *ngIf="formGroup.controls['fournisseur_id'].hasError('required')">
+                                Ce champs est obligatoire
+                            </mat-error>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-end">
+                <a href="javascript:void(0);" class="btn btn-light me-2" data-bs-dismiss="offcanvas">Cancel</a>
+                @if (isLoading) {
+                <button disabled class="btn btn-primary">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </button>
+                }
+                @if (!isLoading) {
+                <button type="submit" class="btn btn-primary" id="myOffcanvas" data-bs-dismiss="offcanvas"
+                    data-bs-target="#create_success">Create</button>
+                }
+            </div>
+        </form>
+    </div>
+</div>
+<!-- /Add data form -->
+
+<!-- Edit data form -->
+<div class="offcanvas offcanvas-end offcanvas-large" tabindex="-1" id="offcanvas_edit_mobile">
+
+    <div class="offcanvas-header border-bottom">
+        <h4>Modification du stock</h4>
+        <button type="button"
+            class="btn-close custom-btn-close border p-1 me-0 d-flex align-items-center justify-content-center rounded-circle"
+            data-bs-dismiss="offcanvas" aria-label="Close">
+            <i class="ti ti-x"></i>
+        </button>
+    </div>
+    <div class="offcanvas-body">
+        <form [formGroup]="formGroup" (ngSubmit)="onSubmitUpdate()">
+            <div>
+                <div class="row">
+                    <div class="col-md-6">
+                        @if (product) {
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <label class="col-form-label" for="name">Prix de vente <span
+                                            class="text-danger">*</span></label>
+                                </div>
+                                <input type="number" class="form-control" [value]="product.prix_vente" [readOnly]="true" /> 
+                            </div>
+                        } 
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="name">Prix d'achat <span
+                                        class="text-danger">*</span></label>
+                            </div>
+                            <input type="number" class="form-control" formControlName="prix_achat" required />
+                            <mat-error *ngIf="formGroup.controls['prix_achat'].hasError('required')">
+                                Ce champs est obligatoire
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="name">Quantité <span
+                                        class="text-danger">*</span></label>
+                            </div>
+                            <input type="number" class="form-control" formControlName="quantity" required />
+                            <mat-error *ngIf="formGroup.controls['quantity'].hasError('required')">
+                                Ce champs est obligatoire
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="col-form-label" for="Start">
+                                Date d'expiration du produit
+                                <span class="text-danger">*</span>
+                            </label>
+                            <div class="icon-form">
+                                <span class="form-icon"><i class="ti ti-calendar-event"></i></span>
+                                <input type="text" class="form-control datetimepicker" bsDatepicker
+                                    [bsConfig]="{ adaptivePosition: true }" value="29-02-2020"
+                                    formControlName="date_expiration" />
+                                <mat-error *ngIf="formGroup.controls['date_expiration'].hasError('required')">
+                                    Ce champs est obligatoire
+                                </mat-error>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="description">Description <span
+                                        class="text-danger">*</span></label>
+                            </div>
+                            <input type="text" class="form-control" formControlName="description" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="col-form-label" for="fournisseur_id">
+                                Fournisseur
+                                <span class="text-danger">*</span>
+                            </label>
+                            <mat-select class="select custom-mat-select" formControlName="fournisseur_id"
+                                placeholder="Choose fournisseur">
+                                @for (item of fournisseurList; track item) {
+                                <mat-option value="{{item.ID}}">{{item.name}}</mat-option>
+                                }
+                            </mat-select>
+                            <mat-error *ngIf="formGroup.controls['fournisseur_id'].hasError('required')">
+                                Ce champs est obligatoire
+                            </mat-error>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-end">
+                <button type="button" data-bs-dismiss="offcanvas" class="btn btn-light me-2">Cancel</button>
+                @if (isLoading) {
+                <button disabled class="btn btn-primary">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </button>
+                }
+                @if (!isLoading) {
+                <button type="submit" class="btn btn-primary" data-bs-dismiss="offcanvas"
+                    data-bs-target="#create_success">Save
+                    Changes</button>
+                }
+            </div>
+        </form>
+    </div>
+
+</div>
+<!-- /Edit data form -->
+
+<!-- Delete data item -->
+<div class="modal fade" id="delete_contact_mobile" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="text-center">
+                    <div class="avatar avatar-xl bg-danger-light rounded-circle mb-3">
+                        <i class="ti ti-trash-x fs-36 text-danger"></i>
+                    </div>
+                    <h4 class="mb-2">Supprimer cet l'élément ?</h4>
+                    <p class="mb-0">Êtes-vous sûr de vouloir le supprimer ?</p>
+                    <div class="d-flex align-items-center justify-content-center mt-4">
+                        <a href="javascript:void(0);" class="btn btn-light me-2" data-bs-dismiss="modal">Annuler</a>
+                        <button (click)="delete()" class="btn btn-danger" data-bs-dismiss="modal">
+                            Oui, supprimez-le
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Delete data item -->

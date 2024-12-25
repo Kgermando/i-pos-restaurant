@@ -1,0 +1,38 @@
+.quantity-input {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    overflow: hidden;
+
+    button {
+      background-color: transparent;
+      border: none;
+      padding: 8px 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      font-size: 1.2rem;
+      color: #333;
+      &:disabled{
+          cursor: default;
+          opacity: 0.5;
+      }
+    }
+
+    input[type="number"] {
+      width: 60px;
+      padding: 8px;
+      border: none;
+      text-align: center;
+      -webkit-appearance: textfield;
+      -moz-appearance: textfield;
+      appearance: textfield;
+
+      &::-webkit-inner-spin-button,
+      &::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+    }
+  }
