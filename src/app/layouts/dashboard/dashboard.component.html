@@ -65,24 +65,23 @@
 
         <div class="card shadow flex-fill">
           @if (isLoading) {
-            <div class="spinner-border" role="status">
-              <span class="visually-hidden">Loading...</span>
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
           </div>
           }@else {
-            <div class="card-header d-flex justify-content-between align-items-center flex-wrap row-gap-2">
-              <h4>Ventes journalières</h4>
+          <div class="card-header d-flex justify-content-between align-items-center flex-wrap row-gap-2">
+            <h4>Ventes journalières</h4>
+          </div>
+          <div class="card-body">
+            <h3>{{ formatCurrency(totalVente24h, currentUser.currency) }}</h3>
+            <div id="contact-report">
+              <apx-chart [series]="chartOptions4?.series" [chart]="chartOptions4?.chart" [xaxis]="chartOptions4?.xaxis"
+                [dataLabels]="chartOptions4?.dataLabels" [grid]="chartOptions4?.grid" [stroke]="chartOptions4?.stroke"
+                [title]="chartOptions4?.title" [colors]="chartOptions4?.colors"></apx-chart>
             </div>
-            <div class="card-body">
-              <h3>{{ formatCurrency(totalVente24h, currentUser.currency) }}</h3>
-              <div id="contact-report">
-                <apx-chart [series]="chartOptions4?.series" [chart]="chartOptions4?.chart" [xaxis]="chartOptions4?.xaxis"
-                  [dataLabels]="chartOptions4?.dataLabels" [grid]="chartOptions4?.grid" [stroke]="chartOptions4?.stroke"
-                  [title]="chartOptions4?.title" [colors]="chartOptions4?.colors"></apx-chart>
-              </div>
-            </div>
-          } 
+          </div>
+          }
         </div>
-
 
         <div class="row">
           <div class="col-md-6">
@@ -144,11 +143,11 @@
               </div>
               <div class="card-body">
                 @if (dataSaleProfits) {
-                  <div class="chartjs-wrapper-demo">
-                    <div class="chart-container">
-                      <canvas id="MyChart" class="h-300"></canvas>
-                    </div>
+                <div class="chartjs-wrapper-demo">
+                  <div class="chart-container">
+                    <canvas id="MyChart" class="h-300"></canvas>
                   </div>
+                </div>
                 }
               </div>
             </div>

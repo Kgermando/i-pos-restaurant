@@ -118,6 +118,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.getTotalProductInStock(this.currentUser);
       this.getTotalStockDispoSortie(this.currentUser);
       this.getTotalValeurProduct(this.currentUser);
+      this.getCourbeVente24h(this.currentUser);
+      this.getTotalVente24h(this.currentUser);
     });
   }
 
@@ -331,8 +333,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.dashboardService.getTotalVente24h(
       currentUser.entreprise!.code!
     ).subscribe((res) => {
-      this.totalVente24h = res.data;
-      console.log("totalVente24h", this.totalVente24h);
+      this.totalVente24h = res.data; 
       this.isLoading = false;
     });
   }
