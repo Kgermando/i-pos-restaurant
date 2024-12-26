@@ -82,9 +82,7 @@
                                 <ng-container matColumnDef="reference">
                                     <th mat-header-cell *matHeaderCellDef> N˚ Reference </th>
                                     <td mat-cell *matCellDef="let element">
-                                        <a [routerLink]="['/web/products', element.ID, 'stocks' ]">
-                                            #{{element.reference}}
-                                        </a>
+                                        #{{element.reference}}
                                     </td>
                                 </ng-container>
 
@@ -92,9 +90,7 @@
                                 <ng-container matColumnDef="name">
                                     <th mat-header-cell *matHeaderCellDef> Nom </th>
                                     <td mat-cell *matCellDef="let element">
-                                        <a [routerLink]="['/web/products', element.ID, 'stocks' ]">
-                                            {{ element.name }}
-                                        </a>
+                                        {{ element.name }}
                                     </td>
                                 </ng-container>
 
@@ -102,9 +98,7 @@
                                 <ng-container matColumnDef="prix_vente">
                                     <th mat-header-cell *matHeaderCellDef> Prix de vente </th>
                                     <td mat-cell *matCellDef="let element">
-                                        <a [routerLink]="['/web/products', element.ID, 'stocks' ]">
-                                            {{ formatCurrency(element.prix_vente, currentUser.currency) }}
-                                        </a>
+                                        {{ formatCurrency(element.prix_vente, currentUser.currency) }}
                                     </td>
                                 </ng-container>
 
@@ -112,13 +106,11 @@
                                 <ng-container matColumnDef="tva">
                                     <th mat-header-cell *matHeaderCellDef> TVA </th>
                                     <td mat-cell *matCellDef="let element">
-                                        <a [routerLink]="['/web/products', element.ID, 'stocks' ]">
-                                            @if (element.tva === 16) {
+                                        @if (element.tva === 16) {
                                             {{element.tva}}%
                                             } @else {
                                             -
                                             }
-                                        </a>
                                     </td>
                                 </ng-container>
 

@@ -8,6 +8,7 @@ import { AuthService } from '../../auth/auth.service';
 import { TableBoxService } from './table-box.service';
 import { ToastrService } from 'ngx-toastr';
 import { PageEvent } from '@angular/material/paginator';
+import { CommandeService } from '../commandes/commande.service';
 
 @Component({
   selector: 'app-table-box',
@@ -32,6 +33,8 @@ export class TableBoxComponent implements OnInit {
   // Forms  
   idItem!: number;
   dataItem!: ITableBox; // Single data 
+
+
 
   formGroup!: FormGroup;
   currentUser!: IUser;
@@ -98,7 +101,7 @@ export class TableBoxComponent implements OnInit {
         this.dataList = res.data;
         this.totalItems = res.pagination.total_pages;
         this.length = res.pagination.length;
-
+        
         this.isLoadingData = false;
       });
     }
@@ -108,7 +111,6 @@ export class TableBoxComponent implements OnInit {
     this.search = search;
     this.fetchProducts(this.currentUser);
   }
-
 
 
   onSubmit() {

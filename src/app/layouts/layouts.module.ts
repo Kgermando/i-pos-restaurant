@@ -49,6 +49,7 @@ import { PlatCardComponent } from './plat/plat-card/plat-card.component';
 import { PlatTableComponent } from './plat/plat-table/plat-table.component';
 import { ProdQtyDispoComponent } from './products/prod-qty-dispo/prod-qty-dispo.component';
 import { ProdItemComponent } from './commandes-lines/product-line/prod-item/prod-item.component';
+import { TableTotalCmdComponent } from './table-box/table-total-cmd/table-total-cmd.component';
 
 
 @NgModule({
@@ -95,6 +96,7 @@ import { ProdItemComponent } from './commandes-lines/product-line/prod-item/prod
     PlatTableComponent,
     ProdQtyDispoComponent,
     ProdItemComponent,
+    TableTotalCmdComponent,
   ],
   imports: [
     CommonModule,

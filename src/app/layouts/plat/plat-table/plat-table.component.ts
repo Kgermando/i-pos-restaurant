@@ -23,7 +23,7 @@ import { BarcodeFormat } from '@zxing/library';
 export class PlatTableComponent implements OnInit, AfterViewInit {
   loadUserData = false;
   isLoadingData = false;
-  public routes = routes; 
+  public routes = routes;
 
   // Table 
   dataList: IPlat[] = [];
@@ -63,7 +63,7 @@ export class PlatTableComponent implements OnInit, AfterViewInit {
 
   // Utilisation des formats BarcodeFormat
   formats = [BarcodeFormat.QR_CODE, BarcodeFormat.CODE_128, BarcodeFormat.CODE_39, BarcodeFormat.EAN_13];
-  
+
   constructor(
     private router: Router,
     private _formBuilder: FormBuilder,
@@ -129,8 +129,8 @@ export class PlatTableComponent implements OnInit, AfterViewInit {
         this.dataList = res.data;
         this.totalItems = res.pagination.total_pages;
         this.length = res.pagination.length;
-        this.dataSource = new MatTableDataSource<IPlat>(this.dataList); 
-        this.dataSource.sort = this.sort; 
+        this.dataSource = new MatTableDataSource<IPlat>(this.dataList);
+        this.dataSource.sort = this.sort;
 
         this.isLoadingData = false;
       });
@@ -139,14 +139,14 @@ export class PlatTableComponent implements OnInit, AfterViewInit {
         this.dataList = res.data;
         this.totalItems = res.pagination.total_pages;
         this.length = res.pagination.length;
-        this.dataSource = new MatTableDataSource<IPlat>(this.dataList); 
-        this.dataSource.sort = this.sort; 
+        this.dataSource = new MatTableDataSource<IPlat>(this.dataList);
+        this.dataSource.sort = this.sort;
 
         this.isLoadingData = false;
       });
     }
   }
-   
+
   onSearchChange(search: string) {
     this.search = search;
     this.fetchProducts(this.currentUser);
@@ -165,7 +165,7 @@ export class PlatTableComponent implements OnInit, AfterViewInit {
     }
   }
 
-  
+
 
   onReferenceGenCode() {
     const code = Math.floor(1000000000000 + Math.random() * 9999999999999);
@@ -216,9 +216,9 @@ export class PlatTableComponent implements OnInit, AfterViewInit {
         this.platService.create(body).subscribe(() => {
           this.isLoading = false;
           this.formGroup.reset();
-          this.reference = ''; 
+          this.reference = '';
           this.toastr.success('Plat ajoutée avec succès!', 'Success!');
-        }); 
+        });
       }
     } catch (error) {
       this.isLoading = false;
@@ -238,6 +238,7 @@ export class PlatTableComponent implements OnInit, AfterViewInit {
         prix_vente: this.formGroup.value.prix_vente,
         tva: this.formGroup.value.tva,
         signature: this.currentUser.fullname,
+        pos_id: parseInt(this.currentUser.pos!.ID!.toString()),
         code_entreprise: parseInt(this.currentUser.entreprise!.code.toString()),
       };
       this.platService.update(this.idItem, body).subscribe(() => {
@@ -245,7 +246,7 @@ export class PlatTableComponent implements OnInit, AfterViewInit {
         this.reference = '';
         this.toastr.success('Modification enregistrée!', 'Success!');
         this.isLoading = false;
-      }); 
+      });
     } catch (error) {
       this.isLoading = false;
       console.log(error);
@@ -265,6 +266,8 @@ export class PlatTableComponent implements OnInit, AfterViewInit {
         unite_vente: this.dataItem.unite_vente,
         prix_vente: this.dataItem.prix_vente,
         tva: this.dataItem.tva,
+        pos_id: this.dataItem.pos_id,
+        code_entreprise: this.dataItem.code_entreprise,
       });
     });
   }
@@ -273,11 +276,11 @@ export class PlatTableComponent implements OnInit, AfterViewInit {
   delete(): void {
     this.isLoading = true;
     this.platService.delete(this.idItem).subscribe(() => {
-      this.formGroup.reset(); 
+      this.formGroup.reset();
       this.reference = '';
       this.toastr.info('Supprimé avec succès!', 'Success!');
       this.isLoading = false;
-    }); 
+    });
   }
 
 }

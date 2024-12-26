@@ -196,7 +196,7 @@ export class PlatCardComponent implements OnInit, AfterViewInit {
           prix_vente: this.formGroup.value.prix_vente,
           tva: this.formGroup.value.tva,
           signature: this.currentUser.fullname,
-          pos_id: this.currentUser.pos!.ID,
+          pos_id: parseInt(this.currentUser.pos!.ID!.toString()),
           code_entreprise: parseInt(this.currentUser.entreprise!.code.toString()),
         };
         this.platService.create(body).subscribe(() => {
@@ -224,6 +224,7 @@ export class PlatCardComponent implements OnInit, AfterViewInit {
         prix_vente: this.formGroup.value.prix_vente,
         tva: this.formGroup.value.tva,
         signature: this.currentUser.fullname,
+        pos_id: parseInt(this.currentUser.pos!.ID!.toString()),
         code_entreprise: parseInt(this.currentUser.entreprise!.code.toString()),
       };
       this.platService.update(this.idItem, body).subscribe(() => {
