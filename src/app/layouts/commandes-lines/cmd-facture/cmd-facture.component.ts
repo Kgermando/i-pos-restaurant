@@ -77,7 +77,6 @@ export class CmdFactureComponent {
   }
 
   onSubmitFacture(status: string) {
-    console.log("commandeeee", this.commande);
     try {
       this.isLoading = true;
       const body: ICommande = {
