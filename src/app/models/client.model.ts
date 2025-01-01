@@ -7,6 +7,7 @@ export interface IClient {
     fullname: string;
     telephone: string;
     email?: string; 
+    adress?: string; 
     signature: string; // Code secret pour le client
     code_entreprise?: number;
     commandes? :ICommande[];

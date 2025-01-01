@@ -50,6 +50,26 @@ import { PlatTableComponent } from './plat/plat-table/plat-table.component';
 import { ProdQtyDispoComponent } from './products/prod-qty-dispo/prod-qty-dispo.component';
 import { ProdItemComponent } from './commandes-lines/product-line/prod-item/prod-item.component';
 import { TableTotalCmdComponent } from './table-box/table-total-cmd/table-total-cmd.component';
+import { PlatItemComponent } from './commandes-lines/plat-line/plat-item/plat-item.component';
+import { IngredientCardComponent } from './ingredients/ingredient-card/ingredient-card.component';
+import { IngredientTableComponent } from './ingredients/ingredient-table/ingredient-table.component';
+import { IngredientsComponent } from './ingredients/ingredients.component';
+import { IngredientStocksComponent } from './ingredient-stocks/ingredient-stocks.component';
+import { IngStockCardComponent } from './ingredient-stocks/ing-stock-card/ing-stock-card.component';
+import { IngStockTableComponent } from './ingredient-stocks/ing-stock-table/ing-stock-table.component';
+import { IngredientItemComponent } from './ingredients/ingredient-item/ingredient-item.component';
+import { LivraisonsComponent } from './livraisons/livraisons.component';
+import { LivreursComponent } from './livreurs/livreurs.component';
+import { LivreurCardComponent } from './livreurs/livreur-card/livreur-card.component';
+import { LivreurTableComponent } from './livreurs/livreur-table/livreur-table.component';
+import { AreaComponent } from './area/area.component';
+import { LivraisonLineComponent } from './livraisons/livraison-line/livraison-line.component';
+import { LivFactureComponent } from './livraisons/livraison-line/liv-facture/liv-facture.component';
+import { LivPlatLineComponent } from './livraisons/liv-plat-line/liv-plat-line.component';
+import { LivProductLineComponent } from './livraisons/liv-product-line/liv-product-line.component';
+import { LivPlatItemComponent } from './livraisons/liv-plat-line/liv-plat-item/liv-plat-item.component';
+import { LivProdItemComponent } from './livraisons/liv-product-line/liv-prod-item/liv-prod-item.component';
+import { LivraisonFactureComponent } from './livraisons/livraison-facture/livraison-facture.component';
 
 
 @NgModule({
@@ -73,7 +93,7 @@ import { TableTotalCmdComponent } from './table-box/table-total-cmd/table-total-
     CommandesComponent,
     CommandeTableComponent,
     CommandeCardComponent,
-    ClientsComponent, 
+    ClientsComponent,
     ClientViewComponent,
     ClientTableComponent,
     ClientCardComponent,
@@ -97,6 +117,26 @@ import { TableTotalCmdComponent } from './table-box/table-total-cmd/table-total-
     ProdQtyDispoComponent,
     ProdItemComponent,
     TableTotalCmdComponent,
+    PlatItemComponent,
+    IngredientCardComponent,
+    IngredientTableComponent,
+    IngredientsComponent,
+    IngredientStocksComponent,
+    IngStockCardComponent,
+    IngStockTableComponent,
+    IngredientItemComponent,
+    LivraisonsComponent,
+    LivreursComponent,
+    LivreurCardComponent,
+    LivreurTableComponent,
+    AreaComponent,
+    LivraisonLineComponent,
+    LivFactureComponent,
+    LivPlatLineComponent,
+    LivProductLineComponent,
+    LivPlatItemComponent,
+    LivProdItemComponent,
+    LivraisonFactureComponent,
   ],
   imports: [
     CommonModule,

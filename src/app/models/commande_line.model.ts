@@ -8,6 +8,7 @@ export interface ICommandeLine {
     CreatedAt?: Date;
     UpdatedAt?: Date;
     commande_id: number;
+    livraison_id: number;
     product_id: number;
     plat_id: number;
     quantity: number; 

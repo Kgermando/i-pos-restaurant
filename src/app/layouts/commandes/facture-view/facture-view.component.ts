@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ICommande } from '../../../models/commande.model';
 import { CurrencyPipe } from '@angular/common';
-import { CommandeDbLineService } from '../../commandes-lines/commande-db-line.service';
 import { PdfService } from '../../../shared/services/pdf.service';
 import { IUser } from '../../../auth/models/user';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CommandeDbService } from '../commande-db.service';
 import { AuthService } from '../../../auth/auth.service';
 import { ICommandeLine } from '../../../models/commande_line.model';
 import { CommandeLineService } from '../../commandes-lines/commande-line.service';

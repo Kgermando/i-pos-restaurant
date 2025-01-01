@@ -28,8 +28,6 @@ export class CommandeTableComponent implements OnInit, AfterViewInit {
   isLoadingData = false;
   loading = false;
   public routes = routes;
-  public sidebarPopup1 = false;
-  public sidebarPopup2 = false;
 
   // Table 
   dataList: ICommande[] = [];

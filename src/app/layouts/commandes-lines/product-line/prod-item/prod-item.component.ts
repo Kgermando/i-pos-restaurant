@@ -71,6 +71,7 @@ export class ProdItemComponent implements OnInit {
     this.isLoading = true;
     const body: ICommandeLine = {
       commande_id: parseInt(this.commandeId!.toString()),
+      livraison_id: 0,
       product_id: product.ID!,
       plat_id: 0,
       quantity: this.qty(),

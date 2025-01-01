@@ -64,8 +64,6 @@ export class ProductLineComponent implements OnInit {
       this.dataList = res.data;
       this.idDataService.changeProd(this.dataList.length); // Pour transferer La taille des donnees de products a commandeline
       this.isLoadingData = false;
-
-      console.log("dataList", this.dataList);
     });
   }
 

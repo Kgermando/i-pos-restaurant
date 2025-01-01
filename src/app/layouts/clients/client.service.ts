@@ -7,5 +7,4 @@ import { environment } from '../../../environments/environment';
 })
 export class ClientService extends ApiService {
   endpoint: string = `${environment.apiUrl}/clients`;
-
 }

@@ -48,32 +48,63 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr *ngFor="let item of commandeLineList">
-                                            <td>
-                                                {{ item.Product!.name }}
-                                            </td>
-                                            <td>{{ item.quantity }}
-                                                @if (item.quantity > 1) {
-                                                {{ item.Product!.unite_vente }}s
-                                                }@else {
-                                                {{ item.Product!.unite_vente }}
-                                                }
-                                            </td>
-                                            <td> {{ formatCurrency(item.Product!.prix_vente, currentUser.currency) }}
-                                            </td>
-                                            <td>
-                                                @if (item.Product!.tva === 16) {
-                                                {{ item.Product!.tva }}%
-                                                }@else {
-                                                -
-                                                }
-                                            </td>
-                                            <td>
-                                                {{ formatCurrency(item.quantity * item.Product!.prix_vente,
-                                                currentUser.currency) }}
-                                            </td>
+                                        @for (item of commandeLineList; track item.ID) {
+                                        @if (item.Plat!.ID! > 0) {
+                                        <tr>
+                                          <td>
+                                            {{ item.Plat!.name }}
+                                          </td>
+                                          <td>{{ item.quantity }}
+                                            @if (item.quantity > 1) {
+                                            {{ item.Plat!.unite_vente }}s
+                                            }@else {
+                                            {{ item.Plat!.unite_vente }}
+                                            }
+                                          </td>
+                                          <td> {{ formatCurrency(item.Plat!.prix_vente, currentUser.currency) }} </td>
+                                          <td>
+                                            @if (item.Plat!.tva === 16) {
+                                            {{ item.Plat!.tva }}%
+                                            }@else {
+                                            -
+                                            }
+                                          </td>
+                                          <td>
+                                            {{ formatCurrency(item.quantity * item.Plat!.prix_vente, currentUser.currency) }}
+                                          </td>
                                         </tr>
-                                    </tbody>
+                                        }@else if (item.Product!.ID! > 0) {
+                                        <tr>
+                                          <td>
+                                            {{ item.Product!.name }}
+                                          </td>
+                                          <td>{{ item.quantity }}
+                                            @if (item.quantity > 1) {
+                                            {{ item.Product!.unite_vente }}s
+                                            }@else {
+                                            {{ item.Product!.unite_vente }}
+                                            }
+                                          </td>
+                                          <td> {{ formatCurrency(item.Product!.prix_vente, currentUser.currency) }} </td>
+                                          <td>
+                                            @if (item.Product!.tva === 16) {
+                                            {{ item.Product!.tva }}%
+                                            }@else {
+                                            -
+                                            }
+                                          </td>
+                                          <td>
+                                            {{ formatCurrency(item.quantity * item.Product!.prix_vente, currentUser.currency) }}
+                                          </td>
+                                        </tr>
+                                        }
+                                
+                                        } @empty {
+                                        <tr>
+                                          <td colspan="6">Aucune donnée</td>
+                                        </tr>
+                                        }
+                                      </tbody>
                                     <tfoot>
                                         <tr>
                                             <td colspan="4">Sous-total</td>

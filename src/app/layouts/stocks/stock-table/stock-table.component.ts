@@ -146,7 +146,7 @@ export class StockTableComponent implements OnInit, AfterViewInit {
   }
 
   fetchProducts() {
-    this.stockService.getPaginatedById(this.product.ID!, this.pageIndex, this.pageSize, this.search).subscribe((res) => {
+    this.stockService.getPaginatedById(this.productId, this.pageIndex, this.pageSize, this.search).subscribe((res) => {
       this.dataList = res.data;
       this.totalItems = res.pagination.total_pages;
       this.length = res.pagination.length;
@@ -170,11 +170,11 @@ export class StockTableComponent implements OnInit, AfterViewInit {
   }
 
   getTotalQty() {
-    this.stockService.getTotalQty(this.product.ID!).subscribe((res) => {
+    this.stockService.getTotalQty(this.productId).subscribe((res) => {
       this.stockQty.set(res.data);
-      this.commaneLineService.getTotalQty(this.product.ID!).subscribe((line) => {
+      this.commaneLineService.getTotalQty(this.productId).subscribe((line) => {
         this.cmdLineQty.set(line.data);  
-        this.stockService.GetStockMargeBeneficiaire(this.product.ID!).subscribe(r => { 
+        this.stockService.GetStockMargeBeneficiaire(this.productId).subscribe(r => { 
           const mbAttendu = (this.product.prix_vente - r.data.prix_achat) * r.data.quantity;
           const mbObtenu = (this.product.prix_vente - r.data.prix_achat) * line.data;
           this.profitAttendu.set(mbAttendu);

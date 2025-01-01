@@ -20,8 +20,6 @@ export class PosComponent implements OnInit, AfterViewInit {
   loadUserData = false;
   isLoadingData = false;
   public routes = routes;
-  public sidebarPopup1 = false;
-  public sidebarPopup2 = false;
 
   // Table 
   dataList: IPos[] = [];
@@ -122,16 +120,7 @@ export class PosComponent implements OnInit, AfterViewInit {
         return (aValue < bValue ? -1 : 1) * (sort.direction === 'asc' ? 1 : -1);
       });
     }
-  }
-
-
-  openSidebarPopup1() {
-    this.sidebarPopup1 = !this.sidebarPopup1;
-  }
-  openSidebarPopup2() {
-    this.sidebarPopup2 = !this.sidebarPopup2;
-  }
-
+  } 
 
   onSubmit() {
     try {

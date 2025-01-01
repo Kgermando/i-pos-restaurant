@@ -1,43 +1,71 @@
 @if (loadUserData && loading) {
-    <div class="text-center d-flex justify-content-center align-items-center">
-        <div class="spinner-border bs-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
-        </div>
+<div class="text-center d-flex justify-content-center align-items-center">
+    <div class="spinner-border bs-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
     </div>
-    } @else {
-    @if (commande) {
-    <!-- Page Wrapper -->
-    <div class="page-wrapper">
-        <div class="content">
-            <div class="row">
-                <div class="col-md-12">
-                    <!-- Page Header -->
-                    <div class="page-header">
-                        <div class="row align-items-center">
-                            <div class="col-8">
-                                <h4 class="page-title">
-                                    Commandes
-                                    <span class="count-title">#{{ commande.ncommande }}</span>
-                                </h4>
-                                <!-- <h6>Germain kataku</h6> -->
-                            </div>
-                            <div class="col-4 text-end">
-                                <div class="head-icons">
-                                    <a [routerLink]="routes.commandeList" data-bs-toggle="tooltip" data-bs-placement="top"
-                                        data-bs-original-title="Refresh"><i class="ti ti-refresh-dot"></i></a>
-                                    <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top"
-                                        data-bs-original-title="Collapse" id="collapse-header"><i
-                                            class="ti ti-chevrons-up"></i>
-                                    </a>
-                                </div>
+</div>
+} @else {
+@if (commande) {
+<!-- Page Wrapper -->
+<div class="page-wrapper">
+    <div class="content">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Page Header -->
+                <div class="page-header">
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <h4 class="page-title">
+                                Commandes
+                                <span class="count-title">#{{ commande.ncommande }}</span>
+                            </h4>
+                            <!-- <h6>Germain kataku</h6> -->
+                        </div>
+                        <div class="col-4 text-end">
+                            <div class="head-icons">
+                                <a [routerLink]="routes.commandeList" data-bs-toggle="tooltip" data-bs-placement="top"
+                                    data-bs-original-title="Refresh"><i class="ti ti-refresh-dot"></i></a>
+                                <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top"
+                                    data-bs-original-title="Collapse" id="collapse-header"><i
+                                        class="ti ti-chevrons-up"></i>
+                                </a>
                             </div>
                         </div>
                     </div>
-                    <!-- /Page Header -->
-    
-                    <!-- Campaign Tab -->
-                    <div class="campaign-tab">
-                        <div class="d-block d-lg-none d-xl-none d-flex align-items-center flex-wrap row-gap-2 justify-content-sm-end">
+                </div>
+                <!-- /Page Header -->
+
+                <!-- Campaign Tab -->
+                <div class="campaign-tab">
+                    <div
+                        class="d-block d-lg-none d-xl-none d-flex align-items-center flex-wrap row-gap-2 justify-content-sm-end">
+                        <h4 style="padding-right: 10px;">Panier client : </h4>
+                        <a href="javascript:void(0);" class="btn btn-outline-primary position-relative"
+                            data-bs-toggle="offcanvas" data-bs-target="#offcanvas_view"><i
+                                class="ti ti-shopping-cart me-2" style="size: 40px;"></i>
+                            <span
+                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                {{ totalLength() }}
+                            </span>
+                            <span>{{ formatCurrency(total, currentUser.currency) }}</span>
+                        </a>
+                    </div>
+                    <div class="d-flex align-items-center flex-wrap row-gap-2 justify-content-between">
+                        <ul class="nav">
+                            <li>
+                                <a [routerLink]="['plat-line']" routerLinkActive="active">
+                                    Plats
+                                    <span>{{ platLength() }}</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a [routerLink]="['product-line']" routerLinkActive="active">
+                                    Produits
+                                    <span>{{ prodLength() }}</span>
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="d-none d-lg-flex align-items-center flex-wrap row-gap-2 justify-content-sm-end">
                             <h4 style="padding-right: 10px;">Panier client : </h4>
                             <a href="javascript:void(0);" class="btn btn-outline-primary position-relative"
                                 data-bs-toggle="offcanvas" data-bs-target="#offcanvas_view"><i
@@ -49,81 +77,56 @@
                                 <span>{{ formatCurrency(total, currentUser.currency) }}</span>
                             </a>
                         </div>
-                        <div class="d-flex align-items-center flex-wrap row-gap-2 justify-content-between">
-                            <ul class="nav">
-                                <li>
-                                    <a [routerLink]="['plat-line']" routerLinkActive="active">
-                                        Plats
-                                        <span>{{ platLength() }}</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a [routerLink]="['product-line']" routerLinkActive="active">
-                                        Produits
-                                        <span>{{ prodLength() }}</span> 
-                                    </a>
-                                </li> 
-                            </ul>
-                            <div class="d-none d-lg-flex align-items-center flex-wrap row-gap-2 justify-content-sm-end">
-                                <h4 style="padding-right: 10px;">Panier client : </h4>
-                                <a href="javascript:void(0);" class="btn btn-outline-primary position-relative"
-                                    data-bs-toggle="offcanvas" data-bs-target="#offcanvas_view"><i
-                                        class="ti ti-shopping-cart me-2" style="size: 40px;"></i>
-                                    <span
-                                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                        {{ totalLength() }}
-                                    </span>
-                                    <span>{{ formatCurrency(total, currentUser.currency) }}</span>
-                                </a>
-                            </div>
-                        </div>
                     </div>
-                    <!-- Campaign Tab -->
-                     <router-outlet></router-outlet>
                 </div>
+                <!-- Campaign Tab -->
+                <router-outlet></router-outlet>
             </div>
         </div>
     </div>
-    <!-- /Page Wrapper -->
-    
-    
-    
-    
-    <!--View cart -->
-    <div class="offcanvas offcanvas-end offcanvas-large" tabindex="-1" id="offcanvas_view">
-        <div class="offcanvas-header border-bottom justify-content-between">
-            <h4>Facture <span class="text-purple ms-2">#{{ commande.ncommande }}</span></h4>
-            <div class="d-flex align-items-center">
-                <div class="toggle-header-popup">
-                    <div class="dropdown table-action me-2">
-                        <a href="javascript:void(0);" class="btn btn-dropdowns dropdown-toggle" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            <div style="margin-right: 10px;">
-                                <i class="fa-solid fa-print"></i>
-                            </div>
-                            Download
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <!-- <a class="dropdown-item" href="javascript:void(0);"> Download </a> -->
-                            <a class="dropdown-item" href="javascript:void(0);" (click)="generatePdf()">
-                                Facture PDF
-                            </a>
-                        </div>
+</div>
+<!-- /Page Wrapper -->
+
+
+
+
+<!--View cart -->
+<div class="offcanvas offcanvas-end offcanvas-large" tabindex="-1" id="offcanvas_view">
+    <div class="offcanvas-header border-bottom justify-content-between">
+        <h4>Facture <span class="text-purple ms-2">#{{ commande.ncommande }}</span></h4>
+        <div class="d-flex align-items-center">
+            <div class="toggle-header-popup">
+                <div class="mb-3">
+                    <input #client_id type="text" matInput [matAutocomplete]="auto1" placeholder="Ajouter le Client"
+                        class="form-control" (input)="getAllClient(currentUser)" (focus)="getAllClient(currentUser)"
+                        (change)="onChange($event)">
+                    @if (isloadClient()) {
+                    <div class="d-flex align-items-center">
+                        <strong role="status">Loading...</strong>
+                        <div class="spinner-border ms-auto" aria-hidden="true"></div>
                     </div>
+                    }
+                    <mat-autocomplete requireSelection1 #auto1="matAutocomplete"
+                        (optionSelected)="optionSelectedClient($event)" [displayWith]="displayFnClient">
+                        @for (item of filteredOptionsClient; track item.ID) {
+                        <mat-option [value]="item"> {{item.fullname}} </mat-option>
+                        }
+                    </mat-autocomplete>
                 </div>
-                <button type="button"
-                    class="btn-close custom-btn-close border p-1 me-0 d-flex align-items-center justify-content-center rounded-circle"
-                    data-bs-dismiss="offcanvas" aria-label="Close">
-                    <i class="ti ti-x"></i>
-                </button>
             </div>
-        </div>
-        <div class="offcanvas-body ">
-            <app-cmd-facture [currentUser]="currentUser" [commande_id]="commande.ID!" [commande]="commande"
-                [commandeLineList]="commandeLineList"></app-cmd-facture>
+            <button type="button"
+                class="btn-close custom-btn-close border p-1 me-0 d-flex align-items-center justify-content-center rounded-circle"
+                data-bs-dismiss="offcanvas" aria-label="Close">
+                <i class="ti ti-x"></i>
+            </button>
         </div>
     </div>
-    <!-- /View cart -->
-    
-    }
-    }
+    <div class="offcanvas-body ">
+        <app-cmd-facture [currentUser]="currentUser" [commande_id]="commande.ID!" [commande]="commande"
+            [commandeLineList]="commandeLineList"></app-cmd-facture>
+    </div>
+</div>
+<!-- /View cart -->
+
+}
+}

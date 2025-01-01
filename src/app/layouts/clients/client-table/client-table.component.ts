@@ -31,7 +31,7 @@ export class ClientTableComponent implements OnInit, AfterViewInit {
   length: number = 0;
 
   // Table 
-  displayedColumns: string[] = ['fullname', 'telephone', 'email', 'action', 'id'];
+  displayedColumns: string[] = ['fullname', 'telephone', 'email', 'adress', 'action', 'id'];
   dataSource = new MatTableDataSource<IClient>(this.dataList);
 
   @ViewChild(MatSort) sort!: MatSort;
@@ -80,6 +80,7 @@ export class ClientTableComponent implements OnInit, AfterViewInit {
       fullname: ['', Validators.required],
       telephone: ['', Validators.required],
       email: ['', Validators.required],
+      adress: ['', Validators.required],
     });
   }
 
@@ -151,13 +152,14 @@ export class ClientTableComponent implements OnInit, AfterViewInit {
           fullname: this.formGroup.value.fullname,
           telephone: this.formGroup.value.telephone,
           email: this.formGroup.value.email,
+          adress: this.formGroup.value.adress,
           signature: this.currentUser.fullname,
           code_entreprise: parseInt(this.currentUser.entreprise!.code.toString()),
         };
         this.clientService.create(body).subscribe(() => {
           this.isLoading = false;
           this.formGroup.reset();
-          this.toastr.success('Client ajoutée avec succès!', 'Success!');
+          this.toastr.success('Client ajouté avec succès!', 'Success!');
         });
 
       }
@@ -175,6 +177,7 @@ export class ClientTableComponent implements OnInit, AfterViewInit {
         fullname: this.formGroup.value.fullname,
         telephone: this.formGroup.value.telephone,
         email: this.formGroup.value.email,
+        adress: this.formGroup.value.adress,
         signature: this.currentUser.fullname,
         code_entreprise: parseInt(this.currentUser.entreprise!.code.toString()),
       };
@@ -198,6 +201,7 @@ export class ClientTableComponent implements OnInit, AfterViewInit {
         fullname: this.dataItem.fullname,
         telephone: this.dataItem.telephone,
         email: this.dataItem.email,
+        adress: this.dataItem.adress,
       });
     });
   }

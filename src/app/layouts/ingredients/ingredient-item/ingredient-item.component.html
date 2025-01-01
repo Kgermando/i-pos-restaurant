@@ -1,0 +1,11 @@
+
+
+<div class="progress-container">
+    <div class="progress-bar" [style.width.%]="pourcentstockDispo()" [ngClass]="{
+      'bg-danger': +pourcentstockDispo().toFixed(2) < 30,
+      'bg-warning': +pourcentstockDispo().toFixed(2) >= 30 && +pourcentstockDispo().toFixed(2) < 70,
+      'bg-success': +pourcentstockDispo().toFixed(2) >= 70
+    }"></div>
+  </div>
+  <p>Taux de Stock disponible: {{ pourcentstockDispo().toFixed(2) }}%</p>
+  

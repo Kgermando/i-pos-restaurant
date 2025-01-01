@@ -18,6 +18,16 @@ import { PlatComponent } from './plat/plat.component';
 import { TableBoxComponent } from './table-box/table-box.component';
 import { ProductLineComponent } from './commandes-lines/product-line/product-line.component';
 import { PlatLineComponent } from './commandes-lines/plat-line/plat-line.component';
+import { IngredientsComponent } from './ingredients/ingredients.component';
+import { IngredientStocksComponent } from './ingredient-stocks/ingredient-stocks.component';
+import { LivraisonsComponent } from './livraisons/livraisons.component';
+import { LivreursComponent } from './livreurs/livreurs.component';
+import { AreaComponent } from './area/area.component';
+import { LivraisonLineComponent } from './livraisons/livraison-line/livraison-line.component';
+import { LivProductLineComponent } from './livraisons/liv-product-line/liv-product-line.component';
+import { LivPlatLineComponent } from './livraisons/liv-plat-line/liv-plat-line.component';
+import { LivraisonFactureComponent } from './livraisons/livraison-facture/livraison-facture.component';
+
 
 const routes: Routes = [
   {
@@ -56,7 +66,7 @@ const routes: Routes = [
       {
         path: 'table-box/commandes/:id/line',
         component: CommandesLinesComponent, children: [
-          {
+          { 
             path: 'product-line',
             component: ProductLineComponent, 
           },
@@ -92,13 +102,55 @@ const routes: Routes = [
         component: StockViewComponent,
       },
       {
+        path: 'ingredients/ingredient-list',
+        component: IngredientsComponent,
+      },
+      {
+        path: 'ingredients/:id/stocks',
+        component: IngredientStocksComponent,
+      },
+      {
         path: 'clients/client-list',
         component: ClientsComponent,
       },
       {
         path: 'fournisseurs/fournisseur-list',
         component: FournisseursComponent,
-      }, 
+      },
+      {
+        path: 'livreurs/livreur-list',
+        component: LivreursComponent,
+      },
+      {
+        path: 'livraisons/livraison-list',
+        component: LivraisonsComponent,
+      },
+      {
+        path: 'livraisons/view/:id/facture/:fullname',
+        component: LivraisonFactureComponent,
+      },
+      {
+        path: 'livraisons/:id/line',
+        component: LivraisonLineComponent, children: [
+          { 
+            path: 'product-line',
+            component: LivProductLineComponent, 
+          },
+          {
+            path: 'plat-line',
+            component: LivPlatLineComponent,
+          },
+          {
+            path: '',
+            redirectTo: 'plat-line',
+            pathMatch: 'full'
+          }
+        ]
+      },
+      {
+        path: 'areas/area-list',
+        component: AreaComponent,
+      },
       {
         path: 'dashboard',
         component: DashboardComponent,

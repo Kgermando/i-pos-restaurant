@@ -1,3 +1,6 @@
+import { ICommandeLine } from "./commande_line.model";
+import { IComposition } from "./composition.model";
+
 export interface IPlat {
     ID?: number;
     reference: string;
@@ -11,4 +14,6 @@ export interface IPlat {
     CreatedAt?: Date;
     UpdatedAt?: Date;
     signature: string;
+    commandeLines?: ICommandeLine[]; 
+    Compositions?: IComposition[]; 
 }

@@ -1,0 +1,412 @@
+<!-- Page Wrapper -->
+<div class="page-wrapper">
+    <div class="content">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Page Header -->
+                <div class="page-header">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h4 class="page-title">
+                                Livreurs <span class="count-title">{{ length }}</span>
+                            </h4>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <div class="head-icons">
+                                <app-reload></app-reload>
+                                <app-collapse-header></app-collapse-header>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /Page Header -->
+                @if (loadUserData) {
+                <div class="spinner-border text-center d-flex justify-content-center align-items-center" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                }@else {
+                @if (currentUser) {
+                <div class="card">
+                    <div class="card-header">
+                        <!-- Search -->
+                        <div class="row align-items-center">
+                            <div class="col-sm-4">
+                                <div class="icon-form mb-3 mb-sm-0">
+                                    <span class="form-icon"><i class="ti ti-search"></i></span>
+                                    <input type="text" #input [(ngModel)]="search"
+                                        (ngModelChange)="onSearchChange($event)" class="form-control"
+                                        placeholder="Ex. societe ou luvreur" />
+                                </div>
+                            </div>
+                            <div class="col-sm-8">
+                                <div class="d-flex align-items-center flex-wrap row-gap-2 justify-content-sm-end">
+                                    <div class="dropdown me-2">
+                                        <a href="javascript:void(0);" class="dropdown-toggle"
+                                            data-bs-toggle="dropdown"><i
+                                                class="ti ti-package-export me-2"></i>Export</a>
+                                        <div class="dropdown-menu dropdown-menu-end">
+                                            <ul>
+                                                <li>
+                                                    <a href="javascript:void(0);" class="dropdown-item"><i
+                                                            class="ti ti-file-type-pdf text-danger me-1"></i>Export as
+                                                        PDF</a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript:void(0);" class="dropdown-item"><i
+                                                            class="ti ti-file-type-xls text-green me-1"></i>Export as
+                                                        Excel
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    @if(currentUser.permission === 'ALL' ||
+                                    currentUser.permission === 'AM' ||
+                                    currentUser.permission === 'A') {
+                                    <a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="offcanvas"
+                                        data-bs-target="#offcanvas_add_mobile">
+                                        <i class="ti ti-square-rounded-plus me-2"></i>
+                                        Ajouter un livreur
+                                    </a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /Search -->
+                    </div>
+
+                    <div class="card-body">
+
+                        <!-- Recent Task List -->
+                        <div class="task-wrapper">
+                            @if (isLoadingData || isLoading ){
+                            <button disabled class="btn btn-primary">
+                                <div class="spinner-border" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </button>
+                            } @else {
+                            <div class="tasks-activity tasks mb-5" id="recent">
+                                <ul>
+                                    @for (item of dataList; track item.ID) {
+                                    <li class="task-wrap pending">
+                                        <div class="">
+                                            <h6>
+                                                {{ item.name_society }}
+                                            </h6>
+                                            <p> {{ item.livreur_name }} </p>
+                                        </div>
+                                        <div class="task-actions">
+                                            <ul class="social-links d-flex align-items-center">
+                                                <li>
+                                                    <a [href]="generateMailtoLink(item.email!)">
+                                                        <i class="ti ti-mail"></i>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a [href]="generateTeltoLink(item.telephone)">
+                                                        <i class="ti ti-phone-check"></i>
+                                                    </a>
+                                                </li>
+                                                <li class="task-owner">
+                                                    <div class="dropdown table-action">
+                                                        <a href="javascript:void(0);" class="action-icon"
+                                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                                            <i class="fa fa-ellipsis-v"></i>
+                                                        </a>
+                                                        <div class="dropdown-menu dropdown-menu-right">
+                                                            @if(currentUser.permission === 'ALL' ||
+                                                            currentUser.permission === 'AM' ||
+                                                            currentUser.permission === 'MS' ||
+                                                            currentUser.permission === 'M') {
+                                                            <a class="dropdown-item" data-bs-toggle="offcanvas"
+                                                                href="javascript:void(0);"
+                                                                data-bs-target="#offcanvas_edit_mobile"
+                                                                (click)="findValue(item.ID!)">
+                                                                <i class="ti ti-edit text-blue"></i>
+                                                                Edit
+                                                            </a>
+                                                            }
+                                                            @if (isLoading) {
+                                                                <div class="spinner-border" role="status">
+                                                                    <span class="visually-hidden">Loading...</span>
+                                                                </div>
+                                                            }@else { 
+                                                                @if(currentUser.permission === 'ALL' ||
+                                                            currentUser.permission === 'MS') {
+                                                            <a class="dropdown-item" href="javascript:void(0);"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#delete_contact_mobile"
+                                                                (click)="findValue(item.ID!)">
+                                                                <i class="ti ti-trash text-danger"></i>
+                                                                Delete
+                                                            </a>
+                                                            }
+                                                            }  
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    } @empty {
+                                    <li>Pas encore de donnée </li>
+                                    }
+                                </ul>
+                            </div>
+                            <mat-paginator [length]="length" [pageSize]="pageSize"
+                                [pageSizeOptions]="[15, 20, 30, 40, 50, 80, 100]" showFirstLastButtons
+                                (page)="onPageChange($event)" aria-label="Select page">
+                            </mat-paginator>
+                            }
+
+                        </div>
+                        <!-- /Recent Task List -->
+
+                        <!-- /Task List -->
+                    </div>
+                </div>
+                }
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Page Wrapper -->
+
+<!-- Add data form -->
+<div class="offcanvas offcanvas-end offcanvas-large" tabindex="-1" id="offcanvas_add_mobile">
+    <div class="offcanvas-header border-bottom">
+        <h5 class="fw-semibold">Ajouter Nouveau Livreur</h5>
+        <button type="button"
+            class="btn-close custom-btn-close border p-1 me-0 d-flex align-items-center justify-content-center rounded-circle"
+            data-bs-dismiss="offcanvas" aria-label="Close">
+            <i class="ti ti-x"></i>
+        </button>
+    </div>
+    <div class="offcanvas-body">
+        <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+            <div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="name_society">Nom de la société
+                                    <span class="text-danger">*</span></label>
+                            </div>
+                            <input type="text" class="form-control" formControlName="name_society" required />
+                            <mat-error *ngIf="formGroup.controls['name_society'].hasError('required')">
+                                Ce champs est obligatoire
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="livreur_name">Nom du livreur
+                                    <span class="text-danger">*</span></label>
+                            </div>
+                            <input type="text" class="form-control" formControlName="livreur_name" required />
+                            <mat-error *ngIf="formGroup.controls['livreur_name'].hasError('required')">
+                                Ce champs est obligatoire
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="telephone">Telephone <span
+                                        class="text-danger">*</span></label>
+                            </div>
+                            <input type="tel" class="form-control" formControlName="telephone" required />
+                            <mat-error *ngIf="formGroup.controls['telephone'].hasError('required')">
+                                Ce champs est obligatoire
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="email">Email <span
+                                        class="text-danger">*</span></label>
+                            </div>
+                            <input type="email" class="form-control" formControlName="email" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="rccm">RCCM
+                                    <span class="text-danger">*</span></label>
+                            </div>
+                            <input type="text" class="form-control" formControlName="rccm" required />
+                            <mat-error *ngIf="formGroup.controls['rccm'].hasError('required')">
+                                Ce champs est obligatoire
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="idnat">Id. nat.
+                                    <span class="text-danger">*</span></label>
+                            </div>
+                            <input type="text" class="form-control" formControlName="idnat" required />
+                            <mat-error *ngIf="formGroup.controls['idnat'].hasError('required')">
+                                Ce champs est obligatoire
+                            </mat-error>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-end">
+                <a href="javascript:void(0);" class="btn btn-light me-2" data-bs-dismiss="offcanvas">Annuler</a>
+                @if (isLoading) {
+                <button disabled class="btn btn-primary">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </button>
+                }
+                @if (!isLoading) {
+                <button type="submit" class="btn btn-primary" id="myOffcanvas" data-bs-dismiss="offcanvas"
+                    data-bs-target="#create_success">Soumettre</button>
+                }
+            </div>
+        </form>
+    </div>
+</div>
+<!-- /Add data form -->
+
+<!-- Edit data form -->
+<div class="offcanvas offcanvas-end offcanvas-large" tabindex="-1" id="offcanvas_edit_mobile">
+
+    <div class="offcanvas-header border-bottom">
+        <h4>Modification du Livreur</h4>
+        <button type="button"
+            class="btn-close custom-btn-close border p-1 me-0 d-flex align-items-center justify-content-center rounded-circle"
+            data-bs-dismiss="offcanvas" aria-label="Close">
+            <i class="ti ti-x"></i>
+        </button>
+    </div>
+    <div class="offcanvas-body">
+        <form [formGroup]="formGroup" (ngSubmit)="onSubmitUpdate()">
+            <div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="name_society">Nom de la société
+                                    <span class="text-danger">*</span></label>
+                            </div>
+                            <input type="text" class="form-control" formControlName="name_society" required />
+                            <mat-error *ngIf="formGroup.controls['name_society'].hasError('required')">
+                                Ce champs est obligatoire
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="livreur_name">Nom du livreur
+                                    <span class="text-danger">*</span></label>
+                            </div>
+                            <input type="text" class="form-control" formControlName="livreur_name" required />
+                            <mat-error *ngIf="formGroup.controls['livreur_name'].hasError('required')">
+                                Ce champs est obligatoire
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="telephone">Telephone <span
+                                        class="text-danger">*</span></label>
+                            </div>
+                            <input type="tel" class="form-control" formControlName="telephone" required />
+                            <mat-error *ngIf="formGroup.controls['telephone'].hasError('required')">
+                                Ce champs est obligatoire
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="email">Email <span
+                                        class="text-danger">*</span></label>
+                            </div>
+                            <input type="email" class="form-control" formControlName="email" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="rccm">RCCM
+                                    <span class="text-danger">*</span></label>
+                            </div>
+                            <input type="text" class="form-control" formControlName="rccm" required />
+                            <mat-error *ngIf="formGroup.controls['rccm'].hasError('required')">
+                                Ce champs est obligatoire
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="idnat">Id. nat.
+                                    <span class="text-danger">*</span></label>
+                            </div>
+                            <input type="text" class="form-control" formControlName="idnat" required />
+                            <mat-error *ngIf="formGroup.controls['idnat'].hasError('required')">
+                                Ce champs est obligatoire
+                            </mat-error>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-end">
+                <button type="button" data-bs-dismiss="offcanvas" class="btn btn-light me-2">Cancel</button>
+                @if (isLoading) {
+                <button disabled class="btn btn-primary">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </button>
+                }
+                @if (!isLoading) {
+                <button type="submit" class="btn btn-primary" data-bs-dismiss="offcanvas"
+                    data-bs-target="#create_success">
+                    Save Changes
+                </button>
+                }
+            </div>
+        </form>
+    </div>
+
+</div>
+<!-- /Edit data form -->
+
+<!-- Delete data item -->
+<div class="modal fade" id="delete_contact_mobile" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="text-center">
+                    <div class="avatar avatar-xl bg-danger-light rounded-circle mb-3">
+                        <i class="ti ti-trash-x fs-36 text-danger"></i>
+                    </div>
+                    <h4 class="mb-2">Supprimer cet l'élément ?</h4>
+                    <p class="mb-0">Êtes-vous sûr de vouloir le supprimer ?</p>
+                    <div class="d-flex align-items-center justify-content-center mt-4">
+                        <a href="javascript:void(0);" class="btn btn-light me-2" data-bs-dismiss="modal">Annuler</a>
+                        <button (click)="delete()" class="btn btn-danger" data-bs-dismiss="modal">
+                            Oui, supprimez-le
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Delete data item -->

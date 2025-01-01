@@ -6,7 +6,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   styleUrl: './cmd-qty-input.component.scss'
 })
 export class CmdQtyInputComponent {
-  @Input() quantity: number = 0;
+  @Input() quantity: number = 1;
   @Output() quantityChange = new EventEmitter<number>();
  
   increment() {

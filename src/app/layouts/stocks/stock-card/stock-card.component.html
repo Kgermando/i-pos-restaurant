@@ -77,8 +77,8 @@
                             <div class="tasks-activity tasks collapse show mt-3" id="rapport">
                                 <!-- Campaign Status -->
                                 <div class="row">
-                                    <div class="col-xl-4 col-lg-6"> 
-                                        <div class="campaign-box bg-primary-light" style="background-color: #007d9c1f;"> 
+                                    <div class="col-xl-4 col-lg-6">
+                                        <div class="campaign-box bg-primary-light" style="background-color: #007d9c1f;">
                                             <div class="campaign-img">
                                                 <p>Prix de vente</p>
                                             </div>
@@ -87,7 +87,7 @@
 
                                                 <br>
                                                 <h6 style="font-weight: 300;">
-                                                    {{ formatCurrency(prixAchat(), currentUser.currency) }} 
+                                                    {{ formatCurrency(prixAchat(), currentUser.currency) }}
                                                 </h6>
                                             </h4>
                                         </div>
@@ -195,6 +195,11 @@
                                                                 Edit
                                                             </a>
                                                             }
+                                                            @if (isLoading) {
+                                                            <div class="spinner-border" role="status">
+                                                                <span class="visually-hidden">Loading...</span>
+                                                            </div>
+                                                            }@else {
                                                             @if(currentUser.permission === 'ALL' ||
                                                             currentUser.permission === 'MS') {
                                                             <a class="dropdown-item" href="javascript:void(0);"
@@ -204,6 +209,7 @@
                                                                 <i class="ti ti-trash text-danger"></i>
                                                                 Delete
                                                             </a>
+                                                            }
                                                             }
                                                         </div>
                                                     </div>
@@ -255,14 +261,14 @@
                 <div class="row">
                     <div class="col-md-6">
                         @if (product) {
-                            <div class="mb-3">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <label class="col-form-label" for="name">Prix de vente <span
-                                            class="text-danger">*</span></label>
-                                </div>
-                                <input type="number" class="form-control" [value]="product.prix_vente" [readOnly]="true" /> 
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="name">Prix de vente <span
+                                        class="text-danger">*</span></label>
                             </div>
-                        } 
+                            <input type="number" class="form-control" [value]="product.prix_vente" [readOnly]="true" />
+                        </div>
+                        }
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
@@ -301,7 +307,7 @@
                                     formControlName="date_expiration" />
                                 <mat-error *ngIf="formGroup.controls['date_expiration'].hasError('required')">
                                     Ce champs est obligatoire
-                                </mat-error> 
+                                </mat-error>
                             </div>
                         </div>
                     </div>
@@ -334,7 +340,7 @@
                 </div>
             </div>
             <div class="d-flex align-items-center justify-content-end">
-                <a href="javascript:void(0);" class="btn btn-light me-2" data-bs-dismiss="offcanvas">Cancel</a>
+                <a href="javascript:void(0);" class="btn btn-light me-2" data-bs-dismiss="offcanvas">Annuler</a>
                 @if (isLoading) {
                 <button disabled class="btn btn-primary">
                     <div class="spinner-border" role="status">
@@ -344,7 +350,7 @@
                 }
                 @if (!isLoading) {
                 <button type="submit" class="btn btn-primary" id="myOffcanvas" data-bs-dismiss="offcanvas"
-                    data-bs-target="#create_success">Create</button>
+                    data-bs-target="#create_success">Soumettre</button>
                 }
             </div>
         </form>
@@ -369,14 +375,14 @@
                 <div class="row">
                     <div class="col-md-6">
                         @if (product) {
-                            <div class="mb-3">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <label class="col-form-label" for="name">Prix de vente <span
-                                            class="text-danger">*</span></label>
-                                </div>
-                                <input type="number" class="form-control" [value]="product.prix_vente" [readOnly]="true" /> 
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="name">Prix de vente <span
+                                        class="text-danger">*</span></label>
                             </div>
-                        } 
+                            <input type="number" class="form-control" [value]="product.prix_vente" [readOnly]="true" />
+                        </div>
+                        }
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">

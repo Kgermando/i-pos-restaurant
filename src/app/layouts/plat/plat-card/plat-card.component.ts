@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, signal, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, signal, ViewChild } from '@angular/core';
 import { routes } from '../../../shared/routes/routes';
 import { IPlat } from '../../../models/plat.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -12,6 +12,11 @@ import { PlatService } from '../plat.service';
 import { ToastrService } from 'ngx-toastr';
 import { PageEvent } from '@angular/material/paginator';
 import { BarcodeFormat } from '@zxing/library';
+import { IComposition } from '../../../models/composition.model';
+import { IIngredient } from '../../../models/ingredient.model';
+import { IngredientService } from '../../ingredients/ingredient.service';
+import { CompositionService } from '../composition.service';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-plat-card',
@@ -21,7 +26,7 @@ import { BarcodeFormat } from '@zxing/library';
 export class PlatCardComponent implements OnInit, AfterViewInit {
   loadUserData = false;
   isLoadingData = false;
-  public routes = routes; 
+  public routes = routes;
 
   // Table 
   dataList: IPlat[] = [];
@@ -56,16 +61,21 @@ export class PlatCardComponent implements OnInit, AfterViewInit {
   // Utilisation des formats BarcodeFormat
   formats = [BarcodeFormat.QR_CODE, BarcodeFormat.CODE_128, BarcodeFormat.CODE_39, BarcodeFormat.EAN_13];
 
-  qty = 80;
-  totalStockQty = 0;
-  totalCmdQty = 0;
-  totalQtyRest = 0;
 
-  pourcentQty = signal<number>(100);
-  qtyDispo = signal<number>(0);
+  // Composition
+  formGroupComp!: FormGroup;
 
-  prix = signal<number>(3000);
-  profit = signal<number>(0);
+  compositionList: IComposition[] = [];
+  idItemComp!: number;
+  dataItemComp!: IComposition;
+  isloadComp = false;
+
+  ingredientList: IIngredient[] = [];
+  ingredientListFilter: IIngredient[] = [];
+  filteredOptions: IIngredient[] = [];
+  @ViewChild('ingredient_id') ingredient_id!: ElementRef<HTMLInputElement>;
+  ingredientID!: number;
+  isload = false;
 
 
   constructor(
@@ -73,7 +83,9 @@ export class PlatCardComponent implements OnInit, AfterViewInit {
     private _formBuilder: FormBuilder,
     private authService: AuthService,
     private currencyPipe: CurrencyPipe,
-    private platService: PlatService, 
+    private platService: PlatService,
+    private ingredientService: IngredientService,
+    private compositionService: CompositionService,
     private toastr: ToastrService
   ) { }
 
@@ -86,6 +98,14 @@ export class PlatCardComponent implements OnInit, AfterViewInit {
           this.fetchProducts(this.currentUser);
         });
         this.fetchProducts(this.currentUser);
+
+
+        this.getAllIngredientFilter(this.currentUser);
+
+        this.compositionService.refreshDataList$.subscribe(() => {
+          this.getAllComposition(this.currentUser);
+        });
+        this.getAllComposition(this.currentUser);
       },
       error: (error) => {
         this.isLoadingData = false;
@@ -105,6 +125,11 @@ export class PlatCardComponent implements OnInit, AfterViewInit {
       prix_vente: ['', Validators.required],
       tva: ['', Validators.required],
     });
+
+    this.formGroupComp = this._formBuilder.group({
+      quantity: ['', Validators.required],
+    });
+
 
     // Obtenir tous les appareils disponibles (caméras)
     navigator.mediaDevices.enumerateDevices().then((devices: MediaDeviceInfo[]) => {
@@ -150,7 +175,7 @@ export class PlatCardComponent implements OnInit, AfterViewInit {
     this.search = search;
     this.fetchProducts(this.currentUser);
   }
- 
+
 
   onReferenceGenCode() {
     const code = Math.floor(1000000000000 + Math.random() * 9999999999999);
@@ -176,7 +201,7 @@ export class PlatCardComponent implements OnInit, AfterViewInit {
 
     console.log('Code barre scanné :', this.reference);
   }
- 
+
 
   // Format de devise
   formatCurrency(price: number, currency: string): string {
@@ -202,9 +227,9 @@ export class PlatCardComponent implements OnInit, AfterViewInit {
         this.platService.create(body).subscribe(() => {
           this.isLoading = false;
           this.formGroup.reset();
-          this.reference = ''; 
+          this.reference = '';
           this.toastr.success('Produit ajouté avec succès!', 'Success!');
-        }); 
+        });
       }
     } catch (error) {
       this.isLoading = false;
@@ -232,7 +257,7 @@ export class PlatCardComponent implements OnInit, AfterViewInit {
         this.reference = '';
         this.toastr.success('Modification enregistré!', 'Success!');
         this.isLoading = false;
-      }); 
+      });
     } catch (error) {
       this.isLoading = false;
       console.log(error);
@@ -260,11 +285,91 @@ export class PlatCardComponent implements OnInit, AfterViewInit {
   delete(): void {
     this.isLoading = true;
     this.platService.delete(this.idItem).subscribe(() => {
-      this.formGroup.reset(); 
+      this.formGroup.reset();
       this.reference = '';
       this.toastr.info('Supprimé avec succès!', 'Success!');
       this.isLoading = false;
-    }); 
+    });
   }
 
+
+
+  // ### Composition ### 
+  getAllComposition(currentUser: IUser): void {
+    this.isloadComp = true;
+    this.compositionService.getAllEntreprisePos(currentUser.entreprise?.code!, currentUser.pos?.ID!).subscribe(res => {
+      this.compositionList = res.data;
+      this.isloadComp = false;
+    });
+  }
+
+  getAllIngredientFilter(currentUser: IUser): void {
+    if (this.ingredient_id) {
+      this.isload = true;
+      const filterValue = this.ingredient_id.nativeElement.value.toLowerCase();
+      this.ingredientService.getAllEntreprisePos(currentUser.entreprise?.code!, currentUser.pos?.ID!).subscribe(res => {
+        this.ingredientList = res.data;
+        this.ingredientListFilter = this.ingredientList;
+        this.filteredOptions = this.ingredientListFilter.filter(o => o.name.toLowerCase().includes(filterValue));
+        this.isload = false;
+      });
+    }
+  }
+
+  displayFn(pos: any): any {
+    return pos && pos.name ? pos.name : '';
+  }
+
+  optionSelected(event: MatAutocompleteSelectedEvent) {
+    const selectedOption = event.option.value;
+    const name = selectedOption.name;
+    this.ingredientID = selectedOption.ID;
+    // Utilisez id et fullName comme vous le souhaitez
+    console.log('ingredientID:', this.ingredientID);
+    console.log('Name:', name);
+  }
+
+
+  onSubmitComp() {
+    try {
+      if (this.formGroupComp.valid) {
+        this.isLoading = true;
+        const body: IComposition = {
+          plat_id: parseInt(this.dataItem.ID!.toString()),
+          ingredient_id: (this.ingredientID) ? parseInt(this.ingredientID.toString()) : 0,
+          quantity: this.formGroupComp.value.quantity,
+          signature: this.currentUser.fullname,
+          pos_id: parseInt(this.currentUser.pos!.ID.toString()),
+          code_entreprise: parseInt(this.currentUser.entreprise!.code.toString()),
+        };
+        this.compositionService.create(body).subscribe(() => {
+          this.isLoading = false;
+          this.formGroupComp.reset();
+          this.toastr.success('Composition ajoutée avec succès!', 'Success!');
+        });
+      }
+    } catch (error) {
+      this.isLoading = false;
+      console.log(error);
+    }
+  }
+
+
+
+  findValueComp(value: number) {
+    this.idItemComp = value;
+    this.compositionService.get(this.idItemComp).subscribe(item => {
+      this.dataItemComp = item.data;
+    });
+  }
+
+  deleteComp(): void {
+    this.isloadComp = true;
+    this.compositionService.delete(this.idItemComp).subscribe(() => {
+      this.formGroupComp.reset();
+      this.getAllComposition(this.currentUser);
+      this.toastr.info('Supprimé avec succès!', 'Success!');
+      this.isloadComp = false;
+    });
+  }
 }

@@ -1,0 +1,24 @@
+/* Cache le composant pour les écrans de taille mobile et tablette */
+.desktop-only {
+    display: none;
+  }
+  
+  /* Affiche le composant pour les écrans de taille desktop */
+  @media (min-width: 1024px) {
+    .desktop-only {
+      display: block;
+    }
+  }
+  
+  /* Cache le composant pour les écrans de taille desktop */
+  .mobile-tablet-only {
+    display: block;
+  }
+  
+  /* Affiche le composant pour les écrans de taille mobile et tablette */
+  @media (min-width: 1024px) {
+    .mobile-tablet-only {
+      display: none;
+    }
+  }
+  

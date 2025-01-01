@@ -87,9 +87,7 @@
                 <div class="tasks-activity tasks mb-5" id="recent">
                   <ul>
                     @for (item of dataList; track item.ID) { 
-                    <li class="task-wrap" [ngClass]="{ 
-                            'success': pourcentQty() >= 70
-                          }">
+                    <li class="task-wrap success">
                       <div>
                         <h6>
                             #{{ item.reference }}
@@ -112,6 +110,11 @@
                                 <i class="fa fa-ellipsis-v"></i>
                               </a>
                               <div class="dropdown-menu dropdown-menu-right">
+                                <a class="dropdown-item" data-bs-toggle="offcanvas" href="javascript:void(0);"
+                                  data-bs-target="#offcanvas_composition_mobile" (click)="findValue(item.ID!)">
+                                  <i class="ti ti-file text-blue"></i>
+                                  Voir
+                                </a>
                                 @if(currentUser.permission === 'ALL' ||
                                 currentUser.permission === 'AM' ||
                                 currentUser.permission === 'MS' ||
@@ -257,7 +260,7 @@
           </div>
         </div>
         <div class="d-flex align-items-center justify-content-end">
-          <a href="javascript:void(0);" class="btn btn-light me-2" data-bs-dismiss="offcanvas">Cancel</a>
+          <a href="javascript:void(0);" class="btn btn-light me-2" data-bs-dismiss="offcanvas">Annuler</a>
           @if (isLoading) {
           <button disabled class="btn btn-primary">
             <div class="spinner-border" role="status">
@@ -267,7 +270,7 @@
           }
           @if (!isLoading) {
           <button type="submit" class="btn btn-primary" id="myOffcanvas" data-bs-target="#create_success"
-            data-bs-dismiss="offcanvas">Create</button>
+            data-bs-dismiss="offcanvas">Soumettre</button>
           }
         </div>
       </form>
@@ -404,3 +407,167 @@
     </div>
   </div>
   <!-- /Delete data item -->
+
+  <!-- Composition data form -->
+<div class="offcanvas offcanvas-end offcanvas-large" tabindex="-1" id="offcanvas_composition_mobile">
+  @if (currentUser && dataItem) {
+  <div class="offcanvas-header border-bottom">
+      <h5 class="fw-semibold">Ajouter ingredient pour {{ dataItem.name }} </h5>
+      <button type="button"
+          class="btn-close custom-btn-close border p-1 me-0 d-flex align-items-center justify-content-center rounded-circle"
+          data-bs-dismiss="offcanvas" aria-label="Close">
+          <i class="ti ti-x"></i>
+      </button>
+  </div>
+  <div class="offcanvas-body">
+      <form [formGroup]="formGroupComp" (ngSubmit)="onSubmitComp()">
+          <div>
+              <div class="row">
+                  <div class="col-md-6">
+                      <div class="mb-3">
+                          <label class="col-form-label" for="text">Ingredient <span
+                                  class="text-danger">*</span></label>
+                          <input #ingredient_id type="text" matInput [matAutocomplete]="auto"
+                              placeholder="Selectionner l'ingredient" class="form-control"
+                              (input)="getAllIngredientFilter(currentUser)"
+                              (focus)="getAllIngredientFilter(currentUser)"
+                              >
+                          @if (isload) {
+                          <div class="d-flex align-items-center">
+                              <strong role="status">Loading...</strong>
+                              <div class="spinner-border ms-auto" aria-hidden="true"></div>
+                          </div>
+                          }
+                          <mat-autocomplete requireSelection #auto="matAutocomplete"
+                              (optionSelected)="optionSelected($event)" [displayWith]="displayFn">
+                              @for (item of filteredOptions; track item) {
+                              <mat-option [value]="item"> {{item.name}} </mat-option>
+                              }
+                          </mat-autocomplete>
+                      </div>
+                  </div>
+                  <div class="col-md-6">
+                      <div class="mb-3">
+                          <div class="d-flex justify-content-between align-items-center">
+                              <label class="col-form-label" for="name">Quantité <span
+                                      class="text-danger">*</span></label>
+                          </div>
+                          <input type="number" class="form-control" formControlName="quantity" required />
+                          <mat-error *ngIf="formGroupComp.controls['quantity'].hasError('required')">
+                              Ce champs est obligatoire
+                          </mat-error>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="d-flex align-items-center justify-content-end">
+              <a href="javascript:void(0);" class="btn btn-light me-2" data-bs-dismiss="offcanvas">Annuler</a>
+              @if (isLoading) {
+              <button disabled class="btn btn-primary">
+                  <div class="spinner-border" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                  </div>
+              </button>
+              }
+              @if (!isLoading) {
+              <button type="submit" class="btn btn-primary" id="myOffcanvas"  
+                  data-bs-target="#create_success">Soumettre</button>
+              }
+          </div>
+      </form>
+      <hr>
+      <!-- Recent Task List -->
+      <div class="task-wrapper mt-5">
+          @if (isloadComp){
+          <button disabled class="btn btn-primary">
+              <div class="spinner-border" role="status">
+                  <span class="visually-hidden">Loading...</span>
+              </div>
+          </button>
+          } @else {
+          <div class="tasks-activity tasks mb-5" id="recent">
+              <h4>Liste Ingredients pour <span class="text-primary">{{ dataItem.name }}</span></h4>
+              <ul>
+                  @for (item of compositionList; track item.ID) {
+                  <li class="task-wrap  ">
+                      <div>
+                          <h5>{{ item.Ingredient!.name }} </h5>
+                          <p>{{ item.Ingredient!.description }}</p>
+                      </div>
+                      <div class="task-actions">
+                          <ul>
+                              <li>
+                                  Qty:
+                                  {{item.quantity}} @if (item.quantity > 1 ) {
+                                  {{ item.Ingredient!.unite }}s
+                                  } @else {
+                                  {{ item.Ingredient!.unite }}
+                                  }
+                              </li>
+                              <li class="task-owner">
+                                  <div class="dropdown table-action">
+                                      <a href="javascript:void(0);" class="action-icon" data-bs-toggle="dropdown"
+                                          aria-expanded="false">
+                                          <i class="fa fa-ellipsis-v"></i>
+                                      </a>
+                                      <div class="dropdown-menu dropdown-menu-right">
+                                          @if (isloadComp) {
+                                          <button disabled class="btn btn-primary">
+                                              <div class="spinner-border" role="status">
+                                                  <span class="visually-hidden">Loading...</span>
+                                              </div>
+                                          </button>
+                                          }@else {
+                                          @if(currentUser.permission === 'ALL' ||
+                                          currentUser.permission === 'MS') {
+                                          <a class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal"
+                                              data-bs-target="#delete_contact_compsition"
+                                              (click)="findValueComp(item.ID!)">
+                                              <i class="ti ti-trash text-danger"></i>
+                                              Delete
+                                          </a>
+                                          }
+                                          }
+                                      </div>
+                                  </div>
+                              </li>
+                          </ul>
+                      </div>
+                  </li>
+                  } @empty {
+                  <li>Pas encore de donnée </li>
+                  }
+              </ul>
+          </div>
+          }
+
+      </div>
+      <!-- /Recent Task List -->
+  </div>
+  }
+</div>
+<!-- /Composition data form -->
+
+<!-- Delete composition data item -->
+<div class="modal fade" id="delete_contact_compsition" role="dialog">
+  <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+          <div class="modal-body">
+              <div class="text-center">
+                  <div class="avatar avatar-xl bg-danger-light rounded-circle mb-3">
+                      <i class="ti ti-trash-x fs-36 text-danger"></i>
+                  </div>
+                  <h4 class="mb-2">Supprimer cet l'élément ?</h4>
+                  <p class="mb-0">Êtes-vous sûr de vouloir le supprimer ?</p>
+                  <div class="d-flex align-items-center justify-content-center mt-4">
+                      <a href="javascript:void(0);" class="btn btn-light me-2" data-bs-dismiss="modal">Annuler</a>
+                      <button (click)="deleteComp()" class="btn btn-danger" data-bs-dismiss="modal">
+                          Oui, supprimez-le
+                      </button>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+<!-- /Delete composition data item -->

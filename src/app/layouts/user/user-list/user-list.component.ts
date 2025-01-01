@@ -134,8 +134,7 @@ export class UserListComponent implements OnInit, AfterViewInit {
 
   getAllPos(currentUser: IUser): void {
     this.isload = true;
-    const filterValue = this.pos_id.nativeElement.value.toLowerCase(); 
-    console.log("currentUser", currentUser)
+    const filterValue = this.pos_id.nativeElement.value.toLowerCase();
     this.posService.getAllById(currentUser.entreprise?.ID!).subscribe(res => {
       this.posList = res.data;
       this.posListFilter = this.posList; 

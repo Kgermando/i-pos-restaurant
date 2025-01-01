@@ -76,6 +76,7 @@ export class ClientCardComponent implements OnInit, AfterViewInit {
       fullname: ['', Validators.required],
       telephone: ['', Validators.required],
       email: ['', Validators.required],
+      adress: ['', Validators.required],
     });
   }
 
@@ -144,6 +145,7 @@ export class ClientCardComponent implements OnInit, AfterViewInit {
           fullname: this.formGroup.value.fullname,
           telephone: this.formGroup.value.telephone,
           email: this.formGroup.value.email,
+          adress: this.formGroup.value.adress,
           signature: this.currentUser.fullname,
           code_entreprise: parseInt(this.currentUser.entreprise!.code.toString()), 
         };
@@ -167,6 +169,7 @@ export class ClientCardComponent implements OnInit, AfterViewInit {
         fullname: this.formGroup.value.fullname,
         telephone: this.formGroup.value.telephone,
         email: this.formGroup.value.email,
+        adress: this.formGroup.value.adress,
         signature: this.currentUser.fullname,
         code_entreprise: parseInt(this.currentUser.entreprise!.code.toString()),
       };
@@ -190,6 +193,7 @@ export class ClientCardComponent implements OnInit, AfterViewInit {
         fullname: this.dataItem.fullname,
         telephone: this.dataItem.telephone,
         email: this.dataItem.email,
+        adress: this.dataItem.adress,
       });
     });
   }

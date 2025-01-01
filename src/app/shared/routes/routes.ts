@@ -122,7 +122,29 @@ export class routes {
     return this.fournisseur + '/fournisseur-list';
   }
 
+  // livraisons
+  public static get livraison(): string {
+    return this.core + '/web/livraisons';
+  }
+  public static get livraisonList(): string {
+    return this.livraison + '/livraison-list';
+  }
 
+  // livreurs
+  public static get livreur(): string {
+    return this.core + '/web/livreurs';
+  }
+  public static get livreurList(): string {
+    return this.livreur + '/livreur-list';
+  }
+
+  // ingredients
+  public static get ingredient(): string {
+    return this.core + '/web/ingredients';
+  }
+  public static get ingredientList(): string {
+    return this.ingredient + '/ingredient-list';
+  }
 
   // Table
   public static get table(): string {
@@ -132,15 +154,12 @@ export class routes {
     return this.table + '/table-list';
   }
 
-
-
-  // Managers
-  public static get managerList(): string {
-    return this.core + '/web/managers/manager-list';
+  // Area
+  public static get area(): string {
+    return this.core + '/web/areas';
   }
-
-  public static get userLogsList(): string {
-    return this.core + '/web/users-logs/activity';
+  public static get areaList(): string {
+    return this.area + '/area-list';
   }
 
 
