@@ -40,7 +40,7 @@
                             </div>
                             <div class="col-sm-8">
                                 <div class="d-flex align-items-center flex-wrap row-gap-2 justify-content-sm-end">
-                                    <div class="dropdown me-2">
+                                    <!-- <div class="dropdown me-2">
                                         <a href="javascript:void(0);" class="dropdown-toggle"
                                             data-bs-toggle="dropdown"><i
                                                 class="ti ti-package-export me-2"></i>Export</a>
@@ -59,7 +59,7 @@
                                                 </li>
                                             </ul>
                                         </div>
-                                    </div>
+                                    </div> -->
                                     @if(currentUser.permission === 'ALL' ||
                                     currentUser.permission === 'AM' ||
                                     currentUser.permission === 'A') {
@@ -188,12 +188,12 @@
     <div class="offcanvas-body">
         <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
             <div>
-                <div class="row">
+                <div class="row"> 
                     <div class="col-md-6">
                         <div class="mb-3">
                             <div class="d-flex justify-content-between align-items-center">
                                 <label class="col-form-label" for="fullname">Nom complet
-                                    <span class="text-danger">*</span></label>
+                                     <span class="text-danger">*</span></label>
                             </div>
                             <input type="text" class="form-control" formControlName="fullname" required />
                             <mat-error *ngIf="formGroup.controls['fullname'].hasError('required')">
@@ -216,10 +216,57 @@
                     <div class="col-md-6">
                         <div class="mb-3">
                             <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="telephone2">Telephone 2 </label>
+                            </div>
+                            <input type="tel" class="form-control" formControlName="telephone2" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
                                 <label class="col-form-label" for="email">Email <span
                                         class="text-danger">*</span></label>
                             </div>
                             <input type="email" class="form-control" formControlName="email" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="adress">Adresse <span
+                                        class="text-danger">*</span></label>
+                            </div>
+                            <input type="text" class="form-control" formControlName="adress" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="col-form-label" for="Start">
+                                Birthday
+                                <span class="text-danger">*</span>
+                            </label>
+                            <div class="icon-form">
+                                <span class="form-icon"><i class="ti ti-calendar-event"></i></span>
+                                <input type="text" class="form-control datetimepicker" bsDatepicker
+                                    [bsConfig]="{ adaptivePosition: true }" value="29-02-2020"
+                                    formControlName="birthday" /> 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="organisation">Organisation </label>
+                            </div>
+                            <input type="text" class="form-control" formControlName="organisation" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="website">Website </label>
+                            </div>
+                            <input type="text" class="form-control" formControlName="website" required />
                         </div>
                     </div>
                 </div>
@@ -257,12 +304,12 @@
     <div class="offcanvas-body">
         <form [formGroup]="formGroup" (ngSubmit)="onSubmitUpdate()">
             <div>
-                <div class="row">
+                <div class="row"> 
                     <div class="col-md-6">
                         <div class="mb-3">
                             <div class="d-flex justify-content-between align-items-center">
                                 <label class="col-form-label" for="fullname">Nom complet
-                                    <span class="text-danger">*</span></label>
+                                     <span class="text-danger">*</span></label>
                             </div>
                             <input type="text" class="form-control" formControlName="fullname" required />
                             <mat-error *ngIf="formGroup.controls['fullname'].hasError('required')">
@@ -285,10 +332,57 @@
                     <div class="col-md-6">
                         <div class="mb-3">
                             <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="telephone2">Telephone 2 </label>
+                            </div>
+                            <input type="tel" class="form-control" formControlName="telephone2" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
                                 <label class="col-form-label" for="email">Email <span
                                         class="text-danger">*</span></label>
                             </div>
                             <input type="email" class="form-control" formControlName="email" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="adress">Adresse <span
+                                        class="text-danger">*</span></label>
+                            </div>
+                            <input type="text" class="form-control" formControlName="adress" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="col-form-label" for="Start">
+                                Birthday
+                                <span class="text-danger">*</span>
+                            </label>
+                            <div class="icon-form">
+                                <span class="form-icon"><i class="ti ti-calendar-event"></i></span>
+                                <input type="text" class="form-control datetimepicker" bsDatepicker
+                                    [bsConfig]="{ adaptivePosition: true }" value="29-02-2020"
+                                    formControlName="birthday" /> 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="organisation">Organisation </label>
+                            </div>
+                            <input type="text" class="form-control" formControlName="organisation" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="website">Website </label>
+                            </div>
+                            <input type="text" class="form-control" formControlName="website" required />
                         </div>
                     </div>
                 </div>

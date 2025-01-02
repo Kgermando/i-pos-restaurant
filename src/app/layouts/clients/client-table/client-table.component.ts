@@ -10,6 +10,11 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../../auth/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { ClientService } from '../client.service';
+import { Papa } from 'ngx-papaparse';
+import { formatDate } from '@angular/common';
+import { parseDate } from 'ngx-bootstrap/chronos';
+import * as FileSaver from 'file-saver';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-client-table',
@@ -31,7 +36,7 @@ export class ClientTableComponent implements OnInit, AfterViewInit {
   length: number = 0;
 
   // Table 
-  displayedColumns: string[] = ['fullname', 'telephone', 'email', 'adress', 'action', 'id'];
+  displayedColumns: string[] = ['fullname', 'telephone', 'telephone2', 'email', 'adress', 'birthday', 'organisation', 'website', 'action', 'id'];
   dataSource = new MatTableDataSource<IClient>(this.dataList);
 
   @ViewChild(MatSort) sort!: MatSort;
@@ -47,12 +52,16 @@ export class ClientTableComponent implements OnInit, AfterViewInit {
   currentUser!: IUser;
   isLoading = false;
 
+  clientList: IClient[] = []; // File uploaded
+  pourcent = 0;
+
   constructor(
     private router: Router,
     private _formBuilder: FormBuilder,
     private authService: AuthService,
     private clientService: ClientService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private papa: Papa
   ) { }
 
   ngAfterViewInit(): void {
@@ -79,8 +88,12 @@ export class ClientTableComponent implements OnInit, AfterViewInit {
     this.formGroup = this._formBuilder.group({
       fullname: ['', Validators.required],
       telephone: ['', Validators.required],
-      email: ['', Validators.required],
-      adress: ['', Validators.required],
+      telephone2: [''],
+      email: [''],
+      adress: [''],
+      birthday: [''],
+      organisation: [''],
+      website: [''],
     });
   }
 
@@ -98,8 +111,8 @@ export class ClientTableComponent implements OnInit, AfterViewInit {
         this.dataList = res.data;
         this.totalItems = res.pagination.total_pages;
         this.length = res.pagination.length;
-        this.dataSource = new MatTableDataSource<IClient>(this.dataList); 
-        this.dataSource.sort = this.sort; 
+        this.dataSource = new MatTableDataSource<IClient>(this.dataList);
+        this.dataSource.sort = this.sort;
 
         this.isLoadingData = false;
       });
@@ -108,8 +121,8 @@ export class ClientTableComponent implements OnInit, AfterViewInit {
         this.dataList = res.data;
         this.totalItems = res.pagination.total_pages;
         this.length = res.pagination.length;
-        this.dataSource = new MatTableDataSource<IClient>(this.dataList); 
-        this.dataSource.sort = this.sort; 
+        this.dataSource = new MatTableDataSource<IClient>(this.dataList);
+        this.dataSource.sort = this.sort;
 
         this.isLoadingData = false;
       });
@@ -151,8 +164,12 @@ export class ClientTableComponent implements OnInit, AfterViewInit {
         const body: IClient = {
           fullname: this.formGroup.value.fullname,
           telephone: this.formGroup.value.telephone,
+          telephone2: this.formGroup.value.telephone2,
           email: this.formGroup.value.email,
           adress: this.formGroup.value.adress,
+          birthday: formatDate(parseDate(this.formGroup.value.birthday), 'yyyy-MM-dd', 'en-US'),
+          organisation: this.formGroup.value.organisation,
+          website: this.formGroup.value.website,
           signature: this.currentUser.fullname,
           code_entreprise: parseInt(this.currentUser.entreprise!.code.toString()),
         };
@@ -176,8 +193,12 @@ export class ClientTableComponent implements OnInit, AfterViewInit {
       const body: IClient = {
         fullname: this.formGroup.value.fullname,
         telephone: this.formGroup.value.telephone,
+        telephone2: this.formGroup.value.telephone2,
         email: this.formGroup.value.email,
         adress: this.formGroup.value.adress,
+        birthday: formatDate(parseDate(this.formGroup.value.birthday), 'yyyy-MM-dd', 'en-US'),
+        organisation: this.formGroup.value.organisation,
+        website: this.formGroup.value.website,
         signature: this.currentUser.fullname,
         code_entreprise: parseInt(this.currentUser.entreprise!.code.toString()),
       };
@@ -200,12 +221,15 @@ export class ClientTableComponent implements OnInit, AfterViewInit {
       this.formGroup.patchValue({
         fullname: this.dataItem.fullname,
         telephone: this.dataItem.telephone,
+        telephone2: this.dataItem.telephone2,
         email: this.dataItem.email,
         adress: this.dataItem.adress,
+        birthday: this.dataItem.birthday,
+        organisation: this.dataItem.organisation,
+        website: this.dataItem.website,
       });
     });
   }
-
 
   delete(): void {
     this.isLoading = true;
@@ -216,5 +240,90 @@ export class ClientTableComponent implements OnInit, AfterViewInit {
     });
   }
 
+
+
+
+
+  async upload(event: any) {
+    const file = event.target.files[0];
+    if (this.isValidCSVFile(file)) {
+      this.isLoading = true;
+      this.papa.parse(file, {
+        worker: true,
+        header: true,
+        delimiter: ';',
+        skipEmptyLines: true,
+        // encoding: 'utf-8',
+        complete: (results) => {
+          this.clientList = results.data;
+          if (this.clientList.length > 1000) {
+            this.isLoading = false;
+            this.toastr.info('Veuillez reduire les lignes en dessous de 1000.', 'Success!');
+          } else {
+            for (let index = 0; index < this.clientList.length; index++) {
+              const body: IClient = {
+                fullname: this.clientList[index].fullname,
+                telephone: this.clientList[index].telephone,
+                telephone2: this.clientList[index].telephone2,
+                email: this.clientList[index].email,
+                adress: this.clientList[index].adress,
+                birthday: formatDate(parseDate(this.clientList[index].birthday!), 'yyyy-MM-dd', 'en-US'),
+                organisation: this.clientList[index].organisation,
+                website: this.clientList[index].website,
+                signature: this.currentUser.fullname,
+                code_entreprise: parseInt(this.currentUser.entreprise!.code.toString()),
+              };
+              this.clientService.create(body).subscribe({
+                next: () => { 
+                  var pourcents = (index + 1) * 100 / this.clientList.length;
+                  this.pourcent = parseInt(pourcents.toFixed(0));
+                  if (this.pourcent == 100) {  
+                    this.isLoading = false;
+                    console.log("All done!");
+                    this.toastr.success('Importation effectuée avec succès!', 'Success!');
+                  }
+                },
+                error: (err) => { 
+                  this.isLoading = false;
+                  this.toastr.error(`${err.error.message}`, 'Oupss!');
+                  console.log(err); 
+                }
+              });
+            }
+          } 
+        },
+        error: (error, file) => { 
+          this.toastr.error(`${error}`, 'Oupss!');
+          console.log(error);
+          console.log("file", file);
+          // this.close();
+        },
+      });
+    } else {  
+      alert("Please import valid .csv file."); 
+    }      
+  }
+ 
+  
+  isValidCSVFile(file: any) {  
+    return file.name.endsWith(".csv");  
+  }
+ 
+
+  downloadModelReport() {
+    const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+    const EXCEL_EXTENSION = '.xlsx';
+    const url = '/xlsx/model-report.xlsx';
+    fetch(url)
+      .then(response => response.blob())
+      .then(blob => {
+        const file = new Blob([blob], { type: EXCEL_TYPE });
+        FileSaver.saveAs(file, 'model-report' + EXCEL_EXTENSION);
+      })
+      .catch(error => {
+        console.error('Error downloading the file', error);
+        this.toastr.error('Erreur lors du téléchargement du fichier', 'Erreur');
+      });
+  }
 }
 

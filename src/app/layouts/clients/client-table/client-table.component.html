@@ -1,5 +1,3 @@
- 
-
 <!-- Page Wrapper -->
 <div class="page-wrapper">
     <div class="content">
@@ -23,167 +21,203 @@
                 </div>
                 <!-- /Page Header -->
                 @if (loadUserData) {
-                    <div class="spinner-border text-center d-flex justify-content-center align-items-center" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                    }@else {
-                        @if (currentUser) {
-                            <div class="card">
-                                <div class="card-header">
-                                    <!-- Search -->
-                                    <div class="row align-items-center">
-                                        <div class="col-sm-4">
-                                            <div class="icon-form mb-3 mb-sm-0">
-                                                <span class="form-icon"><i class="ti ti-search"></i></span>
-                                                <input type="text" #input [(ngModel)]="search"
-                                                    (ngModelChange)="onSearchChange($event)" class="form-control"
-                                                    placeholder="Ex. reference ou name" />
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-8">
-                                            <div class="d-flex align-items-center flex-wrap row-gap-2 justify-content-sm-end">
-                                                <div class="dropdown me-2">
-                                                    <a href="javascript:void(0);" class="dropdown-toggle"
-                                                        data-bs-toggle="dropdown"><i
-                                                            class="ti ti-package-export me-2"></i>Export</a>
-                                                    <div class="dropdown-menu dropdown-menu-end">
-                                                        <ul>
-                                                            <li>
-                                                                <a href="javascript:void(0);" class="dropdown-item"><i
-                                                                        class="ti ti-file-type-pdf text-danger me-1"></i>Export as
-                                                                    PDF</a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="javascript:void(0);" class="dropdown-item"><i
-                                                                        class="ti ti-file-type-xls text-green me-1"></i>Export as
-                                                                    Excel
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                                @if(currentUser.permission === 'ALL' ||
-                                                currentUser.permission === 'AM' ||
-                                                currentUser.permission === 'A') {
-                                                <a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="offcanvas"
-                                                    data-bs-target="#offcanvas_add"><i
-                                                        class="ti ti-square-rounded-plus me-2"></i>Ajouter client</a>
-                                                }
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- /Search -->
-                                </div>
-                                <div class="card-body">
-            
-                                    <div class="table-responsive custom-table">
-                                        <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)"
-                                            class="mat-elevation-z2 table"> 
-            
-                                            <!-- fullname Column -->
-                                            <ng-container matColumnDef="fullname">
-                                                <th mat-header-cell *matHeaderCellDef> Nom complet </th>
-                                                <td mat-cell *matCellDef="let element">
-                                                    {{element.fullname}}
-                                                </td>
-                                            </ng-container>
-            
-                                            <!-- telephone Column -->
-                                            <ng-container matColumnDef="telephone">
-                                                <th mat-header-cell *matHeaderCellDef> Telephone </th>
-                                                <td mat-cell *matCellDef="let element">
-                                                    {{element.telephone}}
-                                                </td>
-                                            </ng-container> 
-            
-                                            <!-- email Column -->
-                                            <ng-container matColumnDef="email">
-                                                <th mat-header-cell *matHeaderCellDef> Email </th>
-                                                <td mat-cell *matCellDef="let element"> {{ element.email }} </td>
-                                            </ng-container>
-
-                                             <!-- adress Column -->
-                                             <ng-container matColumnDef="adress">
-                                                <th mat-header-cell *matHeaderCellDef> Adresse </th>
-                                                <td mat-cell *matCellDef="let element"> {{ element.adress }} </td>
-                                            </ng-container>
-            
-                                            <!-- action Column -->
-                                            <ng-container matColumnDef="action">
-                                                <th mat-header-cell *matHeaderCellDef>   </th>
-                                                <td mat-cell *matCellDef="let element"> 
-                                                    <ul class="social-links d-flex align-items-center">
-                                                        <li>
-                                                            <a [href]="generateMailtoLink(element.email)">
-                                                                <i class="ti ti-mail"></i>
-                                                            </a> 
-                                                        </li>
-                                                        <li>
-                                                            <a  [href]="generateTeltoLink(element.telephone)">
-                                                                <i class="ti ti-phone-check"></i>
-                                                            </a> 
-                                                        </li>
-                                                      </ul>
-                                                </td>
-                                            </ng-container> 
-            
-                                            <!-- id Column -->
-                                            <ng-container matColumnDef="id">
-                                                <th mat-header-cell *matHeaderCellDef> Action </th>
-                                                <td mat-cell *matCellDef="let element">
-                                                    @if(currentUser.permission === 'ALL' ||
-                                                    currentUser.permission === 'AM' ||
-                                                    currentUser.permission === 'MS' ||
-                                                    currentUser.permission === 'M') {
-                                                    <button mat-icon-button (click)="findValue(element.ID)"
-                                                        data-bs-toggle="offcanvas" data-bs-target="#offcanvas_edit">
-                                                        <mat-icon class="text-blue">edit</mat-icon>
-                                                    </button>
-                                                    }
-                                                    @if (isLoading) {
-                                                        <div class="spinner-border" role="status">
-                                                            <span class="visually-hidden">Loading...</span>
-                                                        </div>
-                                                        }@else {
-                                                            @if(currentUser.permission === 'ALL' ||
-                                                            currentUser.permission === 'MS') {
-                                                            <button mat-icon-button (click)="findValue(element.ID)" data-bs-toggle="modal"
-                                                                data-bs-target="#delete_contact">
-                                                                <mat-icon class="text-danger">delete</mat-icon>
-                                                            </button>
-                                                            }
-                                                        }
-                                                </td>
-                                            </ng-container>
-            
-                                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-            
-                                            <!-- Row shown when there is no matching data. -->
-                                            <tr class="mat-row" *matNoDataRow>
-                                                @if (isLoadingData || isLoading){
-                                                <button disabled class="btn btn-primary">
-                                                    <div class="spinner-border" role="status">
-                                                        <span class="visually-hidden">Loading...</span>
-                                                    </div>
-                                                </button>
-                                                } @else {
-                                                <td class="mat-cell" colspan="4">Aucune donnée correspondant au filtre
-                                                    "{{input.value}}"</td>
-                                                }
-                                            </tr>
-                                        </table>
-                                    </div>
-                                    <mat-paginator [length]="length" [pageSize]="pageSize"
-                                        [pageSizeOptions]="[15, 20, 30, 40, 50, 80, 100]" showFirstLastButtons
-                                        (page)="onPageChange($event)" aria-label="Select page">
-                                    </mat-paginator>
-                                    <!-- /Manage data List -->
+                <div class="spinner-border text-center d-flex justify-content-center align-items-center" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                }@else {
+                @if (currentUser) {
+                <div class="card">
+                    <div class="card-header">
+                        <!-- Search -->
+                        <div class="row align-items-center">
+                            <div class="col-sm-4">
+                                <div class="icon-form mb-3 mb-sm-0">
+                                    <span class="form-icon"><i class="ti ti-search"></i></span>
+                                    <input type="text" #input [(ngModel)]="search"
+                                        (ngModelChange)="onSearchChange($event)" class="form-control"
+                                        placeholder="Ex. reference ou name" />
                                 </div>
                             </div>
-                            }
-                    }
-               
+                            <div class="col-sm-8">
+                                <div class="d-flex align-items-center flex-wrap row-gap-2 justify-content-sm-end">
+                                    <div class="dropdown me-2">
+                                        <a href="javascript:void(0);" class="dropdown-toggle"
+                                            data-bs-toggle="dropdown"><i
+                                                class="ti ti-package-export me-2"></i>Export-Import</a>
+                                        <div class="dropdown-menu dropdown-menu-end">
+                                            <ul>
+                                                <li>
+                                                    <a href="javascript:void(0);" class="dropdown-item"
+                                                        (click)="downloadModelReport()">
+                                                        <i class="ti ti-file-type-pdf text-blue me-1"></i>
+                                                        Telecharger le Modèle
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript:void(0);" class="dropdown-item"
+                                                        data-bs-toggle="offcanvas" data-bs-target="#offcanvas_import">
+                                                        <i class="ti ti-file-type-pdf text-danger me-1"></i>
+                                                        Import data .csv
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="javascript:void(0);" class="dropdown-item"><i
+                                                            class="ti ti-file-type-xls text-green me-1"></i>Export as
+                                                        Excel
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    @if(currentUser.permission === 'ALL' ||
+                                    currentUser.permission === 'AM' ||
+                                    currentUser.permission === 'A') {
+                                    <a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="offcanvas"
+                                        data-bs-target="#offcanvas_add"><i
+                                            class="ti ti-square-rounded-plus me-2"></i>Ajouter client</a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /Search -->
+                    </div>
+                    <div class="card-body">
+
+                        <div class="table-responsive custom-table">
+                            <table mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData($event)"
+                                class="mat-elevation-z2 table">
+
+                                <!-- fullname Column -->
+                                <ng-container matColumnDef="fullname">
+                                    <th mat-header-cell *matHeaderCellDef> Nom complet </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        {{element.fullname}}
+                                    </td>
+                                </ng-container>
+
+                                <!-- telephone Column -->
+                                <ng-container matColumnDef="telephone">
+                                    <th mat-header-cell *matHeaderCellDef> Telephone </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        {{element.telephone}}
+                                    </td>
+                                </ng-container>
+
+                                <!-- telephone 2 Column -->
+                                <ng-container matColumnDef="telephone2">
+                                    <th mat-header-cell *matHeaderCellDef> Telephone 2</th>
+                                    <td mat-cell *matCellDef="let element">
+                                        {{element.telephone2}}
+                                    </td>
+                                </ng-container>
+
+                                <!-- email Column -->
+                                <ng-container matColumnDef="email">
+                                    <th mat-header-cell *matHeaderCellDef> Email </th>
+                                    <td mat-cell *matCellDef="let element"> {{ element.email }} </td>
+                                </ng-container>
+
+                                <!-- adress Column -->
+                                <ng-container matColumnDef="adress">
+                                    <th mat-header-cell *matHeaderCellDef> Adresse </th>
+                                    <td mat-cell *matCellDef="let element"> {{ element.adress }} </td>
+                                </ng-container>
+
+                                <!-- birthday Column -->
+                                <ng-container matColumnDef="birthday">
+                                    <th mat-header-cell *matHeaderCellDef> Birthday </th>
+                                    <td mat-cell *matCellDef="let element"> {{ element.birthday | date: 'dd/MM/YYYY' }}
+                                    </td>
+                                </ng-container>
+
+                                <!-- organisation Column -->
+                                <ng-container matColumnDef="organisation">
+                                    <th mat-header-cell *matHeaderCellDef> Organisation </th>
+                                    <td mat-cell *matCellDef="let element"> {{ element.organisation }} </td>
+                                </ng-container>
+
+                                <!-- website Column -->
+                                <ng-container matColumnDef="website">
+                                    <th mat-header-cell *matHeaderCellDef> Website </th>
+                                    <td mat-cell *matCellDef="let element"> {{ element.website }} </td>
+                                </ng-container>
+
+                                <!-- action Column -->
+                                <ng-container matColumnDef="action">
+                                    <th mat-header-cell *matHeaderCellDef> </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <ul class="social-links d-flex align-items-center">
+                                            <li>
+                                                <a [href]="generateMailtoLink(element.email)">
+                                                    <i class="ti ti-mail"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a [href]="generateTeltoLink(element.telephone)">
+                                                    <i class="ti ti-phone-check"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                </ng-container>
+
+                                <!-- id Column -->
+                                <ng-container matColumnDef="id">
+                                    <th mat-header-cell *matHeaderCellDef> Action </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        @if(currentUser.permission === 'ALL' ||
+                                        currentUser.permission === 'AM' ||
+                                        currentUser.permission === 'MS' ||
+                                        currentUser.permission === 'M') {
+                                        <button mat-icon-button (click)="findValue(element.ID)"
+                                            data-bs-toggle="offcanvas" data-bs-target="#offcanvas_edit">
+                                            <mat-icon class="text-blue">edit</mat-icon>
+                                        </button>
+                                        }
+                                        @if (isLoading) {
+                                        <div class="spinner-border" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                        }@else {
+                                        @if(currentUser.permission === 'ALL' ||
+                                        currentUser.permission === 'MS') {
+                                        <button mat-icon-button (click)="findValue(element.ID)" data-bs-toggle="modal"
+                                            data-bs-target="#delete_contact">
+                                            <mat-icon class="text-danger">delete</mat-icon>
+                                        </button>
+                                        }
+                                        }
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                                <!-- Row shown when there is no matching data. -->
+                                <tr class="mat-row" *matNoDataRow>
+                                    @if (isLoadingData || isLoading){
+                                    <button disabled class="btn btn-primary">
+                                        <div class="spinner-border" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </button>
+                                    } @else {
+                                    <td class="mat-cell" colspan="4">Aucune donnée correspondant au filtre
+                                        "{{input.value}}"</td>
+                                    }
+                                </tr>
+                            </table>
+                        </div>
+                        <mat-paginator [length]="length" [pageSize]="pageSize"
+                            [pageSizeOptions]="[15, 20, 30, 40, 50, 80, 100]" showFirstLastButtons
+                            (page)="onPageChange($event)" aria-label="Select page">
+                        </mat-paginator>
+                        <!-- /Manage data List -->
+                    </div>
+                </div>
+                }
+                }
+
 
             </div>
         </div>
@@ -204,12 +238,12 @@
     <div class="offcanvas-body">
         <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
             <div>
-                <div class="row"> 
+                <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">
                             <div class="d-flex justify-content-between align-items-center">
                                 <label class="col-form-label" for="fullname">Nom complet
-                                     <span class="text-danger">*</span></label>
+                                    <span class="text-danger">*</span></label>
                             </div>
                             <input type="text" class="form-control" formControlName="fullname" required />
                             <mat-error *ngIf="formGroup.controls['fullname'].hasError('required')">
@@ -232,6 +266,14 @@
                     <div class="col-md-6">
                         <div class="mb-3">
                             <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="telephone2">Telephone 2 </label>
+                            </div>
+                            <input type="tel" class="form-control" formControlName="telephone2" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
                                 <label class="col-form-label" for="email">Email <span
                                         class="text-danger">*</span></label>
                             </div>
@@ -247,6 +289,36 @@
                             <input type="text" class="form-control" formControlName="adress" required />
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="col-form-label" for="Start">
+                                Birthday
+                                <span class="text-danger">*</span>
+                            </label>
+                            <div class="icon-form">
+                                <span class="form-icon"><i class="ti ti-calendar-event"></i></span>
+                                <input type="text" class="form-control datetimepicker" bsDatepicker
+                                    [bsConfig]="{ adaptivePosition: true }" value="29-02-2020"
+                                    formControlName="birthday" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="organisation">Organisation </label>
+                            </div>
+                            <input type="text" class="form-control" formControlName="organisation" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="website">Website </label>
+                            </div>
+                            <input type="text" class="form-control" formControlName="website" required />
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="d-flex align-items-center justify-content-end">
@@ -259,7 +331,7 @@
                 </button>
                 }
                 @if (!isLoading) {
-                <button type="submit" class="btn btn-primary" id="myOffcanvas"  data-bs-dismiss="offcanvas"
+                <button type="submit" class="btn btn-primary" id="myOffcanvas" data-bs-dismiss="offcanvas"
                     data-bs-target="#create_success">Soumettre</button>
                 }
             </div>
@@ -282,12 +354,12 @@
     <div class="offcanvas-body">
         <form [formGroup]="formGroup" (ngSubmit)="onSubmitUpdate()">
             <div>
-                <div class="row"> 
+                <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3">
                             <div class="d-flex justify-content-between align-items-center">
                                 <label class="col-form-label" for="fullname">Nom complet
-                                     <span class="text-danger">*</span></label>
+                                    <span class="text-danger">*</span></label>
                             </div>
                             <input type="text" class="form-control" formControlName="fullname" required />
                             <mat-error *ngIf="formGroup.controls['fullname'].hasError('required')">
@@ -310,6 +382,14 @@
                     <div class="col-md-6">
                         <div class="mb-3">
                             <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="telephone2">Telephone 2 </label>
+                            </div>
+                            <input type="tel" class="form-control" formControlName="telephone2" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
                                 <label class="col-form-label" for="email">Email <span
                                         class="text-danger">*</span></label>
                             </div>
@@ -325,6 +405,36 @@
                             <input type="text" class="form-control" formControlName="adress" required />
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="col-form-label" for="Start">
+                                Birthday
+                                <span class="text-danger">*</span>
+                            </label>
+                            <div class="icon-form">
+                                <span class="form-icon"><i class="ti ti-calendar-event"></i></span>
+                                <input type="text" class="form-control datetimepicker" bsDatepicker
+                                    [bsConfig]="{ adaptivePosition: true }" value="29-02-2020"
+                                    formControlName="birthday" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="organisation">Organisation </label>
+                            </div>
+                            <input type="text" class="form-control" formControlName="organisation" required />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="website">Website </label>
+                            </div>
+                            <input type="text" class="form-control" formControlName="website" required />
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="d-flex align-items-center justify-content-end">
@@ -337,7 +447,7 @@
                 </button>
                 }
                 @if (!isLoading) {
-                <button type="submit" class="btn btn-primary" data-bs-dismiss="offcanvas" 
+                <button type="submit" class="btn btn-primary" data-bs-dismiss="offcanvas"
                     data-bs-target="#create_success">
                     Save Changes
                 </button>
@@ -372,3 +482,47 @@
     </div>
 </div>
 <!-- /Delete data item -->
+
+
+
+<!-- Add data form -->
+<div class="offcanvas offcanvas-end offcanvas-large" tabindex="-1" id="offcanvas_import">
+    <div class="offcanvas-header border-bottom">
+        <h5 class="fw-semibold">Uploader le fichier .CSV </h5>
+        <button type="button"
+            class="btn-close custom-btn-close border p-1 me-0 d-flex align-items-center justify-content-center rounded-circle"
+            data-bs-dismiss="offcanvas" aria-label="Close">
+            <i class="ti ti-x"></i>
+        </button>
+    </div>
+    <div class="offcanvas-body">
+        <div>
+            <div class="row" *ngIf="!isLoading && pourcent < 100">
+                <div class="col-md-12">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label class="col-form-label" for="file">Upload File</label>
+                        </div>
+                        <input type="file" class="form-control" (change)="upload($event)" accept=".csv" />
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mb-25">
+                <div *ngIf="pourcent" class="progress">
+                    <div
+                      class="progress-bar progress-bar-info progress-bar-striped" 
+                      style="color: whitesmoke;"
+                      role="progressbar"
+                      attr.aria-valuenow="{{ pourcent }}"
+                      aria-valuemin="0"
+                      aria-valuemax="100"
+                      [ngStyle]="{ width: pourcent + '%', 'background-color': pourcent == 100 ? 'green' : 'blue' }"
+                    >
+                      {{ pourcent }} %
+                    </div>
+                </div>
+            </div> 
+        </div>
+    </div>
+</div>
+<!-- /Add data form -->

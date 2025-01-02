@@ -75,8 +75,12 @@ export class ClientCardComponent implements OnInit, AfterViewInit {
     this.formGroup = this._formBuilder.group({
       fullname: ['', Validators.required],
       telephone: ['', Validators.required],
-      email: ['', Validators.required],
-      adress: ['', Validators.required],
+      telephone2: [''],
+      email: [''],
+      adress: [''],
+      birthday: [''],
+      organisation: [''],
+      website: [''],
     });
   }
 
@@ -136,7 +140,6 @@ export class ClientCardComponent implements OnInit, AfterViewInit {
   }
 
 
-
   onSubmit() {
     try {
       if (this.formGroup.valid) {
@@ -144,16 +147,21 @@ export class ClientCardComponent implements OnInit, AfterViewInit {
         const body: IClient = {
           fullname: this.formGroup.value.fullname,
           telephone: this.formGroup.value.telephone,
+          telephone2: this.formGroup.value.telephone2,
           email: this.formGroup.value.email,
           adress: this.formGroup.value.adress,
+          birthday: this.formGroup.value.birthday,
+          organisation: this.formGroup.value.organisation,
+          website: this.formGroup.value.website,
           signature: this.currentUser.fullname,
-          code_entreprise: parseInt(this.currentUser.entreprise!.code.toString()), 
+          code_entreprise: parseInt(this.currentUser.entreprise!.code.toString()),
         };
         this.clientService.create(body).subscribe(() => {
           this.isLoading = false;
           this.formGroup.reset();
-          this.toastr.success('Client ajoutée avec succès!', 'Success!');
+          this.toastr.success('Client ajouté avec succès!', 'Success!');
         });
+
       }
     } catch (error) {
       this.isLoading = false;
@@ -168,8 +176,12 @@ export class ClientCardComponent implements OnInit, AfterViewInit {
       const body: IClient = {
         fullname: this.formGroup.value.fullname,
         telephone: this.formGroup.value.telephone,
+        telephone2: this.formGroup.value.telephone2,
         email: this.formGroup.value.email,
         adress: this.formGroup.value.adress,
+        birthday: this.formGroup.value.birthday,
+        organisation: this.formGroup.value.organisation,
+        website: this.formGroup.value.website,
         signature: this.currentUser.fullname,
         code_entreprise: parseInt(this.currentUser.entreprise!.code.toString()),
       };
@@ -185,6 +197,7 @@ export class ClientCardComponent implements OnInit, AfterViewInit {
   }
 
 
+
   findValue(value: number) {
     this.idItem = value;
     this.clientService.get(this.idItem).subscribe(item => {
@@ -192,8 +205,12 @@ export class ClientCardComponent implements OnInit, AfterViewInit {
       this.formGroup.patchValue({
         fullname: this.dataItem.fullname,
         telephone: this.dataItem.telephone,
+        telephone2: this.dataItem.telephone2,
         email: this.dataItem.email,
         adress: this.dataItem.adress,
+        birthday: this.dataItem.birthday,
+        organisation: this.dataItem.organisation,
+        website: this.dataItem.website,
       });
     });
   }

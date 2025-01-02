@@ -6,9 +6,14 @@ export interface IClient {
     updated_at?: Date;
     fullname: string;
     telephone: string;
+    telephone2?: string;
     email?: string; 
-    adress?: string; 
+    adress?: string;
+    birthday? : string;
+    organisation?: string;
+    website?: string;
     signature: string; // Code secret pour le client
     code_entreprise?: number;
     commandes? :ICommande[];
 }
+ 
