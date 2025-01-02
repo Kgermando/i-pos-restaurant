@@ -396,4 +396,3 @@ export class PlatTableComponent implements OnInit, AfterViewInit {
     });
   }
 }
-

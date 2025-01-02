@@ -9,6 +9,8 @@ import { ICommandeLine } from '../../../models/commande_line.model';
 import { CommandeLineService } from '../commande-line.service';
 import { ITableBox } from '../../../models/table-box.model';
 import { TableBoxService } from '../../table-box/table-box.service';
+import { ICaisse } from '../../../models/caisse.model';
+import { CaisseService } from '../../finances/caisse/caisse.service';
 
 
 @Component({
@@ -28,6 +30,7 @@ export class CmdFactureComponent {
     private commandeService: CommandeService,
     private commandeLineService: CommandeLineService,
     private tableBoxService: TableBoxService,
+    private caisseService: CaisseService,
     private toastr: ToastrService
   ) { }
 
@@ -97,9 +100,23 @@ export class CmdFactureComponent {
           code_entreprise: parseInt(this.currentUser.entreprise!.code.toString()),
         };
         this.tableBoxService.update(this.commande.TableBox!.ID!, body).subscribe(() => {
-          this.isLoading = false;
-          this.toastr.success(`Facture ${status} effectuée avec succès!`, 'Success!');
-          this.router.navigate(['/web/table-box/table-box-list']);   
+          if (status == 'Cash') {
+            var code = Math.floor(1000000000 + Math.random() * 90000000000);
+            const body: ICaisse = {
+              type_transaction: 'Entrée',
+              montant: this.total,
+              libelle: `Vente ${this.commande.ncommande}`,
+              reference: code.toString(),
+              signature: this.currentUser.fullname,
+              pos_id: parseInt(this.currentUser.pos!.ID.toString()),
+              code_entreprise: parseInt(this.currentUser.entreprise!.code.toString()),
+            };
+            this.caisseService.create(body).subscribe((res) => {
+              this.isLoading = false;
+              this.toastr.success(`Facture ${status} effectuée avec succès!`, 'Success!');
+              this.router.navigate(['/web/table-box/table-box-list']);
+            });
+          }
         });
       });
     } catch (error) {
@@ -144,7 +161,7 @@ export class CmdFactureComponent {
         this.router.navigate(['/web/table-box/table-box-list']);
         this.toastr.info('Commande annulée avec succès!', 'Success!');
       });
-    }); 
+    });
   }
 
 

@@ -33,14 +33,12 @@ import { ClientCardComponent } from './clients/client-card/client-card.component
 import { FournisseurCardComponent } from './fournisseurs/fournisseur-card/fournisseur-card.component';
 import { FournisseurTableComponent } from './fournisseurs/fournisseur-table/fournisseur-table.component';
 import { FournisseursComponent } from './fournisseurs/fournisseurs.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
 import { CommandesLinesComponent } from './commandes-lines/commandes-lines.component';
 import { CmdQtyInputComponent } from './commandes-lines/cmd-qty-input/cmd-qty-input.component';
 import { CmdFactureComponent } from './commandes-lines/cmd-facture/cmd-facture.component';
 import { FatureComponent } from './commandes/fature/fature.component';
 import { FactureViewComponent } from './commandes/facture-view/facture-view.component';
-import { ProdStyleComponent } from './products/prod-style/prod-style.component';
-import { SummaryComponent } from './dashboard/summary/summary.component';
+import { ProdStyleComponent } from './products/prod-style/prod-style.component'; 
 import { PlatComponent } from './plat/plat.component';
 import { TableBoxComponent } from './table-box/table-box.component';
 import { ProductLineComponent } from './commandes-lines/product-line/product-line.component';
@@ -100,14 +98,12 @@ import { LivraisonFactureComponent } from './livraisons/livraison-facture/livrai
     FournisseurCardComponent,
     FournisseurTableComponent,
     FournisseursComponent,
-    DashboardComponent,
     CommandesLinesComponent,
     CmdQtyInputComponent,
     CmdFactureComponent,
     FatureComponent,
     FactureViewComponent,
     ProdStyleComponent,
-    SummaryComponent,
     PlatComponent,
     TableBoxComponent,
     ProductLineComponent,

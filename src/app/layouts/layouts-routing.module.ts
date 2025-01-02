@@ -11,7 +11,6 @@ import { StockViewComponent } from './stocks/stock-view/stock-view.component';
 import { CommandesComponent } from './commandes/commandes.component';
 import { ClientsComponent } from './clients/clients.component';
 import { FournisseursComponent } from './fournisseurs/fournisseurs.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
 import { CommandesLinesComponent } from './commandes-lines/commandes-lines.component';
 import { FactureViewComponent } from './commandes/facture-view/facture-view.component';
 import { PlatComponent } from './plat/plat.component';
@@ -153,7 +152,17 @@ const routes: Routes = [
       },
       {
         path: 'dashboard',
-        component: DashboardComponent,
+        loadChildren: () =>
+          import('./dashboard/dashboard.module').then(
+            (m) => m.DashboardModule
+          ),
+      },
+      {
+        path: 'finances',
+        loadChildren: () =>
+          import('./finances/finances.module').then(
+            (m) => m.FinancesModule
+          ),
       },
 
       { path: '', redirectTo: 'dashboard', pathMatch: 'full'}

@@ -30,7 +30,7 @@ export class DataService {
         },
         {
           menuValue: 'Livraisons',
-          icon: 'package',
+          icon: 'truck',
           base: 'livraisons',
           route: routes.livraisonList, 
           hasSubRoute: false,
@@ -70,7 +70,7 @@ export class DataService {
       ],
     },
     {
-      tittle: 'Gestion de Partenaires',
+      tittle: 'Partenaires',
       showAsTab: true,
       separateRoute: false,
       menu: [
@@ -111,21 +111,63 @@ export class DataService {
   ];
 
   public sidebarData = [
+    // {
+    //   tittle: 'Reporting',
+    //   showAsTab: true,
+    //   separateRoute: false,
+    //   menu: [ 
+    //     {
+    //       menuValue: 'Tableau de board',
+    //       icon: 'layout-2',
+    //       base: 'dashboard',
+    //       route: routes.dashboard,
+    //       hasSubRoute: false,
+    //       showSubRoute: false, 
+    //     }, 
+    //   ],
+    // },
     {
-      tittle: 'Reporting',
-      showAsTab: true,
+      tittle: 'Main MENU',
+      showAsTab: false,
       separateRoute: false,
-      menu: [ 
+      hasSubRoute: false,
+      showSubRoute: true,
+      menu: [
         {
-          menuValue: 'Tableau de board',
+          menuValue: 'Dashboard',
+          hasSubRoute: true,
+          showSubRoute: true,
           icon: 'layout-2',
           base: 'dashboard',
-          route: routes.dashboard,
-          hasSubRoute: false,
-          showSubRoute: false, 
-        }, 
+          subMenus: [
+            {
+              menuValue: 'Summary',
+              route: routes.dashboard,
+            },
+            {
+              menuValue: 'Plats',
+              route: routes.dashboard,
+            },
+            {
+              menuValue: 'Produits',
+              route: routes.dashboard,
+            },
+            {
+              menuValue: 'livraisons',
+              route: routes.dashboard,
+            },
+            {
+              menuValue: 'Clients',
+              route: routes.dashboard,
+            },
+            {
+              menuValue: 'Ingredients',
+              route: routes.dashboard,
+            },
+          ]
+        },
       ],
-    }, 
+    },
     {
       tittle: 'Gestion de commandes',
       showAsTab: true,
@@ -141,7 +183,7 @@ export class DataService {
         },
         {
           menuValue: 'Livraisons',
-          icon: 'package',
+          icon: 'truck',
           base: 'livraisons',
           route: routes.livraisonList,
           hasSubRoute: false,
@@ -181,7 +223,7 @@ export class DataService {
       ],
     },
     {
-      tittle: 'Gestion de Partenaires',
+      tittle: 'Partenaires',
       showAsTab: true,
       separateRoute: false,
       menu: [
@@ -216,6 +258,21 @@ export class DataService {
           route: routes.areaList, 
           hasSubRoute: false,
           showSubRoute: false,
+        },
+      ],
+    },
+    {
+      tittle: 'TRESORERIE',
+      showAsTab: true,
+      separateRoute: false,
+      menu: [ 
+        {
+          menuValue: 'Caisse',
+          icon: 'receipt',
+          base: 'finances',
+          hasSubRoute: false,
+          showSubRoute: false,
+          route: routes.caisseList,
         },
       ],
     },
@@ -276,7 +333,7 @@ export class DataService {
         },
         {
           menuValue: 'Livraisons',
-          icon: 'package',
+          icon: 'truck',
           base: 'livraisons',
           route: routes.livraisonList,
           hasSubRoute: false,
@@ -325,7 +382,7 @@ export class DataService {
       ],
     },
     {
-      tittle: 'Gestion de Partenaires',
+      tittle: 'Partenaires',
       showAsTab: true,
       separateRoute: false,
       menu: [

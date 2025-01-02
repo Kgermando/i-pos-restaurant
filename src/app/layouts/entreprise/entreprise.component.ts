@@ -32,7 +32,7 @@ export class EntrepriseComponent implements OnInit, AfterViewInit {
   length: number = 0;
 
   // Table 
-  displayedColumns: string[] = ['status', 'type_entreprise', 'code', 'name', 'rccm', 'idnat', 'email', 'telephone', 'manager', 'total_user', 'total_pos', 'abonnement', 'id'];
+  displayedColumns: string[] = ['id', 'status', 'type_entreprise', 'code', 'name', 'rccm', 'idnat', 'email', 'telephone', 'manager', 'total_user', 'total_pos', 'abonnement', 'id'];
   dataSource = new MatTableDataSource<IEntreprise>(this.dataList);
 
   @ViewChild(MatSort) sort!: MatSort;

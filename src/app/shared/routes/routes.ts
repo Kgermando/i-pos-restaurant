@@ -162,7 +162,13 @@ export class routes {
     return this.area + '/area-list';
   }
 
-
+  // Finances
+  public static get finance(): string {
+    return this.core + '/web/finances';
+  }
+  public static get caisseList(): string {
+    return this.finance + '/caisse-list';
+  }
 
 
 }

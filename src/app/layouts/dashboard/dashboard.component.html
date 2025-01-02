@@ -73,7 +73,12 @@
             <h4>Ventes journalières</h4>
           </div>
           <div class="card-body">
-            <h3>{{ formatCurrency(totalVente24h, currentUser.currency) }}</h3>
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+              <h3>Ventes: {{ formatCurrency(totalVente24h, currentUser.currency) }}</h3>
+              <h3 [ngClass]="{'text-success': totalVente24h > 0, 'text-danger': totalVente24h < 0}">
+                Gains: {{ formatCurrency(totalVente24h, currentUser.currency) }}
+              </h3>
+            </div>
             <div id="contact-report">
               <apx-chart [series]="chartOptions4?.series" [chart]="chartOptions4?.chart" [xaxis]="chartOptions4?.xaxis"
                 [dataLabels]="chartOptions4?.dataLabels" [grid]="chartOptions4?.grid" [stroke]="chartOptions4?.stroke"
@@ -327,3 +332,6 @@
   </div>
 </div>
 <!-- /Page Wrapper -->
+
+
+<router-outlet></router-outlet>

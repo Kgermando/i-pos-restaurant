@@ -7,6 +7,8 @@ import { ICommandeLine } from '../../../../models/commande_line.model';
 import { CommandeLineService } from '../../../commandes-lines/commande-line.service';
 import { ILivraison } from '../../../../models/livraison.model';
 import { LivraisonService } from '../../livraison.service';
+import { ICaisse } from '../../../../models/caisse.model';
+import { CaisseService } from '../../../finances/caisse/caisse.service';
 
 @Component({
   selector: 'app-liv-facture',
@@ -24,6 +26,7 @@ export class LivFactureComponent {
     private currencyPipe: CurrencyPipe,
     private livraisonService: LivraisonService,
     private commandeLineService: CommandeLineService,
+    private caisseService: CaisseService,
     private toastr: ToastrService
   ) { }
 
@@ -87,9 +90,23 @@ export class LivFactureComponent {
         code_entreprise: parseInt(this.currentUser.entreprise!.code.toString()),
       };
       this.livraisonService.update(this.livraison_id!, body).subscribe((res) => {
-        this.isLoading = false;
-        this.toastr.success(`Facture ${status} effectuée avec succès!`, 'Success!');
-        this.router.navigate(['/web/livraisons/livraison-list']);
+        if (status == 'Cash') {
+          var code = Math.floor(1000000000 + Math.random() * 90000000000);
+          const body: ICaisse = {
+            type_transaction: 'Entrée',
+            montant: this.total,
+            libelle: `Livraison ${this.livraison.Client!.fullname}`,
+            reference: code.toString(),
+            signature: this.currentUser.fullname,
+            pos_id: parseInt(this.currentUser.pos!.ID.toString()),
+            code_entreprise: parseInt(this.currentUser.entreprise!.code.toString()),
+          };
+          this.caisseService.create(body).subscribe((res) => {
+            this.isLoading = false;
+            this.toastr.success(`Facture ${status} effectuée avec succès!`, 'Success!');
+            this.router.navigate(['/web/livraisons/livraison-list']);
+          });
+        } 
       });
     } catch (error) {
       this.isLoading = false;
