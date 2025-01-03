@@ -105,7 +105,7 @@ export class CmdFactureComponent {
             const body: ICaisse = {
               type_transaction: 'Entrée',
               montant: this.total,
-              libelle: `Vente ${this.commande.ncommande}`,
+              libelle: `Vente #${this.commande.ncommande}`,
               reference: code.toString(),
               signature: this.currentUser.fullname,
               pos_id: parseInt(this.currentUser.pos!.ID.toString()),

@@ -70,6 +70,21 @@ export class DataService {
       ],
     },
     {
+      tittle: 'TRESORERIE',
+      showAsTab: true,
+      separateRoute: false,
+      menu: [ 
+        {
+          menuValue: 'Caisse',
+          icon: 'receipt',
+          base: 'finances',
+          hasSubRoute: false,
+          showSubRoute: false,
+          route: routes.caisseList,
+        },
+      ],
+    },
+    {
       tittle: 'Partenaires',
       showAsTab: true,
       separateRoute: false,
@@ -140,29 +155,29 @@ export class DataService {
           icon: 'layout-2',
           base: 'dashboard',
           subMenus: [
+            // {
+            //   menuValue: 'Summary',
+            //   route: routes.dashboard,
+            // },
             {
-              menuValue: 'Summary',
-              route: routes.dashboard,
+              menuValue: 'Plats & Produits',
+              route: routes.dashboardPlatProduct,
             },
             {
-              menuValue: 'Plats',
-              route: routes.dashboard,
+              menuValue: 'Caisses',
+              route: routes.dashboardCaisse,
             },
             {
-              menuValue: 'Produits',
-              route: routes.dashboard,
+              menuValue: 'Livraisons',
+              route: routes.dashboardLivraison,
             },
             {
-              menuValue: 'livraisons',
-              route: routes.dashboard,
-            },
-            {
-              menuValue: 'Clients',
-              route: routes.dashboard,
+              menuValue: 'Clients & Fourniseurs',
+              route: routes.dashboardClientFournisseur,
             },
             {
               menuValue: 'Ingredients',
-              route: routes.dashboard,
+              route: routes.dashboardIngredient,
             },
           ]
         },
@@ -417,6 +432,21 @@ export class DataService {
           route: routes.areaList, 
           hasSubRoute: false,
           showSubRoute: false,
+        },
+      ],
+    },
+    {
+      tittle: 'TRESORERIE',
+      showAsTab: true,
+      separateRoute: false,
+      menu: [ 
+        {
+          menuValue: 'Caisse',
+          icon: 'receipt',
+          base: 'finances',
+          hasSubRoute: false,
+          showSubRoute: false,
+          route: routes.caisseList,
         },
       ],
     },

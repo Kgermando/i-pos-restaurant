@@ -39,7 +39,21 @@ export class routes {
   public static get dashboard(): string {
     return this.core + '/web/dashboard';
   }
-
+  public static get dashboardPlatProduct(): string {
+    return this.dashboard + '/dash-plat-products';
+  }
+  public static get dashboardCaisse(): string {
+    return this.dashboard + '/dash-caisse';
+  }
+  public static get dashboardLivraison(): string {
+    return this.dashboard + '/dash-livraison';
+  }
+  public static get dashboardClientFournisseur(): string {
+    return this.dashboard + '/dash-client-fournisseur';
+  }
+  public static get dashboardIngredient(): string {
+    return this.dashboard + '/dash-ingredient';
+  }
 
 
   // Users
