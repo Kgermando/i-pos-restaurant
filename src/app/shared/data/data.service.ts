@@ -155,18 +155,15 @@ export class DataService {
           icon: 'layout-2',
           base: 'dashboard',
           subMenus: [
-            // {
-            //   menuValue: 'Summary',
-            //   route: routes.dashboard,
-            // },
-            {
-              menuValue: 'Plats & Produits',
-              route: routes.dashboardPlatProduct,
-            },
             {
               menuValue: 'Caisses',
               route: routes.dashboardCaisse,
             },
+            {
+              menuValue: 'Plats & Produits',
+              route: routes.dashboardPlatProduct,
+            },
+            
             {
               menuValue: 'Livraisons',
               route: routes.dashboardLivraison,
@@ -174,10 +171,6 @@ export class DataService {
             {
               menuValue: 'Clients & Fourniseurs',
               route: routes.dashboardClientFournisseur,
-            },
-            {
-              menuValue: 'Ingredients',
-              route: routes.dashboardIngredient,
             },
           ]
         },

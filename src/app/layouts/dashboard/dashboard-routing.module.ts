@@ -5,7 +5,6 @@ import { DashPlatProductComponent } from './dash-plat-product/dash-plat-product.
 import { DashCaisseComponent } from './dash-caisse/dash-caisse.component';
 import { DashLivraisonComponent } from './dash-livraison/dash-livraison.component';
 import { DashClientFournisseurComponent } from './dash-client-fournisseur/dash-client-fournisseur.component';
-import { DashIngredientComponent } from './dash-ingredient/dash-ingredient.component';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent, children: [
@@ -13,9 +12,8 @@ const routes: Routes = [
     { path: 'dash-caisse', component: DashCaisseComponent },
     { path: 'dash-livraison', component: DashLivraisonComponent },
     { path: 'dash-client-fournisseur', component: DashClientFournisseurComponent },
-    { path: 'dash-ingredient', component: DashIngredientComponent },
 
-    { path: '', redirectTo: 'dash-plat-products', pathMatch: 'full' }
+    { path: '', redirectTo: 'dash-caisse', pathMatch: 'full' }
   ]}
 ];
 

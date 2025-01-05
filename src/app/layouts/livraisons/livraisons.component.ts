@@ -36,7 +36,7 @@ export class LivraisonsComponent implements OnInit, AfterViewInit {
   length: number = 0;
 
   // Table 
-  displayedColumns: string[] = ['createdat', 'status', 'client', 'livreur', 'livreurname', 'areaprovince', 'areaname', 'adress', 'pos', 'id'];
+  displayedColumns: string[] = ['createdat', 'status', 'client', 'livreur', 'livreurname', 'areaprovince', 'areaname', 'adress', 'operator_name', 'pos', 'id'];
   dataSource = new MatTableDataSource<ILivraison>(this.dataList);
 
   @ViewChild(MatSort) sort!: MatSort;

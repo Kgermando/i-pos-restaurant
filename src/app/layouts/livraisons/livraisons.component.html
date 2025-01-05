@@ -228,7 +228,24 @@
                                 </ng-container>
 
                                 <!-- pos Column -->
-                                <ng-container matColumnDef="pos">
+                                <ng-container matColumnDef="operator_name">
+                                    <th mat-header-cell *matHeaderCellDef> Opérateur </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        @if (element.status === 'Cash') {
+                                        <a
+                                            [routerLink]="['/web/livraisons/view', element.ID, 'facture', element.Client!.fullname ]">
+                                            {{element.operator_name}}
+                                        </a>
+                                        } @else {
+                                        <a [routerLink]="['/web/livraisons', element.ID, 'line']">
+                                            {{element.operator_name}}
+                                        </a>
+                                        }
+                                    </td>
+                                </ng-container>
+
+                                 <!-- pos Column -->
+                                 <ng-container matColumnDef="pos">
                                     <th mat-header-cell *matHeaderCellDef> POS </th>
                                     <td mat-cell *matCellDef="let element">
                                         @if (element.status === 'Cash') {
