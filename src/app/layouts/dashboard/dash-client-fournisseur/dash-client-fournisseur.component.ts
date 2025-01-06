@@ -113,8 +113,6 @@ export class DashClientFournisseurComponent implements OnInit {
   GetTotalClientFournisseur(currentUser: IUser) {
     this.dashClientFournisseurLivraisonService.GetTotalClientFournisseur(
       currentUser.entreprise!.code!,
-      this.start_date,
-      this.end_date
     ).subscribe((res) => {
       this.nombreTotalClient = res.data.client;
       this.nombreTotalFournisseur = res.data.fournisseur;

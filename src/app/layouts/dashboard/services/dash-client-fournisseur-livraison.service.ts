@@ -12,12 +12,8 @@ export class DashClientFournisseurLivraisonService extends ApiService {
 	endpoint: string = `${environment.apiUrl}/dashboard`;
 
 	//   Get total client et fournisseur et zone de livraison
-	GetTotalClientFournisseur(code_entreprise: number,
-		startDateStr: string, endDateStr: string): Observable<any> {
-		let params = new HttpParams()
-			.set("start_date", startDateStr)
-			.set("end_date", endDateStr)
-		return this.http.get<any>(`${this.endpoint}/${code_entreprise}/cl-fseur-liv/total`, { params });
+	GetTotalClientFournisseur(code_entreprise: number): Observable<any> {
+		return this.http.get<any>(`${this.endpoint}/${code_entreprise}/cl-fseur-liv/total`);
 	}
 
 	// Taux de consommation entre livriason et table
