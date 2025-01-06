@@ -17,32 +17,20 @@ export class DashClientFournisseurLivraisonService extends ApiService {
 	}
 
 	// Taux de consommation entre livriason et table
-	GetCourbeZoneLivraison(code_entreprise: number,
-		startDateStr: string, endDateStr: string): Observable<any> {
-		let params = new HttpParams()
-			.set("start_date", startDateStr)
-			.set("end_date", endDateStr)
-		return this.http.get<any>(`${this.endpoint}/${code_entreprise}/cl-fseur-liv/courbe-areas`, { params });
+	GetCourbeZoneLivraison(code_entreprise: number): Observable<any> {
+		return this.http.get<any>(`${this.endpoint}/${code_entreprise}/cl-fseur-liv/courbe-areas`);
 	}
 
 	// best-clients
 
-	GetClientsWithMostDeliveries(code_entreprise: number,
-		startDateStr: string, endDateStr: string): Observable<ApiResponse> {
-		let params = new HttpParams()
-			.set("start_date", startDateStr)
-			.set("end_date", endDateStr)
-		return this.http.get<ApiResponse>(`${this.endpoint}/${code_entreprise}/cl-fseur-liv/best-clients`, { params });
+	GetClientsWithMostDeliveries(code_entreprise: number): Observable<ApiResponse> {
+		return this.http.get<ApiResponse>(`${this.endpoint}/${code_entreprise}/cl-fseur-liv/best-clients`);
 	}
 
 
 	// best-fournisseurs
-	GetTop10FournisseursWithMostStockValue(code_entreprise: number,
-		startDateStr: string, endDateStr: string): Observable<ApiResponse> {
-		let params = new HttpParams()
-			.set("start_date", startDateStr)
-			.set("end_date", endDateStr)
-		return this.http.get<ApiResponse>(`${this.endpoint}/${code_entreprise}/cl-fseur-liv/best-fournisseurs`, { params });
+	GetTop10FournisseursWithMostStockValue(code_entreprise: number): Observable<ApiResponse> {
+		return this.http.get<ApiResponse>(`${this.endpoint}/${code_entreprise}/cl-fseur-liv/best-fournisseurs`);
 	}
 
 

@@ -21,10 +21,10 @@ export class DashClientFournisseurComponent implements OnInit {
   currentUser!: IUser;
   isLoading = false;
 
-  dateRange!: FormGroup;
-  start_date!: string;
-  end_date!: string;
-  rangeDate: any[] = [];
+  // dateRange!: FormGroup;
+  // start_date!: string;
+  // end_date!: string;
+  // rangeDate: any[] = [];
 
   // Clients
   dataListClient: any[] = [];
@@ -61,16 +61,16 @@ export class DashClientFournisseurComponent implements OnInit {
   ngOnInit() {
     this.loadUserData = true;
     this.isLoading = true;
-    const date = new Date();
-    const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-    const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-    this.rangeDate = [firstDay, lastDay];
+    // const date = new Date();
+    // const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+    // const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+    // this.rangeDate = [firstDay, lastDay];
 
-    this.dateRange = this._formBuilder.group({
-      rangeValue: new FormControl(this.rangeDate),
-    });
-    this.start_date = formatDate(this.dateRange.value.rangeValue[0], 'yyyy-MM-dd', 'en-US');
-    this.end_date = formatDate(this.dateRange.value.rangeValue[1], 'yyyy-MM-dd', 'en-US');
+    // this.dateRange = this._formBuilder.group({
+    //   rangeValue: new FormControl(this.rangeDate),
+    // });
+    // this.start_date = formatDate(this.dateRange.value.rangeValue[0], 'yyyy-MM-dd', 'en-US');
+    // this.end_date = formatDate(this.dateRange.value.rangeValue[1], 'yyyy-MM-dd', 'en-US');
 
     this.authService.user().subscribe({
       next: (user) => {
@@ -84,7 +84,7 @@ export class DashClientFournisseurComponent implements OnInit {
 
 
         // Appel de la méthode onChanges
-        this.onChanges();
+        // this.onChanges();
 
         this.isLoading = false;
       },
@@ -96,18 +96,18 @@ export class DashClientFournisseurComponent implements OnInit {
     });
   }
 
-  onChanges(): void {
-    this.dateRange.valueChanges.subscribe(val => {
-      this.start_date = formatDate(val.rangeValue[0], 'yyyy-MM-dd', 'en-US');
-      this.end_date = formatDate(val.rangeValue[1], 'yyyy-MM-dd', 'en-US');
+  // onChanges(): void {
+  //   this.dateRange.valueChanges.subscribe(val => {
+  //     this.start_date = formatDate(val.rangeValue[0], 'yyyy-MM-dd', 'en-US');
+  //     this.end_date = formatDate(val.rangeValue[1], 'yyyy-MM-dd', 'en-US');
 
-      this.GetTotalClientFournisseur(this.currentUser);
-      this.GetCourbeZoneLivraison(this.currentUser);
-      this.GetClientsWithMostDeliveries(this.currentUser);
-      this.GetTop10FournisseursWithMostStockValue(this.currentUser);
+  //     this.GetTotalClientFournisseur(this.currentUser);
+  //     this.GetCourbeZoneLivraison(this.currentUser);
+  //     this.GetClientsWithMostDeliveries(this.currentUser);
+  //     this.GetTop10FournisseursWithMostStockValue(this.currentUser);
 
-    });
-  }
+  //   });
+  // }
 
 
   GetTotalClientFournisseur(currentUser: IUser) {
@@ -125,9 +125,7 @@ export class DashClientFournisseurComponent implements OnInit {
 
   GetCourbeZoneLivraison(currentUser: IUser) {
     this.dashClientFournisseurLivraisonService.GetCourbeZoneLivraison(
-      currentUser.entreprise!.code!,
-      this.start_date,
-      this.end_date
+      currentUser.entreprise!.code!
     ).subscribe((res) => {
       this.piechartZone = res.data.piechart;
       this.pieschart(this.piechartZone);
@@ -137,9 +135,7 @@ export class DashClientFournisseurComponent implements OnInit {
 
   GetClientsWithMostDeliveries(currentUser: IUser) {
     this.dashClientFournisseurLivraisonService.GetClientsWithMostDeliveries(
-      currentUser.entreprise!.code!,
-      this.start_date,
-      this.end_date
+      currentUser.entreprise!.code!
     ).subscribe((res) => {
       console.log("dataListClient", res.data);
       this.dataListClient = res.data;
@@ -150,9 +146,7 @@ export class DashClientFournisseurComponent implements OnInit {
 
   GetTop10FournisseursWithMostStockValue(currentUser: IUser) {
     this.dashClientFournisseurLivraisonService.GetTop10FournisseursWithMostStockValue(
-      currentUser.entreprise!.code!,
-      this.start_date,
-      this.end_date
+      currentUser.entreprise!.code!
     ).subscribe((res) => {
       console.log("dataSourceFournisseur", res.data);
       this.dataListFournisseur = res.data;
