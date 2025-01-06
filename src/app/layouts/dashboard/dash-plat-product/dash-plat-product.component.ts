@@ -40,7 +40,7 @@ export class DashPlatProductComponent implements OnInit {
   // Livraison
   dataListLivraison: any[] = [];
   displayedColumnLivraisons: string[] = ['CreatedAt', 'fullname', 'Area', 'name', 'quantity', 'prix_vente', 'name_society', 'livreur_name', 'cout_livraison', 'operator_name', 'pos'];
-  dataSourceLivraison = new MatTableDataSource<any>(this.dataListTable);
+  dataSourceLivraison = new MatTableDataSource<any>(this.dataListLivraison);
   totalItemLivraisons: number = 0;
   pageSizeLivraison: number = 10;
   pageIndexLivraison: number = 0;
@@ -268,7 +268,7 @@ export class DashPlatProductComponent implements OnInit {
           },
           {
             label: "Profits",
-            data: this.dataSaleProfits.map((v) => v.profits),
+            data: dataSaleProfits.map((v) => v.profits),
             backgroundColor: 'limegreen'
           }
         ]

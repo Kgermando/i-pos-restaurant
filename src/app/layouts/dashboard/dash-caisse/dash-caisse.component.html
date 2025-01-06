@@ -43,22 +43,22 @@
 
                 <div class="row">
                     <div class="col-xl-4 col-lg-6">
-                        <div class="campaign-box bg-danger-light">
-                            <div class="campaign-img">
-                                <span>
-                                    <i class="ti ti-brand-campaignmonitor"></i>
-                                </span>
-                                <p>Total Entrees </p>
-                            </div>
-                            <h4>{{ formatCurrency(totalCaisseEntree, currentUser.currency ) }}</h4>
-                        </div>
-                    </div>
-                    <div class="col-xl-4 col-lg-6">
                         <div class="campaign-box bg-purple-light">
                             <div class="campaign-img">
                                 <span>
                                     <i class="ti ti-brand-feedly"></i>
                                 </span>
+                                <p>Total Entrees </p>
+                            </div>
+                           <h4>{{ formatCurrency(totalCaisseEntree, currentUser.currency ) }}</h4>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-6">
+                        <div class="campaign-box bg-danger-light">
+                            <div class="campaign-img">
+                                <span>
+                                    <i class="ti ti-brand-campaignmonitor"></i>
+                                </span> 
                                 <p>Total Sorties </p>
                             </div>
                             <h4>{{ formatCurrency(totalCaisseSorties, currentUser.currency ) }}</h4>

@@ -163,11 +163,6 @@ export class DataService {
               menuValue: 'Plats & Produits',
               route: routes.dashboardPlatProduct,
             },
-            
-            {
-              menuValue: 'Livraisons',
-              route: routes.dashboardLivraison,
-            },
             {
               menuValue: 'Clients & Fourniseurs',
               route: routes.dashboardClientFournisseur,
@@ -312,20 +307,35 @@ export class DataService {
 
   public sidebarDataSupport = [
     {
-      tittle: 'Reporting',
-      showAsTab: true,
+      tittle: 'Main MENU',
+      showAsTab: false,
       separateRoute: false,
-      menu: [ 
+      hasSubRoute: false,
+      showSubRoute: true,
+      menu: [
         {
-          menuValue: 'Tableau de board',
+          menuValue: 'Dashboard',
+          hasSubRoute: true,
+          showSubRoute: true,
           icon: 'layout-2',
           base: 'dashboard',
-          route: routes.dashboard,
-          hasSubRoute: false,
-          showSubRoute: false, 
-        }, 
+          subMenus: [
+            {
+              menuValue: 'Caisses',
+              route: routes.dashboardCaisse,
+            },
+            {
+              menuValue: 'Plats & Produits',
+              route: routes.dashboardPlatProduct,
+            },
+            {
+              menuValue: 'Clients & Fourniseurs',
+              route: routes.dashboardClientFournisseur,
+            },
+          ]
+        },
       ],
-    }, 
+    },
     {
       tittle: 'Gestion de commandes',
       showAsTab: true,

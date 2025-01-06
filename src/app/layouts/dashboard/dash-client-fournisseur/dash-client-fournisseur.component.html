@@ -1,1 +1,239 @@
-<p>dash-client-fournisseur works!</p>
+<!-- Page Wrapper -->
+<div class="page-wrapper">
+  <div class="content">
+    <div class="row">
+      <div class="col-md-12">
+        @if (loadUserData) {
+        <div class="spinner-border text-center d-flex justify-content-center align-items-center" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        }@else {
+        @if (currentUser) {
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="row align-items-center">
+            <div class="col-4">
+              <h4 class="page-title">
+                Dashboard <span class="text-primary">Clients & Fournisseurs & Zones</span>
+              </h4>
+            </div>
+            <div class="col-8 text-end">
+              <form [formGroup]="dateRange">
+                <div class="d-flex title-head">
+                  <div class="daterange-picker d-flex align-items-center justify-content-center">
+                    <div class="form-sort me-2">
+                      <i class="ti ti-calendar"></i>
+                      <input type="text" class="form-control date-range bookingrange" bsDaterangepicker
+                        [bsConfig]="{ adaptivePosition: true }" formControlName="rangeValue" />
+                    </div>
+                    <div class="head-icons mb-0">
+                      <app-reload></app-reload>
+                      <app-collapse-header></app-collapse-header>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <!-- /Page Header -->
+
+
+        <div class="col-md-12">
+          <!-- Campaign Status -->
+          <div class="row">
+            <div class="col-xl-4 col-lg-6">
+              <div class="dash-box bg-purple-light" style="background-color: #f3edff;">
+                <h6>
+                  Total Clients
+                </h6>
+                <h4>{{ nombreTotalClient }}</h4>
+              </div>
+            </div>
+            <div class="col-xl-4 col-lg-6">
+              <div class="dash-box bg-success-light" style="background-color: #e0f5d7;">
+                <h6>Total Fournisseurs </h6>
+                <h4>{{ nombreTotalFournisseur }}</h4>
+              </div>
+            </div>
+            <div class="col-xl-4 col-lg-6">
+              <div class="dash-box bg-info-light" style="background-color: #d7f0f5;">
+                <h6>Total des zone de livraison </h6>
+                <h4>{{ nombreTotalArea }}</h4>
+              </div>
+            </div>
+          </div>
+          <!-- /Campaign Status -->
+
+
+        </div>
+        <div class="row">
+          <!-- <div class="col-md-6">
+              <div class="card">
+                <div class="card-header">
+                  <div class="card-title">Repartition des zones de livraison</div>
+                </div>
+                <div class="card-body">
+                    <div class="chartjs-wrapper-demo">
+                        <div class="chart-container">
+                          <canvas id="MyChart" class="h-300"></canvas>
+                        </div>
+                      </div>
+                </div>
+              </div>
+            </div> -->
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">Repartition des zones de livraison</div>
+              </div>
+              <div class="card-body">
+                <div class="chartjs-wrapper-demo">
+                  <div class="chart-container">
+                    <canvas id="doughcharts" class="h-300"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 d-flex">
+            <div class="card flex-fill">
+              <div class="card-header border-0 pb-0">
+                <div class="d-flex align-items-center justify-content-between flex-wrap row-gap-3">
+                  <h4>
+                    <i class="ti ti-grip-vertical me-1"></i>
+                    10 meilleurs Clients
+                  </h4>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive custom-table ">
+                  <table mat-table [dataSource]="dataSourceClient" class="mat-elevation-z2 table">
+
+
+                    <!-- fullname Column -->
+                    <ng-container matColumnDef="fullname">
+                      <th mat-header-cell *matHeaderCellDef> Nom complet</th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element.fullname }}
+                      </td>
+                    </ng-container>
+
+                    <!-- telephone Column -->
+                    <ng-container matColumnDef="telephone">
+                      <th mat-header-cell *matHeaderCellDef> Telephone</th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element.telephone }}
+                      </td>
+                    </ng-container>
+
+                    <!-- email Column -->
+                    <ng-container matColumnDef="email">
+                      <th mat-header-cell *matHeaderCellDef> Email</th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element.email }}
+                      </td>
+                    </ng-container>
+
+                    <!-- count Column -->
+                    <ng-container matColumnDef="count">
+                      <th mat-header-cell *matHeaderCellDef> Total Livraison</th>
+                      <td mat-cell *matCellDef="let element" style="font-weight: 800;">
+                        {{ element.count }}
+                      </td>
+                    </ng-container>
+
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumnClients"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnClients;"></tr>
+
+                    <!-- Row shown when there is no matching data. -->
+                    <tr class="mat-row" *matNoDataRow>
+                      @if (isLoading){
+                      <button disabled class="btn btn-primary">
+                        <div class="spinner-border" role="status">
+                          <span class="visually-hidden">Loading...</span>
+                        </div>
+                      </button>
+                      }
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12 d-flex">
+            <div class="card flex-fill">
+              <div class="card-header border-0 pb-0">
+                <div class="d-flex align-items-center justify-content-between flex-wrap row-gap-3">
+                  <h4>
+                    <i class="ti ti-grip-vertical me-1"></i>
+                    10 meilleurs Fournisseurs
+                  </h4>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive custom-table ">
+                  <table mat-table [dataSource]="dataSourceFournisseur" class="mat-elevation-z2 table">
+
+                    <!-- name Column -->
+                    <ng-container matColumnDef="name">
+                      <th mat-header-cell *matHeaderCellDef> Nom </th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element.name }}
+                      </td>
+                    </ng-container>
+
+                    <!-- telephone Column -->
+                    <ng-container matColumnDef="telephone">
+                      <th mat-header-cell *matHeaderCellDef> Telephone </th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element.telephone }}
+                      </td>
+                    </ng-container>
+
+                    <!-- type_fourniture Column -->
+                    <ng-container matColumnDef="type_fourniture">
+                      <th mat-header-cell *matHeaderCellDef> Type de fourniture </th>
+                      <td mat-cell *matCellDef="let element">
+                        {{ element.type_fourniture }}
+                      </td>
+                    </ng-container>
+
+                    <!-- total_value Column -->
+                    <ng-container matColumnDef="total_value">
+                      <th mat-header-cell *matHeaderCellDef> Valeur total</th>
+                      <td mat-cell *matCellDef="let element" style="font-weight: 800;">
+                        {{ element.total_value }}
+                      </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumnFournisseurs"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumnFournisseurs;"></tr>
+
+                    <!-- Row shown when there is no matching data. -->
+                    <tr class="mat-row" *matNoDataRow>
+                      @if (isLoading){
+                      <button disabled class="btn btn-primary">
+                        <div class="spinner-border" role="status">
+                          <span class="visually-hidden">Loading...</span>
+                        </div>
+                      </button>
+                      }
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        }
+        }
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /Page Wrapper -->

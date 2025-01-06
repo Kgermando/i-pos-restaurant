@@ -5,7 +5,6 @@ import { DashboardRoutingModule } from './dashboard-routing.module';
 import { DashboardComponent } from './dashboard.component';
 import { SharedModule } from '../../shared/shared.module';
 import { DashCaisseComponent } from './dash-caisse/dash-caisse.component';
-import { DashLivraisonComponent } from './dash-livraison/dash-livraison.component';
 import { DashClientFournisseurComponent } from './dash-client-fournisseur/dash-client-fournisseur.component';
 import { DashPlatProductComponent } from './dash-plat-product/dash-plat-product.component';
 
@@ -14,7 +13,6 @@ import { DashPlatProductComponent } from './dash-plat-product/dash-plat-product.
   declarations: [
     DashboardComponent,
     DashCaisseComponent,
-    DashLivraisonComponent,
     DashClientFournisseurComponent,
     DashPlatProductComponent,
   ],

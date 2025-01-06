@@ -30,16 +30,16 @@ export class DashPlatProductService extends ApiService {
   }
 
   // Gauge de stock disponible
-  getStockDisponible(
-    code_entreprise: number,
-    startDateStr: string,
-    endDateStr: string
-  ): Observable<ApiResponse> {
-    let params = new HttpParams()
-      .set("start_date", startDateStr)
-      .set("end_date", endDateStr)
-    return this.http.get<ApiResponse>(`${this.endpoint}/${code_entreprise}/all/stocks-disponible`, { params });
-  }
+  // getStockDisponible(
+  //   code_entreprise: number,
+  //   startDateStr: string,
+  //   endDateStr: string
+  // ): Observable<ApiResponse> {
+  //   let params = new HttpParams()
+  //     .set("start_date", startDateStr)
+  //     .set("end_date", endDateStr)
+  //   return this.http.get<ApiResponse>(`${this.endpoint}/${code_entreprise}/all/stocks-disponible`, { params });
+  // }
 
   // Tableau des sortie des plats et produits Table
   GetTablePaginatedCmdLineSortieProductPlat(code_entreprise: number, page: number, pageSize: number,

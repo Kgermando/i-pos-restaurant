@@ -129,16 +129,14 @@
           <div class="col-md-6">
             <div class="card">
               <div class="card-header">
-                <div class="card-title">Gauge de consommation</div>
+                <div class="card-title">Taux de consommation</div>
               </div>
               <div class="card-body">
-                @if (dataStockDisponibles) {
                 <div class="chartjs-wrapper-demo">
                   <div class="chart-container">
                     <canvas id="doughcharts" class="h-300"></canvas>
                   </div>
                 </div>
-                }
               </div>
             </div>
           </div>
@@ -290,7 +288,7 @@
 
                     <!-- Row shown when there is no matching data. -->
                     <tr class="mat-row" *matNoDataRow>
-                      @if (isLoading || isLoading){
+                      @if (isLoading){
                       <button disabled class="btn btn-primary">
                         <div class="spinner-border" role="status">
                           <span class="visually-hidden">Loading...</span>
@@ -470,7 +468,7 @@
 
                     <!-- Row shown when there is no matching data. -->
                     <tr class="mat-row" *matNoDataRow>
-                      @if (isLoading || isLoading){
+                      @if (isLoading){
                       <button disabled class="btn btn-primary">
                         <div class="spinner-border" role="status">
                           <span class="visually-hidden">Loading...</span>

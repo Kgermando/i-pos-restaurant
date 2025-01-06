@@ -11,8 +11,8 @@ import { ApiResponse } from '../../../shared/model/api-response.model';
 export class DashCaisseService extends ApiService {
   endpoint: string = `${environment.apiUrl}/dashboard`;
 
-    // Total caisse
-    GetTotalCaisse(code_entreprise: number, 
+  // Total caisse
+  GetTotalCaisse(code_entreprise: number,
     startDateStr: string, endDateStr: string): Observable<any> {
     let params = new HttpParams()
       .set("start_date", startDateStr)
@@ -31,17 +31,16 @@ export class DashCaisseService extends ApiService {
   ): Observable<any> {
     return this.http.get<any>(`${this.endpoint}/${code_entreprise}/caisses/courbe-ventes-profits`);
   }
-  
 
-    // Tableau des entrees et sorties
-    GetTableauEntreeSorties(code_entreprise: number, page: number, pageSize: number,
-        startDateStr: string, endDateStr: string): Observable<ApiResponse> {
-        let params = new HttpParams()
-          .set("page", page.toString())
-          .set("page_size", pageSize.toString())
-          .set("start_date", startDateStr)
-          .set("end_date", endDateStr)
-        return this.http.get<ApiResponse>(`${this.endpoint}/${code_entreprise}/caisses/tableau-entrees-sorties`, { params });
-      }
+
+  // Tableau des entrees et sorties
+  GetTableauEntreeSorties(code_entreprise: number, page: number, pageSize: number,
+    startDateStr: string, endDateStr: string): Observable<ApiResponse> {
+    let params = new HttpParams()
+      .set("page", page.toString())
+      .set("page_size", pageSize.toString())
+      .set("start_date", startDateStr)
+      .set("end_date", endDateStr)
+    return this.http.get<ApiResponse>(`${this.endpoint}/${code_entreprise}/caisses/tableau-entrees-sorties`, { params });
+  }
 }
- 
