@@ -116,7 +116,7 @@ export class DataService {
         {
           menuValue: 'Zones',
           icon: 'map',
-          base: 'zones',
+          base: 'areas',
           route: routes.areaList, 
           hasSubRoute: false,
           showSubRoute: false,
@@ -257,7 +257,7 @@ export class DataService {
         {
           menuValue: 'Zones',
           icon: 'map',
-          base: 'zones',
+          base: 'areas',
           route: routes.areaList, 
           hasSubRoute: false,
           showSubRoute: false,
@@ -431,7 +431,7 @@ export class DataService {
         {
           menuValue: 'Zones',
           icon: 'map',
-          base: 'zones',
+          base: 'areas',
           route: routes.areaList, 
           hasSubRoute: false,
           showSubRoute: false,
