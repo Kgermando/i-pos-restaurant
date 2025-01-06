@@ -59,14 +59,22 @@
                                                 </li>
                                             </ul>
                                         </div>
-                                    </div>
-                                    @if(currentUser.permission === 'ALL' ||
-                                    currentUser.permission === 'AM' ||
-                                    currentUser.permission === 'A') {
-                                    <a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="offcanvas"
-                                        data-bs-target="#offcanvas_add"><i
-                                            class="ti ti-square-rounded-plus me-2"></i>Ajouter un ingredient </a>
+                                    </div> 
+                                    @if (isLoading) {
+                                        <div class="spinner-border text-center d-flex justify-content-center align-items-center"
+                                            role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                        }@else {
+                                            @if(currentUser.permission === 'ALL' ||
+                                            currentUser.permission === 'AM' ||
+                                            currentUser.permission === 'A') {
+                                            <a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="offcanvas"
+                                                data-bs-target="#offcanvas_add"><i
+                                                    class="ti ti-square-rounded-plus me-2"></i>Ajouter un ingredient </a>
+                                            }
                                     }
+                                   
                                 </div>
                             </div>
                         </div>
