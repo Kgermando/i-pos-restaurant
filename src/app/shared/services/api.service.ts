@@ -1,6 +1,6 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpEventType, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, Subject, tap } from 'rxjs'; 
+import { map, Observable, Subject, tap } from 'rxjs'; 
 import { ApiResponse } from '../model/api-response.model';
 
 @Injectable({
@@ -156,5 +156,33 @@ export abstract class ApiService {
       reportProgress: true,
       observe: 'events'
     });
+  }
+
+  uploadCsvData(data: any[], code_entreprise: number, signature: string): Observable<number> {
+    const payload = {
+      data,
+      code_entreprise,
+      signature
+    };
+    return this.http.post(`${this.endpoint}/uploads`, payload, {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+      reportProgress: true,
+      observe: 'events'
+    }).pipe(
+      map(event => {
+        switch (event.type) {
+          case HttpEventType.UploadProgress:
+            return Math.round((event.loaded / event.total!) * 100);
+          case HttpEventType.Response:
+            return 100;
+          default:
+            return 0;
+        }
+      }),
+      tap(() => {
+        this._refreshDataList$.next();
+        this._refreshData$.next();
+      })
+    );
   }
 }

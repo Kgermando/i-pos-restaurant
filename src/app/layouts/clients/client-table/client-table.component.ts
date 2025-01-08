@@ -15,6 +15,7 @@ import { formatDate } from '@angular/common';
 import { parseDate } from 'ngx-bootstrap/chronos';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
+import { CsvService } from '../../../shared/services/csv.service';
 
 @Component({
   selector: 'app-client-table',
@@ -53,13 +54,14 @@ export class ClientTableComponent implements OnInit, AfterViewInit {
   isLoading = false;
 
   clientList: IClient[] = []; // File uploaded
-  pourcent = 0;
+  progress = 0;
 
   constructor(
     private router: Router,
     private _formBuilder: FormBuilder,
     private authService: AuthService,
     private clientService: ClientService,
+    private csvService: CsvService, 
     private toastr: ToastrService,
     private papa: Papa
   ) { }
@@ -241,68 +243,79 @@ export class ClientTableComponent implements OnInit, AfterViewInit {
   }
 
 
-
-
-
-  async upload(event: any) {
-    const file = event.target.files[0];
-    if (this.isValidCSVFile(file)) {
-      this.isLoading = true;
-      this.papa.parse(file, {
-        worker: true,
-        header: true,
-        delimiter: ';',
-        skipEmptyLines: true,
-        // encoding: 'utf-8',
-        complete: (results) => {
-          this.clientList = results.data;
-          if (this.clientList.length > 1000) {
-            this.isLoading = false;
-            this.toastr.info('Veuillez reduire les lignes en dessous de 1000.', 'Success!');
-          } else {
-            for (let index = 0; index < this.clientList.length; index++) {
-              const body: IClient = {
-                fullname: this.clientList[index].fullname,
-                telephone: this.clientList[index].telephone,
-                telephone2: this.clientList[index].telephone2,
-                email: this.clientList[index].email,
-                adress: this.clientList[index].adress,
-                birthday: formatDate(parseDate(this.clientList[index].birthday!), 'yyyy-MM-dd', 'en-US'),
-                organisation: this.clientList[index].organisation,
-                website: this.clientList[index].website,
-                signature: this.currentUser.fullname,
-                code_entreprise: parseInt(this.currentUser.entreprise!.code.toString()),
-              };
-              this.clientService.create(body).subscribe({
-                next: () => { 
-                  var pourcents = (index + 1) * 100 / this.clientList.length;
-                  this.pourcent = parseInt(pourcents.toFixed(0));
-                  if (this.pourcent == 100) {  
-                    this.isLoading = false;
-                    console.log("All done!");
-                    this.toastr.success('Importation effectuée avec succès!', 'Success!');
-                  }
-                },
-                error: (err) => { 
-                  this.isLoading = false;
-                  this.toastr.error(`${err.error.message}`, 'Oupss!');
-                  console.log(err); 
-                }
-              });
-            }
-          } 
-        },
-        error: (error, file) => { 
-          this.toastr.error(`${error}`, 'Oupss!');
-          console.log(error);
-          console.log("file", file);
-          // this.close();
-        },
+  onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+    if (file) {
+      this.csvService.parseCsv(file).then(data => { 
+        this.clientService.uploadCsvData(data, parseInt(this.currentUser.entreprise!.code.toString()), this.currentUser.fullname).subscribe(progress => {
+          this.progress = progress;
+        });
+      }).catch(error => {
+        console.error('Erreur lors de la lecture du fichier CSV', error);
       });
-    } else {  
-      alert("Please import valid .csv file."); 
-    }      
+    }
   }
+
+
+  // async upload(event: any) {
+  //   const file = event.target.files[0];
+  //   if (this.isValidCSVFile(file)) {
+  //     this.isLoading = true;
+  //     this.papa.parse(file, {
+  //       worker: true,
+  //       header: true,
+  //       delimiter: ';',
+  //       skipEmptyLines: true,
+  //       // encoding: 'utf-8',
+  //       complete: (results) => {
+  //         this.clientList = results.data;
+  //         if (this.clientList.length > 1000) {
+  //           this.isLoading = false;
+  //           this.toastr.info('Veuillez reduire les lignes en dessous de 1000.', 'Success!');
+  //         } else {
+  //           for (let index = 0; index < this.clientList.length; index++) {
+  //             const body: IClient = {
+  //               fullname: this.clientList[index].fullname,
+  //               telephone: this.clientList[index].telephone,
+  //               telephone2: this.clientList[index].telephone2,
+  //               email: this.clientList[index].email,
+  //               adress: this.clientList[index].adress,
+  //               birthday: formatDate(parseDate(this.clientList[index].birthday!), 'yyyy-MM-dd', 'en-US'),
+  //               organisation: this.clientList[index].organisation,
+  //               website: this.clientList[index].website,
+  //               signature: this.currentUser.fullname,
+  //               code_entreprise: parseInt(this.currentUser.entreprise!.code.toString()),
+  //             };
+  //             this.clientService.create(body).subscribe({
+  //               next: () => { 
+  //                 var pourcents = (index + 1) * 100 / this.clientList.length;
+  //                 this.pourcent = parseInt(pourcents.toFixed(0));
+  //                 if (this.pourcent == 100) {  
+  //                   this.isLoading = false;
+  //                   console.log("All done!");
+  //                   this.toastr.success('Importation effectuée avec succès!', 'Success!');
+  //                 }
+  //               },
+  //               error: (err) => { 
+  //                 this.isLoading = false;
+  //                 this.toastr.error(`${err.error.message}`, 'Oupss!');
+  //                 console.log(err); 
+  //               }
+  //             });
+  //           }
+  //         } 
+  //       },
+  //       error: (error, file) => { 
+  //         this.toastr.error(`${error}`, 'Oupss!');
+  //         console.log(error);
+  //         console.log("file", file);
+  //         // this.close();
+  //       },
+  //     });
+  //   } else {  
+  //     alert("Please import valid .csv file."); 
+  //   }      
+  // }
  
   
   isValidCSVFile(file: any) {  

@@ -69,22 +69,22 @@
                                             </ul>
                                         </div>
                                     </div>
-                                    
+
                                     @if (isLoading) {
-                                        <div class="spinner-border text-center d-flex justify-content-center align-items-center"
-                                            role="status">
-                                            <span class="visually-hidden">Loading...</span>
-                                        </div>
-                                        }@else {
-                                            @if(currentUser.permission === 'ALL' ||
-                                            currentUser.permission === 'AM' ||
-                                            currentUser.permission === 'A') {
-                                            <a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="offcanvas"
-                                                data-bs-target="#offcanvas_add"><i
-                                                    class="ti ti-square-rounded-plus me-2"></i>Ajouter client</a>
-                                            }
+                                    <div class="spinner-border text-center d-flex justify-content-center align-items-center"
+                                        role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    }@else {
+                                    @if(currentUser.permission === 'ALL' ||
+                                    currentUser.permission === 'AM' ||
+                                    currentUser.permission === 'A') {
+                                    <a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="offcanvas"
+                                        data-bs-target="#offcanvas_add"><i
+                                            class="ti ti-square-rounded-plus me-2"></i>Ajouter client</a>
                                     }
-                                   
+                                    }
+
                                 </div>
                             </div>
                         </div>
@@ -506,31 +506,27 @@
     </div>
     <div class="offcanvas-body">
         <div>
-            <div class="row" *ngIf="!isLoading && pourcent < 100">
+            <div class="row">
                 <div class="col-md-12">
                     <div class="mb-3">
                         <div class="d-flex justify-content-between align-items-center">
                             <label class="col-form-label" for="file">Upload File</label>
                         </div>
-                        <input type="file" class="form-control" (change)="upload($event)" accept=".csv" />
+                        <input type="file" class="form-control" (change)="onFileSelected($event)" accept=".csv" />
                     </div>
                 </div>
             </div>
+            @if (progress > 0) {
             <div class="text-center mb-25">
-                <div *ngIf="pourcent" class="progress">
-                    <div
-                      class="progress-bar progress-bar-info progress-bar-striped" 
-                      style="color: whitesmoke;"
-                      role="progressbar"
-                      attr.aria-valuenow="{{ pourcent }}"
-                      aria-valuemin="0"
-                      aria-valuemax="100"
-                      [ngStyle]="{ width: pourcent + '%', 'background-color': pourcent == 100 ? 'green' : 'blue' }"
-                    >
-                      {{ pourcent }} %
+                <div *ngIf="progress" class="progress">
+                    <div class="progress-bar progress-bar-info progress-bar-striped" style="color: whitesmoke;"
+                        role="progressbar" attr.aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100"
+                        [ngStyle]="{ width: progress + '%', 'background-color': progress == 100 ? 'green' : 'blue' }">
+                        {{ progress }} %
                     </div>
                 </div>
-            </div> 
+            </div>
+            }
         </div>
     </div>
 </div>
