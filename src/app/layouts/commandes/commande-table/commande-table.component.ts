@@ -163,7 +163,7 @@ export class CommandeTableComponent implements OnInit, AfterViewInit {
       this.isLoading = true;
       const code = Math.floor(1000000000000 + Math.random() * 9999999999999);
       const body: ICommande = {
-        ncommande: code,
+        ncommande: code, 
         status: 'En cours',
         table_box_id: parseInt(this.tableId.toString()),
         signature: this.currentUser.fullname,

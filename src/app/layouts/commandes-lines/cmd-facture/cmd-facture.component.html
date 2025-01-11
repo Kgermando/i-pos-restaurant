@@ -3,10 +3,10 @@
   <span class="visually-hidden">Loading...</span>
 </div>
 } @else {
-<div class="invoice-container" id="print-section"> 
+<div class="invoice-container" id="print-section">
   <div class="invoice">
-    <h4 class="mb-3 text-center"> 
-      {{ currentUser.entreprise?.name?.toUpperCase() }} 
+    <h4 class="mb-3 text-center">
+      {{ currentUser.entreprise?.name?.toUpperCase() }}
     </h4>
     <table class="invoice-table">
       <thead>
@@ -17,82 +17,78 @@
           <th>TVA</th>
           <th>Total</th>
           @if (commande.status !== 'Cash'){
-            <th> <i class="ti ti-trash"></i> </th>
+          <th> <i class="ti ti-trash"></i> </th>
           }
         </tr>
       </thead>
       <tbody>
         @for (item of commandeLineList; track item.ID) {
-          @if (item.Plat!.ID! > 0) {
-            <tr>
-              <td>
-                {{ item.Plat!.name }}
-              </td>
-              <td>{{ item.quantity }}
-                @if (item.quantity > 1) {
-                {{ item.Plat!.unite_vente }}s
-                }@else {
-                {{ item.Plat!.unite_vente }}
-                }
-            </td>
-              <td> {{ formatCurrency(item.Plat!.prix_vente, currentUser.currency) }} </td>
-              <td>
-                @if (item.Plat!.tva === 16) {
-                {{ item.Plat!.tva }}%
-                }@else { 
-                -
-                }
-              </td>
-              <td>
-                {{ formatCurrency(item.quantity * item.Plat!.prix_vente, currentUser.currency) }}
-              </td>
-              @if (commande.status !== 'Cash'){
-                <td>
-                  <button type="button" (click)="restitutionBtn(item.ID!)"
-                      class="btn-close custom-btn-close border p-1 me-0 d-flex align-items-center 
-                        justify-content-center rounded-circle"
-                      data-bs-dismiss="offcanvas" aria-label="Close">
-                      <i class="ti ti-x"></i>
-                  </button>
-                </td>
-              }
-            
-            </tr>
-          }@else if (item.Product!.ID! > 0) {
-            <tr>
-              <td>
-                {{ item.Product!.name }}
-              </td>
-              <td>{{ item.quantity }}
-                @if (item.quantity > 1) {
-                {{ item.Product!.unite_vente }}s
-                }@else {
-                {{ item.Product!.unite_vente }}
-                }
-            </td>
-              <td> {{ formatCurrency(item.Product!.prix_vente, currentUser.currency) }} </td>
-              <td>
-                @if (item.Product!.tva === 16) {
-                {{ item.Product!.tva }}%
-                }@else { 
-                -
-                }
-              </td>
-              <td>
-                {{ formatCurrency(item.quantity * item.Product!.prix_vente, currentUser.currency) }}
-              </td>
-              @if (commande.status !== 'Cash') {
-                <td>
-                  <button type="button" (click)="restitutionBtn(item.ID!)"
-                      class="btn-close custom-btn-close border p-1 me-0 d-flex align-items-center 
-                      justify-content-center rounded-circle"
-                      data-bs-dismiss="offcanvas" aria-label="Close">
-                      <i class="ti ti-x"></i>
-                  </button>
-                </td>
-              } 
-            </tr>
+        @if (item.Plat!.ID! > 0) {
+        <tr>
+          <td>
+            {{ item.Plat!.name }}
+          </td>
+          <td>{{ item.quantity }}
+            @if (item.quantity > 1) {
+            {{ item.Plat!.unite_vente }}s
+            }@else {
+            {{ item.Plat!.unite_vente }}
+            }
+          </td>
+          <td> {{ formatCurrency(item.Plat!.prix_vente, currentUser.currency) }} </td>
+          <td>
+            @if (item.Plat!.tva === 16) {
+            {{ item.Plat!.tva }}%
+            }@else {
+            -
+            }
+          </td>
+          <td>
+            {{ formatCurrency(item.quantity * item.Plat!.prix_vente, currentUser.currency) }}
+          </td>
+          @if (commande.status !== 'Cash'){
+          <td>
+            <button type="button" (click)="restitutionBtn(item.ID!)" class="btn-close custom-btn-close border p-1 me-0 d-flex align-items-center 
+                        justify-content-center rounded-circle" data-bs-dismiss="offcanvas" aria-label="Close">
+              <i class="ti ti-x"></i>
+            </button>
+          </td>
           }
+
+        </tr>
+        }@else if (item.Product!.ID! > 0) {
+        <tr>
+          <td>
+            {{ item.Product!.name }}
+          </td>
+          <td>{{ item.quantity }}
+            @if (item.quantity > 1) {
+            {{ item.Product!.unite_vente }}s
+            }@else {
+            {{ item.Product!.unite_vente }}
+            }
+          </td>
+          <td> {{ formatCurrency(item.Product!.prix_vente, currentUser.currency) }} </td>
+          <td>
+            @if (item.Product!.tva === 16) {
+            {{ item.Product!.tva }}%
+            }@else {
+            -
+            }
+          </td>
+          <td>
+            {{ formatCurrency(item.quantity * item.Product!.prix_vente, currentUser.currency) }}
+          </td>
+          @if (commande.status !== 'Cash') {
+          <td>
+            <button type="button" (click)="restitutionBtn(item.ID!)" class="btn-close custom-btn-close border p-1 me-0 d-flex align-items-center 
+                      justify-content-center rounded-circle" data-bs-dismiss="offcanvas" aria-label="Close">
+              <i class="ti ti-x"></i>
+            </button>
+          </td>
+          }
+        </tr>
+        }
         } @empty {
         <tr>
           <td colspan="6">Aucune donnée</td>
@@ -126,14 +122,53 @@
   </div>
 </div>
 
-@if (commande.status !== 'Cash') {
+
 <div class="button-container mt-5">
-  <button class="button btn btn-warning btn-w-lg me-0 rounded-pill" (click)="onSubmitFacture('Créance')"
-    data-bs-dismiss="offcanvas">Créance</button>
-  <button class="button btn btn-success btn-w-lg me-0 rounded-pill" (click)="onSubmitFacture('Cash')"
+  <!-- @for (item of selectCaisseList; track $index) {
+    <button class="button btn btn-success btn-w-lg me-0 rounded-pill" (click)="onSubmitFacture('Cash')"
+      data-bs-dismiss="offcanvas">
+      {{ item.name }}
+    </button>
+  } -->
+  <div class="dropdown full-width-50">
+    <button class="button btn btn-success btn-w-lg me-0 rounded-pill dropdown-toggle" type="button" id="dropdownMenuButton"
+      data-bs-toggle="dropdown" aria-expanded="false">
+      Sélectionner le Paiement
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+      @for (item of selectCaisseList; track item.ID!) {
+        <li>
+          <a class="dropdown-item" href="javascript:void(0);" (click)="onSubmitFacture(item.name, item.ID!)">
+            {{ item.name }}
+          </a>
+        </li>
+      }
+    </ul>
+  </div>
+  <div class="dropdown full-width-50">
+    <button class="button btn btn-warning  btn-w-lg me-0 rounded-pill dropdown-toggle" type="button" id="dropdownMenuButton"
+      data-bs-toggle="dropdown" aria-expanded="false">
+      Paiement par Créance
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+      @for (item of selectCaisseList; track item.ID!) {
+        <li>
+          <a class="dropdown-item" href="javascript:void(0);" (click)="onSubmitFacture('Créance', item.ID!)">
+            {{ item.name }}
+          </a>
+        </li>
+      }
+    </ul>
+  </div>
+  <!-- <button class="button btn btn-warning btn-w-lg me-0 rounded-pill" (click)="onSubmitFacture('Créance', item.ID!)"
+    data-bs-dismiss="offcanvas">
+    Créance
+  </button> -->
+  <!-- <button class="button btn btn-success btn-w-lg me-0 rounded-pill" (click)="onSubmitFacture('Cash')"
     data-bs-dismiss="offcanvas">
     Cash
-  </button>
+  </button> -->
+ 
   <!-- <button class="button btn btn-outline-warning btn-w-lg me-0 rounded-pill" (click)="onSubmitFacture('Créance')"
     data-bs-dismiss="offcanvas">
     Print Créance
@@ -144,10 +179,9 @@
   </button> -->
   <button class="button btn btn-outline-danger btn-w-lg me-0 
           rounded-pill full-width" data-bs-toggle="modal" data-bs-target="#delete_commande">
-          Annuler
-    </button>
+    Annuler
+  </button>
 </div>
-}
 
 <!-- Delete data item -->
 <div class="modal fade" id="delete_commande" role="dialog">

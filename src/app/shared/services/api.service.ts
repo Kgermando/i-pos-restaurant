@@ -23,6 +23,33 @@ export abstract class ApiService {
     return this._refreshData$;
   }
 
+  getPaginatedEntrepriseRangeDate(
+    code_entreprise: number, page: number, 
+    pageSize: number, search: string,
+    startDateStr: string, endDateStr: string): Observable<ApiResponse> {
+    let params = new HttpParams()
+    .set("page", page.toString())
+    .set("page_size", pageSize.toString())
+    .set("search", search)
+    .set("start_date", startDateStr)
+    .set("end_date", endDateStr)
+    return this.http.get<ApiResponse>(`${this.endpoint}/${code_entreprise}/all/paginate`, { params });
+  }
+
+  getPaginatedEntrepriseByPosRangeDate(
+    code_entreprise: number, pos_id: number, page: number, 
+    pageSize: number, search: string,
+    startDateStr: string, endDateStr: string): Observable<ApiResponse> {
+    let params = new HttpParams()
+    .set("page", page.toString())
+    .set("page_size", pageSize.toString())
+    .set("search", search)
+    .set("start_date", startDateStr)
+    .set("end_date", endDateStr)
+    return this.http.get<ApiResponse>(`${this.endpoint}/${code_entreprise}/${pos_id}/all/paginate`, { params });
+  }
+
+
   getPaginatedEntreprise(code_entreprise: number, page: number, pageSize: number, search: string): Observable<ApiResponse> {
     let params = new HttpParams()
     .set("page", page.toString())

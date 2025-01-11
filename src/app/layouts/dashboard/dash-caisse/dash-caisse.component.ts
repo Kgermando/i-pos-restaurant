@@ -109,7 +109,7 @@ export class DashCaisseComponent implements OnInit {
 
 
   // Méthode onChanges
-  onChanges(): void {
+  onChanges(): void {   
     this.dateRange.valueChanges.subscribe((val) => {
       this.start_date = formatDate(val.rangeValue[0], 'yyyy-MM-dd', 'en-US');
       this.end_date = formatDate(val.rangeValue[1], 'yyyy-MM-dd', 'en-US');

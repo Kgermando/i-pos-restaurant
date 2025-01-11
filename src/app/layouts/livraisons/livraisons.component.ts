@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -17,6 +17,7 @@ import { LivreurService } from '../livreurs/livreur.service';
 import { ClientService } from '../clients/client.service';
 import { AreaService } from '../area/area.service';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-livraisons',
@@ -43,6 +44,11 @@ export class LivraisonsComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   public search = '';
+
+  dateRange!: FormGroup;
+  start_date!: string;
+  end_date!: string;
+  rangeDate: any[] = [];
 
   // Forms  
   idItem!: number;
@@ -127,6 +133,17 @@ export class LivraisonsComponent implements OnInit, AfterViewInit {
     this.isloadClient = true;
     this.isloadLivreur = true;
     this.isloadArea = true;
+const date = new Date();
+    const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+    const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+    this.rangeDate = [firstDay, lastDay];
+
+    this.dateRange = this._formBuilder.group({
+      rangeValue: new FormControl(this.rangeDate),
+    });
+    this.start_date = formatDate(this.dateRange.value.rangeValue[0], 'yyyy-MM-dd', 'en-US');
+    this.end_date = formatDate(this.dateRange.value.rangeValue[1], 'yyyy-MM-dd', 'en-US');
+    
     this.formGroup = this._formBuilder.group({
       // client_id: ['', Validators.required],
       // livreur_id: ['', Validators.required],
@@ -135,7 +152,21 @@ export class LivraisonsComponent implements OnInit, AfterViewInit {
       operator_name: ['', Validators.required],
     });
 
+     // Appel de la méthode onChanges
+     this.onChanges();
+
   }
+
+    // Méthode onChanges
+    onChanges(): void {
+      this.dateRange.valueChanges.subscribe((val) => {
+        this.start_date = formatDate(val.rangeValue[0], 'yyyy-MM-dd', 'en-US');
+        this.end_date = formatDate(val.rangeValue[1], 'yyyy-MM-dd', 'en-US');
+  
+        this.fetchProducts(this.currentUser);
+      });
+    }
+  
 
   onPageChange(event: PageEvent): void {
     this.isLoadingData = true;
@@ -147,7 +178,10 @@ export class LivraisonsComponent implements OnInit, AfterViewInit {
   fetchProducts(currentUser: IUser) {
     if (currentUser.role === 'Manager général' ||
       currentUser.role === 'Support') {
-      this.livraisonService.getPaginatedEntreprise(currentUser.entreprise?.code!, this.pageIndex, this.pageSize, this.search).subscribe((res) => {
+      this.livraisonService.getPaginatedEntrepriseRangeDate(
+        currentUser.entreprise?.code!, 
+        this.pageIndex, this.pageSize, this.search,
+        this.start_date, this.end_date).subscribe((res) => {
         this.dataList = res.data;
         this.totalItems = res.pagination.total_pages;
         this.length = res.pagination.length;
@@ -157,7 +191,10 @@ export class LivraisonsComponent implements OnInit, AfterViewInit {
         this.isLoadingData = false;
       });
     } else {
-      this.livraisonService.getPaginatedEntrepriseByPos(currentUser.entreprise?.code!, currentUser.pos?.ID!, this.pageIndex, this.pageSize, this.search).subscribe((res) => {
+      this.livraisonService.getPaginatedEntrepriseByPosRangeDate(
+        currentUser.entreprise?.code!, currentUser.pos?.ID!, 
+        this.pageIndex, this.pageSize, this.search,
+        this.start_date, this.end_date).subscribe((res) => {
         this.dataList = res.data;
         this.totalItems = res.pagination.total_pages;
         this.length = res.pagination.length;

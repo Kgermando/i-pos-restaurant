@@ -9,7 +9,7 @@ export interface IClient {
     telephone2?: string;
     email?: string; 
     adress?: string;
-    birthday? : string;
+    // birthday? : string;
     organisation?: string;
     website?: string;
     signature: string; // Code secret pour le client

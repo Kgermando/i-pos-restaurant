@@ -1,0 +1,420 @@
+@if (loading) {
+<div class="spinner-border text-center d-flex justify-content-center align-items-center" role="status">
+    <span class="visually-hidden">Loading...</span>
+</div>
+}@else {
+@if (caisse) {
+<div class="card p-4 bg-white all-files mb-0">
+    <div class="card-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <h4 class="d-flex align-items-center">
+                <span class="me-2 d-flex align-items-center">
+                    <i class="feather icon-folder feather-20"></i>
+                </span>
+                <span class=" text-danger me-1">{{ caisse.name.toLocaleUpperCase() }}</span> | {{ caisse.Pos!.name }}
+            </h4>
+            @if(currentUser.role === 'Manager général' || currentUser.role === 'Support') {
+            <div>
+                @if(currentUser.permission === 'ALL' ||
+                currentUser.permission === 'AM' ||
+                currentUser.permission === 'MS' ||
+                currentUser.permission === 'M') {
+                <button mat-icon-button data-bs-toggle="modal" (click)="findCaisseValue(caisse.ID!)"
+                    data-bs-target="#upload-file-edit" tooltip="Modifier le nom de la caisse">
+                    <mat-icon class="text-blue">edit</mat-icon>
+                </button>
+                }
+                @if(currentUser.permission === 'ALL' ||
+                currentUser.permission === 'MS') {
+                <button mat-icon-button data-bs-toggle="modal" data-bs-target="#delete_contact_caisse"
+                    tooltip="Supprimer cette caisse">
+                    <mat-icon class="text-danger">delete</mat-icon>
+                </button>
+                }
+            </div>
+            }
+        </div>
+    </div>
+    <div class="card-header">
+        <!-- Search -->
+        <div class="row align-items-center">
+            <div class="col-sm-6 d-flex align-items-center justify-content-center">
+                <div class="icon-form mb-3 mb-sm-0">
+                    <span class="form-icon"><i class="ti ti-search"></i></span>
+                    <input type="text" #input [(ngModel)]="search" (ngModelChange)="onSearchChange($event)"
+                        class="form-control" placeholder="Ex. Entree, libele, reference, .. " />
+                </div>
+                <form [formGroup]="dateRange">
+                    <div class="daterange-picker">
+                        <div class="form-sort me-2">
+                            <i class="ti ti-calendar"></i>
+                            <input type="text" class="form-control date-range bookingrange"
+                                bsDaterangepicker [bsConfig]="{ adaptivePosition: true }"
+                                formControlName="rangeValue" />
+                        </div> 
+                    </div>
+                </form>
+            </div>
+            <div class="col-sm-6">
+                <div class="d-flex align-items-center flex-wrap row-gap-2 justify-content-sm-end">
+                    <!-- <div class="dropdown me-5">
+                        <a href="javascript:void(0);" class="dropdown-toggle" data-bs-toggle="dropdown"><i
+                                class="ti ti-package-export me-2"></i>Export</a>
+                        <div class="dropdown-menu dropdown-menu-end">
+                            <ul>
+                                <li>
+                                    <a href="javascript:void(0);" class="dropdown-item"><i
+                                            class="ti ti-file-type-pdf text-danger me-1"></i>Export as
+                                        PDF</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0);" class="dropdown-item"><i
+                                            class="ti ti-file-type-xls text-green me-1"></i>Export as
+                                        Excel
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div> -->
+                    @if (isLoading) {
+                    <div class="spinner-border text-center d-flex justify-content-center align-items-center"
+                        role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    }@else {
+                    @if(currentUser.permission === 'ALL' ||
+                    currentUser.permission === 'AM' ||
+                    currentUser.permission === 'A') {
+                    <a href="javascript:void(0);" class="btn btn-primary btn-added" data-bs-toggle="offcanvas"
+                        data-bs-target="#offcanvas_add">
+                        <span class="me-1 d-flex align-items-center">
+                            <i class="feather icon-upload feather-16"></i>
+                        </span>
+                        Ajouter une sortie
+                    </a>
+                    }
+                    }
+                </div>
+            </div>
+        </div>
+        <!-- /Search -->
+    </div>
+    <div class="card-body">
+        <!-- Page List -->
+        <div class="table-responsive custom-table">
+            <table matSort (matSortChange)="sortData($event)" class="table" id="pages">
+                <thead class="thead-light">
+                    <tr>
+                        <th mat-sort-header="createdat">Date</th>
+                        <th mat-sort-header="type_transaction">Transaction</th>
+                        <th mat-sort-header="montant">Montant</th>
+                        <th mat-sort-header="libelle">Libelle</th>
+                        <th mat-sort-header="reference">Reference</th>
+                        <th mat-sort-header="caisse">Caisse</th>
+                        <th mat-sort-header="signature">signature</th>
+                        <th mat-sort-header="id">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (data of dataItemList; track data.ID!) {
+                    <tr class="odd">
+                        <td>
+                            <span class="title-name">
+                                {{data.CreatedAt | date: 'dd/MM/YYYY HH:mm' }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge badge-pill badge-status" [ngClass]="{
+                        'bg-success': data.type_transaction == 'Entrée',
+                        'bg-danger': data.type_transaction == 'Sortie'
+                    }">
+                                @if (data.type_transaction == 'Entrée') {
+                                Entrée
+                                } @else {
+                                Sortie
+                                }
+                            </span>
+                        </td>
+                        <td>
+                            {{ formatCurrency(data.montant, currentUser.currency ) }}
+                        </td>
+                        <td>
+                            {{data.libelle}}
+                        </td>
+                        <td>
+                            {{data.reference}}
+                        </td>
+                        <td>
+                            {{data.Caisse!.name}}
+                        </td>
+                        <td>
+                            {{data.signature}}
+                        </td>
+                        <td>
+                            <div class="dropdown table-action"><a href="javascript:void(0);" class="action-icon "
+                                    data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    @if(currentUser.permission === 'ALL' ||
+                                    currentUser.permission === 'AM' ||
+                                    currentUser.permission === 'MS' ||
+                                    currentUser.permission === 'M') {
+                                    <a class="dropdown-item" href="javascript:void(0);" (click)="findValue(data.ID!)"
+                                        data-bs-toggle="offcanvas" data-bs-target="#offcanvas_edit">
+                                        <i class="ti ti-edit text-blue"></i>
+                                        Edit
+                                    </a>
+                                    }
+                                    @if(currentUser.permission === 'ALL' ||
+                                    currentUser.permission === 'MS') {
+                                    <a class="dropdown-item" href="javascript:void(0);" (click)="findValue(data.ID!)"
+                                        data-bs-toggle="modal" data-bs-target="#delete_contact">
+                                        <i class="ti ti-trash text-danger"></i>
+                                        Delete
+                                    </a>
+                                    }
+
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    }@empty {
+                        <tr class="odd">
+                           <td>Aucune donnée.</td>
+                        </tr>
+                        @if (isLoadingData || isLoading){
+                            <button disabled class="btn btn-primary">
+                                <div class="spinner-border" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </button>
+                            } @else {
+                            <td class="mat-cell" colspan="4">Aucune donnée correspondant au filtre "{{input.value}}"</td>
+                            }
+                    }
+                </tbody>
+            </table>
+            <mat-paginator [length]="length" [pageSize]="pageSize" [pageSizeOptions]="[15, 20, 30, 40, 50, 80, 100]"
+                showFirstLastButtons (page)="onPageChange($event)" aria-label="Select page">
+            </mat-paginator>
+        </div>
+    </div>
+</div>
+}
+}
+
+
+
+<!-- Add data form -->
+<div class="offcanvas offcanvas-end offcanvas-large" tabindex="-1" id="offcanvas_add">
+
+    <div class="offcanvas-header border-bottom">
+        <h4>Entrer une sortie</h4>
+        <button type="button"
+            class="btn-close custom-btn-close border p-1 me-0 d-flex align-items-center justify-content-center rounded-circle"
+            data-bs-dismiss="offcanvas" aria-label="Close">
+            <i class="ti ti-x"></i>
+        </button>
+    </div>
+    <div class="offcanvas-body">
+        <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+            <div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="montant">Montant <span
+                                        class="text-danger">*</span></label>
+                            </div>
+                            <input type="text" class="form-control" formControlName="montant" required />
+                            <mat-error *ngIf="formGroup.controls['montant'].hasError('required')">
+                                Ce champs est obligatoire
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="libelle">Libelle <span
+                                        class="text-danger">*</span></label>
+                            </div>
+                            <input type="text" class="form-control" formControlName="libelle" required />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-end">
+                <button type="button" data-bs-dismiss="offcanvas" class="btn btn-light me-2">Cancel</button>
+                @if (isLoading) {
+                <button disabled class="btn btn-primary">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </button>
+                }
+                @if (!isLoading) {
+                <button type="submit" class="btn btn-primary" data-bs-dismiss="offcanvas"
+                    data-bs-target="#create_success">Soumettre</button>
+                }
+            </div>
+        </form>
+    </div>
+
+</div>
+<!-- /Add data form -->
+
+<!-- Edit data form -->
+<div class="offcanvas offcanvas-end offcanvas-large" tabindex="-1" id="offcanvas_edit">
+
+    <div class="offcanvas-header border-bottom">
+        <h4>Modification de la sortie</h4>
+        <button type="button"
+            class="btn-close custom-btn-close border p-1 me-0 d-flex align-items-center justify-content-center rounded-circle"
+            data-bs-dismiss="offcanvas" aria-label="Close">
+            <i class="ti ti-x"></i>
+        </button>
+    </div>
+    <div class="offcanvas-body">
+        <form [formGroup]="formGroup" (ngSubmit)="onSubmitUpdate()">
+            <div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="montant">Montant <span
+                                        class="text-danger">*</span></label>
+                            </div>
+                            <input type="text" class="form-control" formControlName="montant" required />
+                            <mat-error *ngIf="formGroup.controls['montant'].hasError('required')">
+                                Ce champs est obligatoire
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="col-form-label" for="libelle">Libelle <span
+                                        class="text-danger">*</span></label>
+                            </div>
+                            <input type="text" class="form-control" formControlName="libelle" required />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex align-items-center justify-content-end">
+                <button type="button" data-bs-dismiss="offcanvas" class="btn btn-light me-2">Cancel</button>
+                @if (isLoading) {
+                <button disabled class="btn btn-primary">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </button>
+                }
+                @if (!isLoading) {
+                <button type="submit" class="btn btn-primary" data-bs-dismiss="offcanvas"
+                    data-bs-target="#create_success">Save
+                    Changes</button>
+                }
+            </div>
+        </form>
+    </div>
+
+</div>
+<!-- /Edit data form -->
+
+<!-- Delete data item -->
+<div class="modal fade" id="delete_contact" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="text-center">
+                    <div class="avatar avatar-xl bg-danger-light rounded-circle mb-3">
+                        <i class="ti ti-trash-x fs-36 text-danger"></i>
+                    </div>
+                    <h4 class="mb-2">Supprimer cet l'élément ?</h4>
+                    <p class="mb-0">Êtes-vous sûr de vouloir le supprimer ?</p>
+                    <div class="d-flex align-items-center justify-content-center mt-4">
+                        <a href="javascript:void(0);" class="btn btn-light me-2" data-bs-dismiss="modal">Annuler</a>
+                        <button (click)="delete()" class="btn btn-danger" data-bs-dismiss="modal">
+                            Oui, supprimez-le
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Delete data item -->
+
+<!-- Upload File -->
+<div class="modal fade modal-default file-manager-modal upload-modal" id="upload-file-edit"
+    aria-labelledby="upload-file-edit">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header p-4">
+                <h5>Modification de la caisse</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body p-4">
+                <form [formGroup]="formGroupCaisse" (ngSubmit)="editCaisse()">
+                    <div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <label class="col-form-label" for="name">Nom de la caisse <span
+                                                class="text-danger">*</span></label>
+                                    </div>
+                                    <input type="text" class="form-control" formControlName="name" required />
+                                    <mat-error *ngIf="formGroupCaisse.controls['name'].hasError('required')">
+                                        Ce champs est obligatoire
+                                    </mat-error>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-end">
+                        <a href="javascript:void(0);" class="btn btn-light me-2" data-bs-dismiss="modal">Annuler</a>
+                        @if (isLoading) {
+                        <button disabled class="btn btn-danger">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </button>
+                        }
+                        @if (!isLoading) {
+                        <button type="submit" class="btn btn-danger" id="myModal" data-bs-dismiss="modal"
+                            data-bs-target="#create_success">Soumettre</button>
+                        }
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Upload File -->
+
+<!-- Delete data item -->
+<div class="modal fade" id="delete_contact_caisse" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="text-center">
+                    <div class="avatar avatar-xl bg-danger-light rounded-circle mb-3">
+                        <i class="ti ti-trash-x fs-36 text-danger"></i>
+                    </div>
+                    <h4 class="mb-2">Supprimer cet l'élément ?</h4>
+                    <p class="mb-0">Êtes-vous sûr de vouloir le supprimer ?</p>
+                    <div class="d-flex align-items-center justify-content-center mt-4">
+                        <a href="javascript:void(0);" class="btn btn-light me-2" data-bs-dismiss="modal">Annuler</a>
+                        <button (click)="deleteCaisse()" class="btn btn-danger" data-bs-dismiss="modal">
+                            Oui, supprimez-le
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Delete data item -->

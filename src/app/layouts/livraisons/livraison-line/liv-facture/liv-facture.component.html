@@ -1,132 +1,161 @@
 @if (isLoading) {
-    <div class="spinner-border text-center d-flex justify-content-center align-items-center" role="status">
-      <span class="visually-hidden">Loading...</span>
-    </div>
-    } @else {
-    <div class="invoice-container" id="print-section"> 
-      <div class="invoice">
-        <h4 class="mb-3 text-center"> 
-          {{ currentUser.entreprise?.name?.toUpperCase() }} 
-        </h4>
-        <table class="invoice-table">
-          <thead>
-            <tr>
-              <th>Designation</th>
-              <th>Qté</th>
-              <th>P.U.</th>
-              <th>TVA</th>
-              <th>Total</th>
-              @if (livraison.status !== 'Cash'){
-                <th> <i class="ti ti-trash"></i> </th>
-              }
-            </tr>
-          </thead>
-          <tbody>
-            @for (item of commandeLineList; track item.ID) {
-              @if (item.Plat!.ID! > 0) {
-                <tr>
-                  <td>
-                    {{ item.Plat!.name }}
-                  </td>
-                  <td>{{ item.quantity }}
-                    @if (item.quantity > 1) {
-                    {{ item.Plat!.unite_vente }}s
-                    }@else {
-                    {{ item.Plat!.unite_vente }}
-                    }
-                </td>
-                  <td> {{ formatCurrency(item.Plat!.prix_vente, currentUser.currency) }} </td>
-                  <td>
-                    @if (item.Plat!.tva === 16) {
-                    {{ item.Plat!.tva }}%
-                    }@else { 
-                    -
-                    }
-                  </td>
-                  <td>
-                    {{ formatCurrency(item.quantity * item.Plat!.prix_vente, currentUser.currency) }}
-                  </td>
-                  @if (livraison.status !== 'Cash'){
-                    <td>
-                      <button type="button" (click)="restitutionBtn(item.ID!)"
-                          class="btn-close custom-btn-close border p-1 me-0 d-flex align-items-center 
-                            justify-content-center rounded-circle"
-                          data-bs-dismiss="offcanvas" aria-label="Close">
-                          <i class="ti ti-x"></i>
-                      </button>
-                    </td>
-                  }
-                
-                </tr>
-              }@else if (item.Product!.ID! > 0) {
-                <tr>
-                  <td>
-                    {{ item.Product!.name }}
-                  </td>
-                  <td>{{ item.quantity }}
-                    @if (item.quantity > 1) {
-                    {{ item.Product!.unite_vente }}s
-                    }@else {
-                    {{ item.Product!.unite_vente }}
-                    }
-                </td>
-                  <td> {{ formatCurrency(item.Product!.prix_vente, currentUser.currency) }} </td>
-                  <td>
-                    @if (item.Product!.tva === 16) {
-                    {{ item.Product!.tva }}%
-                    }@else { 
-                    -
-                    }
-                  </td>
-                  <td>
-                    {{ formatCurrency(item.quantity * item.Product!.prix_vente, currentUser.currency) }}
-                  </td>
-                  @if (livraison.status !== 'Cash') {
-                    <td>
-                      <button type="button" (click)="restitutionBtn(item.ID!)"
-                          class="btn-close custom-btn-close border p-1 me-0 d-flex align-items-center 
-                          justify-content-center rounded-circle"
-                          data-bs-dismiss="offcanvas" aria-label="Close">
-                          <i class="ti ti-x"></i>
-                      </button>
-                    </td>
-                  } 
-                </tr>
-              }
-            } @empty {
-            <tr>
-              <td colspan="6">Aucune donnée</td>
-            </tr>
+<div class="spinner-border text-center d-flex justify-content-center align-items-center" role="status">
+  <span class="visually-hidden">Loading...</span>
+</div>
+} @else {
+<div class="invoice-container" id="print-section">
+  <div class="invoice">
+    <h4 class="mb-3 text-center">
+      {{ currentUser.entreprise?.name?.toUpperCase() }}
+    </h4>
+    <table class="invoice-table">
+      <thead>
+        <tr>
+          <th>Designation</th>
+          <th>Qté</th>
+          <th>P.U.</th>
+          <th>TVA</th>
+          <th>Total</th>
+          @if (livraison.status !== 'Cash'){
+          <th> <i class="ti ti-trash"></i> </th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of commandeLineList; track item.ID) {
+        @if (item.Plat!.ID! > 0) {
+        <tr>
+          <td>
+            {{ item.Plat!.name }}
+          </td>
+          <td>{{ item.quantity }}
+            @if (item.quantity > 1) {
+            {{ item.Plat!.unite_vente }}s
+            }@else {
+            {{ item.Plat!.unite_vente }}
             }
-          </tbody>
-          <tfoot>
-            <tr>
-              <td colspan="4">Sous-total</td>
-              <td>{{ formatCurrency(subtotal, currentUser.currency) }}</td>
-            </tr>
-            <tr>
-              <td colspan="4">TVA (16%)</td>
-              <td>{{ formatCurrency(tax, currentUser.currency) }}</td>
-            </tr>
-            <tr>
-              <td colspan="4">Total</td>
-              <td style="font-weight: 800;">{{ formatCurrency(total, currentUser.currency) }}</td>
-            </tr>
-          </tfoot>
-        </table>
-    
-        <div class="footer text-center">
-          <p>Merci de votre confiance !</p>
-          <p>
-            RCCM: {{ currentUser.entreprise?.rccm }} ID Nat: {{ currentUser.entreprise?.idnat }} <br>
-            Telephone: {{ currentUser.entreprise?.telephone }} <br>
-            Email: {{ currentUser.entreprise?.email }}
-          </p>
-        </div>
-      </div>
+          </td>
+          <td> {{ formatCurrency(item.Plat!.prix_vente, currentUser.currency) }} </td>
+          <td>
+            @if (item.Plat!.tva === 16) {
+            {{ item.Plat!.tva }}%
+            }@else {
+            -
+            }
+          </td>
+          <td>
+            {{ formatCurrency(item.quantity * item.Plat!.prix_vente, currentUser.currency) }}
+          </td>
+          @if (livraison.status !== 'Cash'){
+          <td>
+            <button type="button" (click)="restitutionBtn(item.ID!)" class="btn-close custom-btn-close border p-1 me-0 d-flex align-items-center 
+                            justify-content-center rounded-circle" data-bs-dismiss="offcanvas" aria-label="Close">
+              <i class="ti ti-x"></i>
+            </button>
+          </td>
+          }
+
+        </tr>
+        }@else if (item.Product!.ID! > 0) {
+        <tr>
+          <td>
+            {{ item.Product!.name }}
+          </td>
+          <td>{{ item.quantity }}
+            @if (item.quantity > 1) {
+            {{ item.Product!.unite_vente }}s
+            }@else {
+            {{ item.Product!.unite_vente }}
+            }
+          </td>
+          <td> {{ formatCurrency(item.Product!.prix_vente, currentUser.currency) }} </td>
+          <td>
+            @if (item.Product!.tva === 16) {
+            {{ item.Product!.tva }}%
+            }@else {
+            -
+            }
+          </td>
+          <td>
+            {{ formatCurrency(item.quantity * item.Product!.prix_vente, currentUser.currency) }}
+          </td>
+          @if (livraison.status !== 'Cash') {
+          <td>
+            <button type="button" (click)="restitutionBtn(item.ID!)" class="btn-close custom-btn-close border p-1 me-0 d-flex align-items-center 
+                          justify-content-center rounded-circle" data-bs-dismiss="offcanvas" aria-label="Close">
+              <i class="ti ti-x"></i>
+            </button>
+          </td>
+          }
+        </tr>
+        }
+        } @empty {
+        <tr>
+          <td colspan="6">Aucune donnée</td>
+        </tr>
+        }
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="4">Sous-total</td>
+          <td>{{ formatCurrency(subtotal, currentUser.currency) }}</td>
+        </tr>
+        <tr>
+          <td colspan="4">TVA (16%)</td>
+          <td>{{ formatCurrency(tax, currentUser.currency) }}</td>
+        </tr>
+        <tr>
+          <td colspan="4">Total</td>
+          <td style="font-weight: 800;">{{ formatCurrency(total, currentUser.currency) }}</td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <div class="footer text-center">
+      <p>Merci de votre confiance !</p>
+      <p>
+        RCCM: {{ currentUser.entreprise?.rccm }} ID Nat: {{ currentUser.entreprise?.idnat }} <br>
+        Telephone: {{ currentUser.entreprise?.telephone }} <br>
+        Email: {{ currentUser.entreprise?.email }}
+      </p>
     </div>
-    
-    @if (livraison.status !== 'Cash') {
+  </div>
+</div>
+
+
+<div class="button-container mt-5">
+  <div class="dropdown full-width-50">
+    <button class="button btn btn-success btn-w-lg me-0 rounded-pill dropdown-toggle" type="button"
+      id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+      Sélectionner le Paiement
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+      @for (item of selectCaisseList; track item.ID!) {
+      <li>
+        <a class="dropdown-item" href="javascript:void(0);" (click)="onSubmitFacture(item.name, item.ID!)">
+          {{ item.name }}
+        </a>
+      </li>
+      }
+    </ul>
+  </div>
+  <div class="dropdown full-width-50">
+    <button class="button btn btn-warning  btn-w-lg me-0 rounded-pill dropdown-toggle" type="button"
+      id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+      Paiement par Créance
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+      @for (item of selectCaisseList; track item.ID!) {
+      <li>
+        <a class="dropdown-item" href="javascript:void(0);" (click)="onSubmitFacture('Créance', item.ID!)">
+          {{ item.name }}
+        </a>
+      </li>
+      }
+    </ul>
+  </div>
+</div>
+<!-- @if (livraison.status !== 'Cash') {
     <div class="button-container mt-5">
       <button class="button btn btn-warning btn-w-lg me-0 rounded-pill" (click)="onSubmitFacture('Créance')"
         data-bs-dismiss="offcanvas">Créance</button>
@@ -137,29 +166,29 @@
       <button class="button btn btn-outline-danger btn-w-lg me-0 
               rounded-pill full-width" data-bs-toggle="modal" data-bs-target="#delete_commande">Annuler</button>
     </div>
-    }
-    
-    <!-- Delete data item -->
-    <div class="modal fade" id="delete_commande" role="dialog">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-body">
-            <div class="text-center">
-              <div class="avatar avatar-xl bg-danger-light rounded-circle mb-3">
-                <i class="ti ti-trash-x fs-36 text-danger"></i>
-              </div>
-              <h4 class="mb-2">Supprimer cet commande ?</h4>
-              <p class="mb-0">Êtes-vous sûr de vouloir le supprimer ?</p>
-              <div class="d-flex align-items-center justify-content-center mt-4">
-                <a href="javascript:void(0);" class="btn btn-light me-2" data-bs-dismiss="modal">Annuler</a>
-                <button (click)="delete()" class="btn btn-danger" data-bs-dismiss="modal">
-                  Yes, Delete it
-                </button>
-              </div>
-            </div>
+    } -->
+
+<!-- Delete data item -->
+<div class="modal fade" id="delete_commande" role="dialog">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="text-center">
+          <div class="avatar avatar-xl bg-danger-light rounded-circle mb-3">
+            <i class="ti ti-trash-x fs-36 text-danger"></i>
+          </div>
+          <h4 class="mb-2">Supprimer cet commande ?</h4>
+          <p class="mb-0">Êtes-vous sûr de vouloir le supprimer ?</p>
+          <div class="d-flex align-items-center justify-content-center mt-4">
+            <a href="javascript:void(0);" class="btn btn-light me-2" data-bs-dismiss="modal">Annuler</a>
+            <button (click)="delete()" class="btn btn-danger" data-bs-dismiss="modal">
+              Yes, Delete it
+            </button>
           </div>
         </div>
       </div>
     </div>
-    <!-- /Delete data item -->
-    }
+  </div>
+</div>
+<!-- /Delete data item -->
+}

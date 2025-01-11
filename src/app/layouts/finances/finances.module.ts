@@ -5,12 +5,14 @@ import { FinancesRoutingModule } from './finances-routing.module';
 import { CaisseComponent } from './caisse/caisse.component';
 import { SharedModule } from '../../shared/shared.module';
 import { FinancesComponent } from './finances.component';
+import { CaisseItemComponent } from './caisse/caisse-item/caisse-item.component';
 
 
 @NgModule({
   declarations: [
     CaisseComponent,
-    FinancesComponent
+    FinancesComponent,
+    CaisseItemComponent
   ],
   imports: [
     CommonModule,

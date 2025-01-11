@@ -14,6 +14,8 @@ import { ToastrService } from 'ngx-toastr';
 import { IClient } from '../../models/client.model';
 import { ClientService } from '../clients/client.service';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { CaisseService } from '../finances/caisse/caisse.service';
+import { ICaisse } from '../../models/caisse.model';
 
 
 @Component({
@@ -41,6 +43,8 @@ export class CommandesLinesComponent implements OnInit {
   commande!: ICommande;
   commandeLineList: ICommandeLine[] = [];
 
+  selectCaisseList: ICaisse[] = [];
+
   isLoading = false;
 
   searchField = '';
@@ -66,6 +70,7 @@ export class CommandesLinesComponent implements OnInit {
     private idDataService: IdDataService,
     private pdfService: PdfService,
     private clientService: ClientService,
+    private caisseService: CaisseService,
     private toastr: ToastrService
   ) { }
 
@@ -91,7 +96,10 @@ export class CommandesLinesComponent implements OnInit {
         this.idDataService.platLength.subscribe(length => {
           this.platLength.set(length);
         });
-        this.getAllClient(this.currentUser);
+        this.getCaisses(this.currentUser);
+
+        // this.getAllClient(this.currentUser);
+        
       },
       error: (error) => {
         this.loading = false;
@@ -120,6 +128,11 @@ export class CommandesLinesComponent implements OnInit {
     });
   }
 
+  getCaisses(currentUser: IUser) {
+    this.caisseService.getAllEntreprisePos(currentUser.entreprise?.code!, currentUser.pos?.ID!).subscribe((res) => {
+      this.selectCaisseList = res.data; 
+    });
+  }
 
 
   getAllClient(currentUser: IUser): void { 

@@ -10,6 +10,8 @@ import { CommandeLineService } from '../../commandes-lines/commande-line.service
 import { IdDataService } from '../../commandes-lines/id-data.service'; 
 import { ILivraison } from '../../../models/livraison.model';
 import { LivraisonService } from '../livraison.service';
+import { CaisseService } from '../../finances/caisse/caisse.service';
+import { ICaisse } from '../../../models/caisse.model';
 
 @Component({
   selector: 'app-livraison-line',
@@ -30,6 +32,8 @@ export class LivraisonLineComponent implements OnInit {
   // Taille des produits et plats
   prodLength = signal<number>(0);
   platLength = signal<number>(0);
+
+  selectCaisseList: ICaisse[] = []; 
   
 
   livraisonId!: number;
@@ -42,7 +46,8 @@ export class LivraisonLineComponent implements OnInit {
     private authService: AuthService,
     private currencyPipe: CurrencyPipe,
     private livraisonService: LivraisonService,
-    private commaneLineService: CommandeLineService,
+    private commaneLineService: CommandeLineService, 
+     private caisseService: CaisseService,
     private idDataService: IdDataService,
     private pdfService: PdfService,
   ) { }
@@ -68,6 +73,7 @@ export class LivraisonLineComponent implements OnInit {
         this.idDataService.platLength.subscribe(length => {
           this.platLength.set(length);
         });
+        this.getCaisses(this.currentUser);
       },
       error: (error) => {
         this.loading = false;
@@ -96,7 +102,11 @@ export class LivraisonLineComponent implements OnInit {
     });
   }
 
-
+  getCaisses(currentUser: IUser) {
+    this.caisseService.getAllEntreprisePos(currentUser.entreprise?.code!, currentUser.pos?.ID!).subscribe((res) => {
+      this.selectCaisseList = res.data; 
+    });
+  }
  
   // Plat
   get totalPlatTVA(): number {

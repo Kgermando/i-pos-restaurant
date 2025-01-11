@@ -7,7 +7,7 @@ import { ICommandeLine } from '../../../../models/commande_line.model';
 import { CommandeLineService } from '../../../commandes-lines/commande-line.service';
 import { ILivraison } from '../../../../models/livraison.model';
 import { LivraisonService } from '../../livraison.service';
-import { ICaisse } from '../../../../models/caisse.model';
+import { ICaisse, ICaisseItem } from '../../../../models/caisse.model';
 import { CaisseService } from '../../../finances/caisse/caisse.service';
 
 @Component({
@@ -20,7 +20,9 @@ export class LivFactureComponent {
   @Input() livraison_id: number | undefined;
   @Input() livraison!: ILivraison;
   @Input() commandeLineList: ICommandeLine[] = [];
+  @Input() selectCaisseList: ICaisse[] = [];
   isLoading = false;
+  
 
   constructor(private router: Router,
     private currencyPipe: CurrencyPipe,
@@ -68,14 +70,13 @@ export class LivFactureComponent {
     return this.subtotalSansTVA + this.subtotalTVA + this.tax;
   }
 
-
-
   // Format de devise
   formatCurrency(price: number, currency: string): string {
     return this.currencyPipe.transform(price, currency, 'symbol', '1.2-2', 'fr-FR') || '';
   }
+ 
 
-  onSubmitFacture(status: string) {
+  onSubmitFacture(status: string, caissseID: number) {
     try {
       this.isLoading = true;
       var body: ILivraison = {
@@ -90,23 +91,21 @@ export class LivFactureComponent {
         code_entreprise: parseInt(this.currentUser.entreprise!.code.toString()),
       };
       this.livraisonService.update(this.livraison_id!, body).subscribe((res) => {
-        if (status == 'Cash') {
-          var code = Math.floor(1000000000 + Math.random() * 90000000000);
-          const body: ICaisse = {
-            type_transaction: 'Entrée',
-            montant: this.total,
-            libelle: `Livraison ${this.livraison.Client!.fullname}`,
-            reference: code.toString(),
-            signature: this.currentUser.fullname,
-            pos_id: parseInt(this.currentUser.pos!.ID.toString()),
-            code_entreprise: parseInt(this.currentUser.entreprise!.code.toString()),
-          };
-          this.caisseService.create(body).subscribe((res) => {
-            this.isLoading = false;
-            this.toastr.success(`Facture ${status} effectuée avec succès!`, 'Success!');
-            this.router.navigate(['/web/livraisons/livraison-list']);
-          });
-        } 
+        var code = Math.floor(1000000000 + Math.random() * 90000000000);
+        const body: ICaisseItem = {
+          caisse_id: caissseID,
+          type_transaction: 'Entrée',
+          montant: this.total,
+          libelle: `Livraison ${this.livraison.Client!.fullname}`,
+          reference: code.toString(),
+          signature: this.currentUser.fullname,
+          code_entreprise: parseInt(this.currentUser.entreprise!.code.toString()),
+        };
+        this.caisseService.create(body).subscribe((res) => {
+          this.isLoading = false;
+          this.toastr.success(`Facture ${status} effectuée avec succès!`, 'Success!');
+          this.router.navigate(['/web/livraisons/livraison-list']);
+        });
       });
     } catch (error) {
       this.isLoading = false;

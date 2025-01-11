@@ -37,7 +37,7 @@ export class ClientTableComponent implements OnInit, AfterViewInit {
   length: number = 0;
 
   // Table 
-  displayedColumns: string[] = ['fullname', 'telephone', 'telephone2', 'email', 'adress', 'birthday', 'organisation', 'website', 'action', 'id'];
+  displayedColumns: string[] = ['fullname', 'telephone', 'telephone2', 'email', 'adress',  'organisation', 'website', 'action', 'id'];
   dataSource = new MatTableDataSource<IClient>(this.dataList);
 
   @ViewChild(MatSort) sort!: MatSort;
@@ -93,7 +93,7 @@ export class ClientTableComponent implements OnInit, AfterViewInit {
       telephone2: [''],
       email: [''],
       adress: [''],
-      birthday: [''],
+      // birthday: [''],
       organisation: [''],
       website: [''],
     });
@@ -169,7 +169,7 @@ export class ClientTableComponent implements OnInit, AfterViewInit {
           telephone2: this.formGroup.value.telephone2,
           email: this.formGroup.value.email,
           adress: this.formGroup.value.adress,
-          birthday: formatDate(parseDate(this.formGroup.value.birthday), 'yyyy-MM-dd', 'en-US'),
+          // birthday: formatDate(parseDate(this.formGroup.value.birthday), 'yyyy-MM-dd', 'en-US'),
           organisation: this.formGroup.value.organisation,
           website: this.formGroup.value.website,
           signature: this.currentUser.fullname,
@@ -198,7 +198,7 @@ export class ClientTableComponent implements OnInit, AfterViewInit {
         telephone2: this.formGroup.value.telephone2,
         email: this.formGroup.value.email,
         adress: this.formGroup.value.adress,
-        birthday: formatDate(parseDate(this.formGroup.value.birthday), 'yyyy-MM-dd', 'en-US'),
+        // birthday: formatDate(parseDate(this.formGroup.value.birthday), 'yyyy-MM-dd', 'en-US'),
         organisation: this.formGroup.value.organisation,
         website: this.formGroup.value.website,
         signature: this.currentUser.fullname,
@@ -226,7 +226,7 @@ export class ClientTableComponent implements OnInit, AfterViewInit {
         telephone2: this.dataItem.telephone2,
         email: this.dataItem.email,
         adress: this.dataItem.adress,
-        birthday: this.dataItem.birthday,
+        // birthday: this.dataItem.birthday,
         organisation: this.dataItem.organisation,
         website: this.dataItem.website,
       });
@@ -255,73 +255,6 @@ export class ClientTableComponent implements OnInit, AfterViewInit {
       });
     }
   }
-
-
-  // async upload(event: any) {
-  //   const file = event.target.files[0];
-  //   if (this.isValidCSVFile(file)) {
-  //     this.isLoading = true;
-  //     this.papa.parse(file, {
-  //       worker: true,
-  //       header: true,
-  //       delimiter: ';',
-  //       skipEmptyLines: true,
-  //       // encoding: 'utf-8',
-  //       complete: (results) => {
-  //         this.clientList = results.data;
-  //         if (this.clientList.length > 1000) {
-  //           this.isLoading = false;
-  //           this.toastr.info('Veuillez reduire les lignes en dessous de 1000.', 'Success!');
-  //         } else {
-  //           for (let index = 0; index < this.clientList.length; index++) {
-  //             const body: IClient = {
-  //               fullname: this.clientList[index].fullname,
-  //               telephone: this.clientList[index].telephone,
-  //               telephone2: this.clientList[index].telephone2,
-  //               email: this.clientList[index].email,
-  //               adress: this.clientList[index].adress,
-  //               birthday: formatDate(parseDate(this.clientList[index].birthday!), 'yyyy-MM-dd', 'en-US'),
-  //               organisation: this.clientList[index].organisation,
-  //               website: this.clientList[index].website,
-  //               signature: this.currentUser.fullname,
-  //               code_entreprise: parseInt(this.currentUser.entreprise!.code.toString()),
-  //             };
-  //             this.clientService.create(body).subscribe({
-  //               next: () => { 
-  //                 var pourcents = (index + 1) * 100 / this.clientList.length;
-  //                 this.pourcent = parseInt(pourcents.toFixed(0));
-  //                 if (this.pourcent == 100) {  
-  //                   this.isLoading = false;
-  //                   console.log("All done!");
-  //                   this.toastr.success('Importation effectuée avec succès!', 'Success!');
-  //                 }
-  //               },
-  //               error: (err) => { 
-  //                 this.isLoading = false;
-  //                 this.toastr.error(`${err.error.message}`, 'Oupss!');
-  //                 console.log(err); 
-  //               }
-  //             });
-  //           }
-  //         } 
-  //       },
-  //       error: (error, file) => { 
-  //         this.toastr.error(`${error}`, 'Oupss!');
-  //         console.log(error);
-  //         console.log("file", file);
-  //         // this.close();
-  //       },
-  //     });
-  //   } else {  
-  //     alert("Please import valid .csv file."); 
-  //   }      
-  // }
- 
-  
-  isValidCSVFile(file: any) {  
-    return file.name.endsWith(".csv");  
-  }
- 
 
   downloadModelReport() {
     const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';

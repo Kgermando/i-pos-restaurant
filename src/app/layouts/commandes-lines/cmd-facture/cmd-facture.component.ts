@@ -9,8 +9,8 @@ import { ICommandeLine } from '../../../models/commande_line.model';
 import { CommandeLineService } from '../commande-line.service';
 import { ITableBox } from '../../../models/table-box.model';
 import { TableBoxService } from '../../table-box/table-box.service';
-import { ICaisse } from '../../../models/caisse.model';
-import { CaisseService } from '../../finances/caisse/caisse.service';
+import { ICaisse, ICaisseItem } from '../../../models/caisse.model'; 
+import { CaisseItemService } from '../../finances/caisse/caisse-item.service'; 
 
 
 @Component({
@@ -23,14 +23,15 @@ export class CmdFactureComponent {
   @Input() commande_id: number | undefined;
   @Input() commande!: ICommande;
   @Input() commandeLineList: ICommandeLine[] = [];
-  isLoading = false;
+  @Input() selectCaisseList: ICaisse[] = [];
+  isLoading = false; 
 
   constructor(private router: Router,
     private currencyPipe: CurrencyPipe,
     private commandeService: CommandeService,
     private commandeLineService: CommandeLineService,
-    private tableBoxService: TableBoxService,
-    private caisseService: CaisseService,
+    private tableBoxService: TableBoxService, 
+    private caisseItemService: CaisseItemService,
     private toastr: ToastrService
   ) { }
 
@@ -71,17 +72,16 @@ export class CmdFactureComponent {
   get total(): number {
     return this.subtotalSansTVA + this.subtotalTVA + this.tax;
   }
-
-
-
+ 
   // Format de devise
   formatCurrency(price: number, currency: string): string {
     return this.currencyPipe.transform(price, currency, 'symbol', '1.2-2', 'fr-FR') || '';
   }
 
-  onSubmitFacture(status: string) {
+ 
+  onSubmitFacture(status: string, caissseID: number) { 
     try {
-      this.isLoading = true;
+      this.isLoading = true; 
       const body: ICommande = {
         ncommande: this.commande.ncommande,
         status: status,
@@ -100,23 +100,22 @@ export class CmdFactureComponent {
           code_entreprise: parseInt(this.currentUser.entreprise!.code.toString()),
         };
         this.tableBoxService.update(this.commande.TableBox!.ID!, body).subscribe(() => {
-          if (status == 'Cash') {
-            var code = Math.floor(1000000000 + Math.random() * 90000000000);
-            const body: ICaisse = {
-              type_transaction: 'Entrée',
-              montant: this.total,
-              libelle: `Vente #${this.commande.ncommande}`,
-              reference: code.toString(),
-              signature: this.currentUser.fullname,
-              pos_id: parseInt(this.currentUser.pos!.ID.toString()),
-              code_entreprise: parseInt(this.currentUser.entreprise!.code.toString()),
-            };
-            this.caisseService.create(body).subscribe((res) => {
-              this.isLoading = false;
-              this.toastr.success(`Facture ${status} effectuée avec succès!`, 'Success!');
-              this.router.navigate(['/web/table-box/table-box-list']);
-            });
-          }
+          var code = Math.floor(1000000000 + Math.random() * 90000000000);
+          const body: ICaisseItem = {
+            caisse_id: caissseID,
+            type_transaction: 'Entrée',
+            montant: this.total,
+            libelle: `Vente #${this.commande.ncommande}`,
+            reference: code.toString(),
+            signature: this.currentUser.fullname, 
+            code_entreprise: parseInt(this.currentUser.entreprise!.code.toString()),
+          };
+          this.caisseItemService.create(body).subscribe((res) => {
+            this.isLoading = false;
+            this.toastr.success(`Facture ${status} effectuée avec succès!`, 'Success!');
+            this.router.navigate(['/web/table-box/table-box-list']);
+          });
+          this.isLoading = false;
         });
       });
     } catch (error) {
