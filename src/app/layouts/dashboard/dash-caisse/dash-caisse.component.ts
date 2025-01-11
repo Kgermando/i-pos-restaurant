@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { CurrencyPipe, formatDate } from '@angular/common';
 import { ChartOptions } from 'chart.js';
 import { MatTableDataSource } from '@angular/material/table';
-import { ICaisse } from '../../../models/caisse.model';
+import { ICaisseItem } from '../../../models/caisse.model';
 import { PageEvent } from '@angular/material/paginator';
 
 @Component({
@@ -42,12 +42,17 @@ export class DashCaisseComponent implements OnInit {
 
   // Tableaus des entrees et sorties
   dataList: any[] = [];
-  displayedColumns: string[] = ['createdat', 'type_transaction', 'montant', 'libelle', 'reference', 'pos', 'signature'];
-  dataSource = new MatTableDataSource<ICaisse>(this.dataList);
+  displayedColumns: string[] = ['createdat', 'caisse', 'type_transaction', 'montant', 'libelle', 'reference', 'pos', 'signature'];
+  dataSource = new MatTableDataSource<ICaisseItem>(this.dataList);
   totalItems: number = 0;
   pageSize: number = 10;
   pageIndex: number = 0;
   length: number = 0;
+
+  // Total par caisse
+  dataCaisseList: any[] = [];
+  displayedColumnCaisses: string[] = ['name', 'total_entrees', 'total_sorties', 'solde'];
+  dataSourceCaisse = new MatTableDataSource<any>(this.dataCaisseList);
 
   constructor(
     private dashCaisseService: DashCaisseService,
@@ -85,6 +90,7 @@ export class DashCaisseComponent implements OnInit {
         this.GetCourbeVenteProfit24h(this.currentUser);
         this.GetTotalVentesParJour(this.currentUser);
         this.GetTableauEntreeSorties(this.currentUser);
+        // this.GetTotalParCaisse(this.currentUser);
 
         // Appel de la méthode onChanges
         this.onChanges();
@@ -105,8 +111,9 @@ export class DashCaisseComponent implements OnInit {
     this.pageIndex = event.pageIndex
     this.pageSize = event.pageSize
     this.GetTableauEntreeSorties(this.currentUser);
+    // this.GetTotalParCaisse(this.currentUser);
   }
-
+ 
 
   // Méthode onChanges
   onChanges(): void {   
@@ -118,6 +125,7 @@ export class DashCaisseComponent implements OnInit {
       this.GetCourbeVenteProfit24h(this.currentUser);
       this.GetTotalVentesParJour(this.currentUser);
       this.GetTableauEntreeSorties(this.currentUser);
+      // this.GetTotalParCaisse(this.currentUser);
     });
   }
 
@@ -170,6 +178,20 @@ export class DashCaisseComponent implements OnInit {
       this.length = res.pagination.length;
       this.dataSource = new MatTableDataSource<any>(this.dataList);
       this.isLoading = false;
+    });
+  }
+
+   // Tableau des entrees et sorties
+   GetTotalParCaisse(currentUser: IUser) {
+    this.dashCaisseService.GetTotalParCaisse(
+      currentUser.entreprise!.code!, 
+      this.start_date,
+      this.end_date
+    ).subscribe((res) => {
+      this.dataCaisseList = res.data;
+      this.dataSourceCaisse = new MatTableDataSource<any>(this.dataCaisseList);
+      this.isLoading = false;
+      console.log("dataCaisseList", this.dataCaisseList)
     });
   }
 
