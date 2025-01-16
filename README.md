@@ -61,7 +61,7 @@ Ajoutez la configuration pour la plateforme Electron :
 Construisez votre projet Angular et synchronisez-le avec Capacitor :
 
 ```bash
-ng build --prod
+ng build
 npx cap sync
 ```
 
@@ -83,7 +83,7 @@ Ajoutez ensuite un script de build dans le `package.json` :
 
 ```json
 "scripts": {
-  "build-electron": "ng build --prod && npx cap copy @capacitor-community/electron && npm run electron-build",
+  "build-electron": "ng build && npx cap copy @capacitor-community/electron && npm run electron-build",
   "electron-build": "electron-builder"
 }
 ```
@@ -116,6 +116,11 @@ Pour packager l'application, exécutez le script de build :
 npm run build-electron
 
 npm run electron:build
+
+sudo dpkg -i i-pos-restaurant_1.0.3_amd64.deb
+
+
+
 ```
 
 Cela créera un dossier `release` contenant les installateurs pour votre application Windows.

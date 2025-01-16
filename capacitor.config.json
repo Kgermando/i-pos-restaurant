@@ -1,6 +1,6 @@
 {
   "appId": "com.ictech.iposrestaurant",
-  "appName": "IPosRestaurant",
+  "appName": "i-pos-restaurant",
   "bundledWebRuntime": false,
   "webDir": "dist/i-pos-restaurant",
   "plugins": {

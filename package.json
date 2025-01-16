@@ -1,7 +1,8 @@
 {
   "name": "i-pos-restaurant",
-  "version": "1.0.1",
+  "version": "1.0.3", 
   "main": "main.js",
+  "description": "Application de restaurant",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -12,6 +13,10 @@
     "electron:build": "ng build --base-href ./ && electron-builder",
     "build-electron": "ng build && npx cap copy @capacitor-community/electron && npm run electron-build",
     "electron-build": "electron-builder"
+  },
+  "author": {
+    "name": "ICTech",
+    "email": "katakugermain@gmail.com"
   },
   "private": true,
   "dependencies": {
@@ -117,10 +122,11 @@
       "icon": "src/assets/icon.ico"
     },
     "mac": {
-      "target": "dmg"
+      "target": "dmg", 
+      "icon": "path/to/icon.icns"
     },
     "linux": {
-      "target": "deb"
+      "category": "utilities"
     }
   }
 }

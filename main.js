@@ -5,6 +5,7 @@ function createWindow() {
     const win = new BrowserWindow({
         width: 1300,
         height: 900,
+        icon: path.join(__dirname, 'public/img/logo.png'), // Specify the path to your icon file
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
