@@ -1,6 +1,6 @@
 {
   "name": "i-pos-restaurant",
-  "version": "1.0.3", 
+  "version": "1.0.3",
   "main": "main.js",
   "description": "Application de restaurant",
   "scripts": {
@@ -9,6 +9,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "sync": "ng build && npx cap sync",
     "electron": "ng build && electron .",
     "electron:build": "ng build --base-href ./ && electron-builder",
     "build-electron": "ng build && npx cap copy @capacitor-community/electron && npm run electron-build",
@@ -80,9 +81,11 @@
     "primeng": "^17.4.0",
     "quill": "^2.0.2",
     "rxjs": "~7.8.0",
+    "sqlite3": "^5.1.7",
     "sweetalert2": "^11.6.13",
     "ts-cacheable": "^1.0.10",
     "tslib": "^2.3.0",
+    "typeorm": "^0.3.20",
     "xlsx": "^0.18.5",
     "zone.js": "~0.14.10"
   },
@@ -122,7 +125,7 @@
       "icon": "src/assets/icon.ico"
     },
     "mac": {
-      "target": "dmg", 
+      "target": "dmg",
       "icon": "path/to/icon.icns"
     },
     "linux": {

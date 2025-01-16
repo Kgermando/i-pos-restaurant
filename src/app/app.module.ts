@@ -14,6 +14,7 @@ import { SharedModule } from './shared/shared.module';
 import { CredentialInterceptor } from './auth/interceptors/credential.interceptor'; 
 import { CacheInterceptor } from './interceptors/cache.interceptor';
 import { NgChartsModule } from 'ng2-charts';
+import { DatabaseService } from './services/database.service';
 
 registerLocaleData(localeFr, 'fr-FR');
 
@@ -31,6 +32,7 @@ registerLocaleData(localeFr, 'fr-FR');
     
   ],
   providers: [
+    DatabaseService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: CredentialInterceptor,
