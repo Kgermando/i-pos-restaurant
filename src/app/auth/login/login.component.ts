@@ -5,7 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router'; 
 import { routes } from '../../shared/routes/routes';
 import { AuthService } from '../auth.service';
-import { IUser } from '../models/user';
+import { AuthLocalService } from '../../services/auth.local.service';
 
 @Component({
   selector: 'app-login',
@@ -23,6 +23,7 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private formBuilder: FormBuilder,
     private authService: AuthService,
+    private authLocalService: AuthLocalService,
     private toastr: ToastrService
   ) {
     this.dateY = formatDate(new Date(), 'yyyy', 'en');
@@ -37,47 +38,68 @@ export class LoginComponent implements OnInit {
 
 
   onSubmit(): void {
-    if (this.form.valid) {
-      this.isLoading = true;
-      var body = {
-        email: this.form.value.email.toLowerCase(),
-        password: this.form.value.password
-      };
-
-      this.authService.login(body).subscribe({
-        next: (res) => {
-          console.log("res", res)
-          // this.authService.storeToken(res.token);
-          this.authService.user().subscribe({
-            next: (user) => {
-              this.isLoading = false;
-              if (user.role == 'Support') {
-                this.router.navigate([this.routes.entrepriseList]);
-              } else if (user.role == 'Manager général') {
-                this.router.navigate([this.routes.dashboard]);
-              } else {
-                this.router.navigate([this.routes.commandeList]);
-              }
-              this.toastr.success(`Bienvenue ${user.fullname} ! 🎉`, 'Success!');
-              // this.router.navigate(['/web']);
-              
-            },
-            error: (error) => {
-              this.isLoading = false;
-              this.router.navigate(['/auth/login']);
-              console.log(error);
-            }
-          });
-        },
-        error: (e) => {
+    try {
+      if (this.form.valid) {
+        this.isLoading = true;
+        var body = {
+          email: this.form.value.email.toLowerCase(),
+          password: this.form.value.password
+        };
+        this.authLocalService.login(body.email, body.password).then(async (res) => {
           this.isLoading = false;
-          console.error(e);
-          this.toastr.error(`${e.error.message}`, 'Oupss!');
-          this.router.navigate(['/auth/login']);
-        },
+          const user = await this.authLocalService.getUserLoggedByToken();
+          if (user) {
+            if (user.role == 'Support') {
+              this.router.navigate([this.routes.entrepriseList]);
+            } else if (user.role == 'Manager général') {
+              this.router.navigate([this.routes.dashboard]);
+            } else {
+              this.router.navigate([this.routes.commandeList]);
+            }
+            this.toastr.success(`Bienvenue ${user.fullname} ! 🎉`, 'Success!');
+          }
+        })
       }
-      )
+    } catch (error) {
+      this.isLoading = false;
+      console.error(error);
+      this.toastr.error(`${(error as any).message}`, 'Oupss!');
+      this.router.navigate(['/auth/login']);
     }
+    // if (this.form.valid) { 
+      // this.authService.login(body).subscribe({
+      //   next: (res) => {
+      //     console.log("res", res)
+      //     // this.authService.storeToken(res.token);
+      //     this.authService.user().subscribe({
+      //       next: (user) => {
+      //         this.isLoading = false;
+      //         if (user.role == 'Support') {
+      //           this.router.navigate([this.routes.entrepriseList]);
+      //         } else if (user.role == 'Manager général') {
+      //           this.router.navigate([this.routes.dashboard]);
+      //         } else {
+      //           this.router.navigate([this.routes.commandeList]);
+      //         }
+      //         this.toastr.success(`Bienvenue ${user.fullname} ! 🎉`, 'Success!');
+      //         // this.router.navigate(['/web']);
+              
+      //       },
+      //       error: (error) => {
+      //         this.isLoading = false;
+      //         this.router.navigate(['/auth/login']);
+      //         console.log(error);
+      //       }
+      //     });
+      //   },
+      //   error: (e) => {
+      //     this.isLoading = false;
+      //     console.error(e);
+      //     this.toastr.error(`${e.error.message}`, 'Oupss!');
+      //     this.router.navigate(['/auth/login']);
+      //   },
+      // })
+    // }
   }
  
   public password: boolean[] = [false];

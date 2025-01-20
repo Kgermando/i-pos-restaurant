@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DataSource } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 import { DatabaseService } from './database.service';
 import { UserEntity } from '../entities/user.entity';
 
@@ -14,7 +15,24 @@ export class UserLocalService {
   }
 
   async createUser(user: UserEntity): Promise<UserEntity> {
-    return this.dataSource.getRepository(UserEntity).save(user);
+    const hashedPassword = await bcrypt.hash(user.password!, 10);
+    var u: UserEntity = {
+      id: user.id,
+      fullname: user.fullname,
+      email: user.email,
+      telephone: user.telephone,
+      password: hashedPassword,
+      entreprise: user.entreprise,
+      pos: user.pos,
+      created_at: user.created_at,
+      updated_at: user.updated_at,
+      role: user.role,
+      permission: user.permission,
+      status: user.status,
+      currency: user.currency,
+      signature: user.signature
+    }
+    return this.dataSource.getRepository(UserEntity).save(u);
   }
 
   async getUser(id: number): Promise<UserEntity> {

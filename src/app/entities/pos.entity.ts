@@ -10,33 +10,33 @@ export class PosEntity {
     @ManyToOne(() => EntrepriseEntity, (data) => data.pos)
     entreprise?: EntrepriseEntity;
 
-    @Column()
+    @Column('string')
     name: string = '';
 
-    @Column()
+    @Column('string')
     adresse: string = '';
 
-    @Column()
+    @Column('string')
     email: string = '';
 
-    @Column()
+    @Column('string')
     telephone: string = '';
 
-    @Column()
+    @Column('string')
     manager: string = '';
 
-    @Column()
+    @Column('boolean')
     status: boolean = false;
 
-    @Column()
+    @Column('string')
     signature: string = '';
 
     @OneToMany(() => UserEntity, (data) => data.pos)
     users: UserEntity[] = [];
 
-    @Column()
+    @Column('date')
     created_at?: Date;
 
-    @Column()
+    @Column('date')
     updated_at?: Date;
 }

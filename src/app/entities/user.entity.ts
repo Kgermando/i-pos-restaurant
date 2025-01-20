@@ -7,34 +7,33 @@ export class UserEntity {
   @PrimaryGeneratedColumn()
   id?: number; 
 
-  @Column()
+  @Column('string')
   fullname: string = '';
 
-  @Column()
+  @Column('string')
   email: string = '';
 
-  @Column()
+  @Column('string')
   telephone: string = '';
 
-  @Column()
-  password: string = '';
+  @Column('md5')
+  password?: string;
 
   // password_confirm: string;
 
-  @Column()
+  @Column('string')
   role: string = '';
 
-  @Column()
+  @Column('string')
   permission: string = '';
 
 
-  @Column()
+  @Column('boolean')
   status: boolean = false;
 
-  @Column()
+  @Column('string')
   currency: string = '';
  
-
   @ManyToOne(() => EntrepriseEntity, (data) => data.users)
   entreprise?: EntrepriseEntity;
  
@@ -42,12 +41,12 @@ export class UserEntity {
   @ManyToOne(() => PosEntity, (data) => data.users)
   pos?: PosEntity;
 
-  @Column()
+  @Column('string')
   signature: string = '';
 
-  @Column()
+  @Column('date')
   created_at?: Date;
 
-  @Column()
+  @Column('date')
   updated_at?: Date;
 }

@@ -15,6 +15,10 @@ import { CredentialInterceptor } from './auth/interceptors/credential.intercepto
 import { CacheInterceptor } from './interceptors/cache.interceptor';
 import { NgChartsModule } from 'ng2-charts';
 import { DatabaseService } from './services/database.service';
+import { UserLocalService } from './services/user.local.service';
+import { AuthLocalService } from './services/auth.local.service';
+import { EntrepriseLocalService } from './services/entreprise.local.service';
+import { PosLocalService } from './services/pos.local.service';
 
 registerLocaleData(localeFr, 'fr-FR');
 
@@ -33,6 +37,12 @@ registerLocaleData(localeFr, 'fr-FR');
   ],
   providers: [
     DatabaseService,
+    // UserLocalService,
+    // AuthLocalService,
+    // EntrepriseLocalService,
+    // PosLocalService,
+    
+
     {
       provide: HTTP_INTERCEPTORS,
       useClass: CredentialInterceptor,

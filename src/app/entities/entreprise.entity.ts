@@ -7,48 +7,48 @@ export class EntrepriseEntity {
     @PrimaryGeneratedColumn()
     id?: number;
 
-    @Column()
+    @Column('string')
     type_entreprise: string = '';
 
-    @Column()
+    @Column('string')
     name: string = '';
 
-    @Column()
-    code: number = 0;
+    @Column('string')
+    code: string = '';
 
-    @Column()
+    @Column('string')
     rccm: string = '';
 
-    @Column()
+    @Column('string')
     idnat: string = '';
 
-    @Column()
+    @Column('string')
     email: string = '';
 
-    @Column()
+    @Column('string')
     telephone: string = '';
 
-    @Column()
+    @Column('string')
     manager: string = '';
 
-    @Column()
+    @Column('boolean')
     status: boolean = false;
 
-    @Column()
+    @Column('date')
     abonnement: Date = new Date();
 
-    @Column()
+    @Column('string')
     signature: string = '';
 
     @OneToMany(() => UserEntity, (data) => data.entreprise)
-    users: UserEntity[] = [];
+    users?: UserEntity[] = [];
  
     @OneToMany(() => PosEntity, (data) => data.entreprise)
-    pos: PosEntity[] = [];
+    pos?: PosEntity[] = [];
 
-    @Column()
+    @Column('date')
     created_at?: Date;
 
-    @Column()
+    @Column('date')
     updated_at?: Date;
 }

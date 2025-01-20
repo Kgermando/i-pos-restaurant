@@ -118,8 +118,8 @@ npm run build-electron
 npm run electron:build
 
 sudo dpkg -i i-pos-restaurant_1.0.3_amd64.deb
-
-
+ 
+sudo snap install i-pos-restaurant_1.0.4_amd64.snap --dangerous
 
 ```
 

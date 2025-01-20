@@ -3,6 +3,7 @@ import { DataSource } from 'typeorm';
 import { UserEntity } from '../entities/user.entity';
 import { EntrepriseEntity } from '../entities/entreprise.entity';
 import { PosEntity } from '../entities/pos.entity';
+import { AuthEntity } from '../entities/auth.entity';
 
 @Injectable({
   providedIn: 'root'
@@ -18,11 +19,11 @@ export class DatabaseService {
     this.dataSource = new DataSource({
       type: 'sqlite',
       database: 'database.sqlite',
-      entities: [
-        UserEntity, 
-        EntrepriseEntity, 
+      entities: [ 
+        UserEntity,
+        EntrepriseEntity,
         PosEntity,
-         
+        AuthEntity,
       ],
       synchronize: true,
       logging: false
